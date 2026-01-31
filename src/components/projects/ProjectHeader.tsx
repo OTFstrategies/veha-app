@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   AlertTriangle,
   ArrowLeft,
@@ -7,6 +8,7 @@ import {
   Clock,
   MoreHorizontal,
   Pencil,
+  Route,
   Trash2,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -19,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { Project, ProjectStatus } from '@/types/projects'
+import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
 
 // =============================================================================
 // Props
@@ -33,6 +36,8 @@ interface ProjectHeaderProps {
   }
   /** Number of scheduling conflicts in the project */
   conflictCount?: number
+  /** Critical path analysis result */
+  criticalPathData?: CriticalPathResult
   onBack?: () => void
   onEdit?: () => void
   onDelete?: () => void
@@ -74,6 +79,7 @@ export function ProjectHeader({
   project,
   stats,
   conflictCount = 0,
+  criticalPathData,
   onBack,
   onEdit,
   onDelete,
@@ -88,6 +94,25 @@ export function ProjectHeader({
       month: 'short',
     })
   }
+
+  // Calculate critical path stats
+  const criticalPathStats = React.useMemo(() => {
+    if (!criticalPathData || criticalPathData.scheduleInfo.size === 0) return null
+
+    let criticalCount = 0
+
+    criticalPathData.scheduleInfo.forEach((info) => {
+      if (info.isCritical) {
+        criticalCount++
+      }
+    })
+
+    return {
+      projectDuration: criticalPathData.projectDuration,
+      criticalTaskCount: criticalCount,
+      totalTasks: criticalPathData.scheduleInfo.size,
+    }
+  }, [criticalPathData])
 
   return (
     <div className="border-b border-border bg-card px-4 py-3">
@@ -197,6 +222,27 @@ export function ProjectHeader({
             {project.progress}%
           </span>
         </div>
+
+        {/* Critical Path Stats */}
+        {criticalPathStats && (
+          <>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              <span>
+                Projectduur: <strong>{criticalPathStats.projectDuration} dagen</strong>
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
+              <Route className="h-3.5 w-3.5" />
+              <span>
+                Kritiek pad:{' '}
+                <strong>
+                  {criticalPathStats.criticalTaskCount}/{criticalPathStats.totalTasks} taken
+                </strong>
+              </span>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

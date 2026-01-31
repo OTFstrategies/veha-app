@@ -3,7 +3,8 @@ import { ChevronDown, ChevronRight, Diamond } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { TimelineHeader } from './TimelineHeader'
-import { TaskBar } from './TaskBar'
+import { DraggableTaskBar } from './DraggableTaskBar'
+import { GhostTaskBar } from './GhostTaskBar'
 import { DependencyArrow } from './DependencyArrow'
 import { GanttLegend } from './GanttLegend'
 import type { TimelineConfig, ViewOptions } from './types'
@@ -28,6 +29,17 @@ interface GanttPanelProps {
   onTaskSelect: (taskId: string) => void
   onTaskDoubleClick: (taskId: string) => void
   onTaskDatesChange?: (taskId: string, startDate: string, endDate: string) => void
+  // Drag & drop props
+  activeTaskId?: string | null
+  dragPreview?: {
+    taskId: string
+    newStartDate: string
+    newEndDate: string
+  } | null
+  // Resize props
+  onResizeStart?: (taskId: string, handle: 'start' | 'end', startX: number) => void
+  resizingTaskId?: string | null
+  resizeHandle?: 'start' | 'end' | null
 }
 
 // =============================================================================
@@ -82,10 +94,17 @@ export function GanttPanel({
   onTaskSelect,
   onTaskDoubleClick,
   onTaskDatesChange: _onTaskDatesChange,
+  activeTaskId,
+  dragPreview,
+  onResizeStart,
+  resizingTaskId,
+  resizeHandle: _resizeHandle,
 }: GanttPanelProps) {
-  // Note: scrollLeft and onTaskDatesChange are passed for future drag implementation
+  // Note: scrollLeft and onTaskDatesChange are passed for callback usage
   void _scrollLeft
   void _onTaskDatesChange
+  void _resizeHandle
+
   const [expandedTasks, setExpandedTasks] = React.useState<Set<string>>(new Set())
   const [hoveredDependencyId, setHoveredDependencyId] = React.useState<string | null>(null)
 
@@ -180,6 +199,20 @@ export function GanttPanel({
     },
     [timelineConfig.startDate, timelineConfig.columnWidth]
   )
+
+  // Calculate position for preview dates
+  const getPreviewPosition = React.useCallback((startDateStr: string, endDateStr: string) => {
+    const startDate = new Date(startDateStr)
+    const endDate = new Date(endDateStr)
+    const dayOffset = Math.floor(
+      (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
+    )
+    const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    const left = dayOffset * timelineConfig.columnWidth
+    const width = duration * timelineConfig.columnWidth
+
+    return { left, width }
+  }, [timelineConfig.startDate, timelineConfig.columnWidth])
 
   // Get today's position
   const todayPosition = React.useMemo(() => {
@@ -289,6 +322,13 @@ export function GanttPanel({
       .slice(0, 2)
   }
 
+  // Default resize handler if not provided
+  const handleResizeStart = React.useCallback((taskId: string, handle: 'start' | 'end', startX: number) => {
+    if (onResizeStart) {
+      onResizeStart(taskId, handle, startX)
+    }
+  }, [onResizeStart])
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
@@ -358,6 +398,11 @@ export function GanttPanel({
             const criticalPathInfo = showCriticalPath ? criticalPathData?.scheduleInfo.get(task.id) : undefined
             const isDependencyHighlighted = isTaskHighlightedByDependency(task.id)
 
+            // Show preview dates if task is being dragged or resized
+            const isBeingModified = (activeTaskId === task.id || resizingTaskId === task.id) && dragPreview?.taskId === task.id
+            const displayStartDate = isBeingModified && dragPreview ? dragPreview.newStartDate : task.startDate
+            const displayEndDate = isBeingModified && dragPreview ? dragPreview.newEndDate : task.endDate
+
             return (
               <div
                 key={task.id}
@@ -425,26 +470,26 @@ export function GanttPanel({
                 <div
                   className={cn(
                     'px-1 text-center font-mono text-xs',
-                    isRecentlyChanged
+                    isRecentlyChanged || isBeingModified
                       ? 'font-medium text-orange-600 dark:text-orange-400'
                       : 'text-muted-foreground'
                   )}
                   style={{ width: GRID_COLUMNS.start }}
                 >
-                  {formatDate(task.startDate)}
+                  {formatDate(displayStartDate)}
                 </div>
 
                 {/* End Date */}
                 <div
                   className={cn(
                     'px-1 text-center font-mono text-xs',
-                    isRecentlyChanged
+                    isRecentlyChanged || isBeingModified
                       ? 'font-medium text-orange-600 dark:text-orange-400'
                       : 'text-muted-foreground'
                   )}
                   style={{ width: GRID_COLUMNS.end }}
                 >
-                  {formatDate(task.endDate)}
+                  {formatDate(displayEndDate)}
                 </div>
 
                 {/* Duration */}
@@ -565,20 +610,47 @@ export function GanttPanel({
               />
             ))}
 
+            {/* Ghost bars showing original position during drag/resize */}
+            {(activeTaskId || resizingTaskId) && flatTasks.map((task, rowIndex) => {
+              const isDragging = activeTaskId === task.id
+              const isResizing = resizingTaskId === task.id
+
+              if (!isDragging && !isResizing) return null
+
+              return (
+                <GhostTaskBar
+                  key={`ghost-${task.id}`}
+                  task={task}
+                  timelineConfig={timelineConfig}
+                  rowHeight={ROW_HEIGHT}
+                  rowIndex={rowIndex}
+                />
+              )
+            })}
+
             {/* Task Bars */}
             {flatTasks.map((task, rowIndex) => {
-              const { left, width } = getTaskBarPosition(task)
+              const isDragging = activeTaskId === task.id
+              const isResizing = resizingTaskId === task.id
               const isSelected = selectedTaskId === task.id
               const isRecentlyChanged = recentlyChangedTaskIds.has(task.id)
               const criticalPathInfo = showCriticalPath ? criticalPathData?.scheduleInfo.get(task.id) : undefined
               const isDependencyHighlighted = isTaskHighlightedByDependency(task.id)
 
+              // Calculate position based on drag/resize preview or original position
+              let position: { left: number; width: number }
+              if ((isDragging || isResizing) && dragPreview?.taskId === task.id) {
+                position = getPreviewPosition(dragPreview.newStartDate, dragPreview.newEndDate)
+              } else {
+                position = getTaskBarPosition(task)
+              }
+
               return (
-                <TaskBar
+                <DraggableTaskBar
                   key={task.id}
                   task={task}
-                  left={left}
-                  width={width}
+                  left={position.left}
+                  width={position.width}
                   top={rowIndex * ROW_HEIGHT}
                   height={ROW_HEIGHT}
                   isSelected={isSelected}
@@ -586,8 +658,11 @@ export function GanttPanel({
                   isDependencyHighlighted={isDependencyHighlighted}
                   showProgress={viewOptions.showProgress}
                   criticalPathInfo={criticalPathInfo}
+                  isDragging={isDragging || isResizing}
+                  dragPreview={(isDragging || isResizing) && dragPreview?.taskId === task.id ? dragPreview : null}
                   onClick={() => onTaskSelect(task.id)}
                   onDoubleClick={() => onTaskDoubleClick(task.id)}
+                  onResizeStart={handleResizeStart}
                 />
               )
             })}

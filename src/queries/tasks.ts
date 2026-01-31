@@ -3,8 +3,9 @@ import { createClient } from '@/lib/supabase/client'
 import type { Task, TaskDependency, TaskAssignment, TaskStatus, TaskPriority, DependencyType } from '@/types/projects'
 import type { Task as DbTask } from '@/types/database'
 import { projectKeys } from './projects'
-import { recalculateTaskDates, validateDependencyNoCycle } from '@/lib/scheduling'
+import { recalculateTaskDates, validateDependencyNoCycle, calculateCriticalPathDetailed } from '@/lib/scheduling'
 import { useTaskHistoryStore, type TaskSnapshot } from '@/stores/task-history-store'
+import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
 
 // =============================================================================
 // Query Keys
@@ -16,6 +17,7 @@ export const taskKeys = {
   list: (projectId: string) => [...taskKeys.lists(), projectId] as const,
   details: () => [...taskKeys.all, 'detail'] as const,
   detail: (id: string) => [...taskKeys.details(), id] as const,
+  criticalPath: (projectId: string) => [...taskKeys.all, 'critical-path', projectId] as const,
 }
 
 // =============================================================================
@@ -123,6 +125,29 @@ export function useTasks(projectId: string) {
       return (data as DbTaskWithRelations[]).map(transformTask)
     },
     enabled: Boolean(projectId),
+  })
+}
+
+/**
+ * Calculate critical path for a project's tasks
+ * Returns schedule info including which tasks are critical and their float values
+ */
+export function useCriticalPath(tasks: Task[]) {
+  return useQuery<CriticalPathResult>({
+    queryKey: ['critical-path', tasks.map(t => t.id).join(',')],
+    queryFn: () => {
+      if (!tasks || tasks.length === 0) {
+        return {
+          criticalPath: [],
+          scheduleInfo: new Map(),
+          projectDuration: 0,
+        }
+      }
+
+      return calculateCriticalPathDetailed(tasks)
+    },
+    enabled: tasks.length > 0,
+    staleTime: 1000 * 60 * 5, // 5 minutes cache
   })
 }
 
@@ -374,6 +399,122 @@ export function useDeleteTask() {
 
       if (error) {
         throw new Error(`Failed to delete task: ${error.message}`)
+      }
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: taskKeys.list(variables.projectId) })
+      queryClient.invalidateQueries({ queryKey: projectKeys.detail(variables.projectId) })
+    },
+  })
+}
+
+// =============================================================================
+// Task Date Updates (Drag/Resize)
+// =============================================================================
+
+interface UpdateTaskDatesInput {
+  taskId: string
+  projectId: string
+  startDate: string
+  endDate: string
+}
+
+/**
+ * Update task dates from drag/resize operations
+ * Stores previous state for undo functionality
+ */
+export function useUpdateTaskDates() {
+  const queryClient = useQueryClient()
+  const pushState = useTaskHistoryStore((state) => state.pushState)
+
+  return useMutation({
+    mutationFn: async ({
+      taskId,
+      projectId,
+      startDate,
+      endDate,
+    }: UpdateTaskDatesInput): Promise<{ taskId: string; startDate: string; endDate: string }> => {
+      const supabase = createClient()
+
+      // Get current task for undo
+      const { data: currentTask, error: fetchError } = await supabase
+        .from('tasks')
+        .select('start_date, end_date, name, duration')
+        .eq('id', taskId)
+        .single()
+
+      if (fetchError) {
+        throw new Error(`Taak niet gevonden: ${fetchError.message}`)
+      }
+
+      // Save state for undo
+      if (currentTask) {
+        pushState(`Taak "${currentTask.name}" verplaatst`, [{
+          id: taskId,
+          startDate: currentTask.start_date,
+          endDate: currentTask.end_date,
+        }])
+      }
+
+      // Calculate new duration
+      const start = new Date(startDate)
+      const end = new Date(endDate)
+      const duration = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+
+      // Update dates
+      const { error } = await supabase
+        .from('tasks')
+        .update({
+          start_date: startDate,
+          end_date: endDate,
+          duration: duration,
+        })
+        .eq('id', taskId)
+
+      if (error) {
+        throw new Error(`Fout bij bijwerken taak: ${error.message}`)
+      }
+
+      return { taskId, startDate, endDate }
+    },
+    onMutate: async (input) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: projectKeys.detail(input.projectId) })
+
+      // Snapshot the previous value
+      const previousProject = queryClient.getQueryData(projectKeys.detail(input.projectId))
+
+      // Calculate new duration for optimistic update
+      const start = new Date(input.startDate)
+      const end = new Date(input.endDate)
+      const duration = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+
+      // Optimistically update the cache
+      queryClient.setQueryData(projectKeys.detail(input.projectId), (old: unknown) => {
+        if (!old || typeof old !== 'object' || !('tasks' in old)) return old
+        const project = old as { tasks: Task[] }
+
+        return {
+          ...project,
+          tasks: project.tasks.map(task =>
+            task.id === input.taskId
+              ? {
+                  ...task,
+                  startDate: input.startDate,
+                  endDate: input.endDate,
+                  duration: duration,
+                }
+              : task
+          ),
+        }
+      })
+
+      return { previousProject }
+    },
+    onError: (_error, input, context) => {
+      // Rollback on error
+      if (context?.previousProject) {
+        queryClient.setQueryData(projectKeys.detail(input.projectId), context.previousProject)
       }
     },
     onSuccess: (_data, variables) => {

@@ -1,9 +1,22 @@
 import * as React from 'react'
+import {
+  DndContext,
+  DragEndEvent,
+  DragMoveEvent,
+  DragStartEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { GanttPanel } from './GanttPanel'
 import { SchedulerPanel } from './SchedulerPanel'
 import { GanttToolbar } from './GanttToolbar'
 import { ProjectHeader } from './ProjectHeader'
 import { TaskEditor } from './TaskEditor'
+import { useCriticalPath, useUpdateTaskDates } from '@/queries/tasks'
+import { useToast } from '@/components/ui/toast'
+import { addDaysToDate, pixelsToDays } from './utils/snap'
 import type { GanttZoomLevel, ViewOptions, TimelineConfig } from './types'
 import type { Project, Task } from '@/types/projects'
 
@@ -42,6 +55,18 @@ export interface ProjectGanttSchedulerProps {
 }
 
 // =============================================================================
+// Types
+// =============================================================================
+
+interface ResizingTaskState {
+  taskId: string
+  handle: 'start' | 'end'
+  originalStart: string
+  originalEnd: string
+  startX: number
+}
+
+// =============================================================================
 // Component
 // =============================================================================
 
@@ -60,6 +85,17 @@ export function ProjectGanttScheduler({
 }: ProjectGanttSchedulerProps) {
   // Note: onTaskProgressChange is for future slider-based progress updates
   void _onTaskProgressChange
+
+  // ---------------------------------------------------------------------------
+  // Toast
+  // ---------------------------------------------------------------------------
+  const { addToast } = useToast()
+
+  // ---------------------------------------------------------------------------
+  // Update Task Dates Mutation
+  // ---------------------------------------------------------------------------
+  const updateTaskDates = useUpdateTaskDates()
+
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
@@ -71,15 +107,33 @@ export function ProjectGanttScheduler({
     showTodayLine: true,
     showWeekends: true,
   })
+  const [showCriticalPath, setShowCriticalPath] = React.useState(false)
   const [splitRatio, setSplitRatio] = React.useState(60) // Gantt gets 60%
   const [selectedTaskId, setSelectedTaskId] = React.useState<string | null>(null)
   const [editingTask, setEditingTask] = React.useState<Task | null>(null)
   const [scrollLeft, setScrollLeft] = React.useState(0)
 
+  // Drag state
+  const [activeTaskId, setActiveTaskId] = React.useState<string | null>(null)
+  const [dragPreview, setDragPreview] = React.useState<{
+    taskId: string
+    newStartDate: string
+    newEndDate: string
+  } | null>(null)
+
+  // Resize state
+  const [resizingTask, setResizingTask] = React.useState<ResizingTaskState | null>(null)
+
   // Refs for synchronized scrolling
   const ganttTimelineRef = React.useRef<HTMLDivElement>(null)
   const schedulerTimelineRef = React.useRef<HTMLDivElement>(null)
   const isDraggingSplitter = React.useRef(false)
+
+  // ---------------------------------------------------------------------------
+  // Critical Path Query
+  // ---------------------------------------------------------------------------
+
+  const { data: criticalPathData } = useCriticalPath(project.tasks)
 
   // ---------------------------------------------------------------------------
   // Timeline Configuration
@@ -111,6 +165,192 @@ export function ProjectGanttScheduler({
       todayPosition: daysDiff * columnWidths[zoomLevel],
     }
   }, [project.startDate, project.endDate, zoomLevel])
+
+  // ---------------------------------------------------------------------------
+  // DnD Kit Sensors
+  // ---------------------------------------------------------------------------
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5, // 5px movement before drag starts
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    })
+  )
+
+  // ---------------------------------------------------------------------------
+  // Drag Handlers
+  // ---------------------------------------------------------------------------
+
+  const handleDragStart = React.useCallback((event: DragStartEvent) => {
+    setActiveTaskId(event.active.id as string)
+  }, [])
+
+  const handleDragMove = React.useCallback((event: DragMoveEvent) => {
+    if (!activeTaskId) return
+
+    const { delta } = event
+    const task = project.tasks.find(t => t.id === activeTaskId)
+    if (!task) return
+
+    // Calculate new dates based on drag delta
+    const daysMoved = pixelsToDays(delta.x, timelineConfig.columnWidth)
+
+    if (daysMoved !== 0) {
+      const newStartDate = addDaysToDate(task.startDate, daysMoved)
+      const newEndDate = addDaysToDate(task.endDate, daysMoved)
+
+      setDragPreview({
+        taskId: activeTaskId,
+        newStartDate,
+        newEndDate,
+      })
+    } else {
+      setDragPreview(null)
+    }
+  }, [activeTaskId, project.tasks, timelineConfig.columnWidth])
+
+  const handleDragEnd = React.useCallback(async (_event: DragEndEvent) => {
+    if (!dragPreview) {
+      setActiveTaskId(null)
+      return
+    }
+
+    // Update task dates
+    try {
+      await updateTaskDates.mutateAsync({
+        taskId: dragPreview.taskId,
+        projectId: project.id,
+        startDate: dragPreview.newStartDate,
+        endDate: dragPreview.newEndDate,
+      })
+
+      // Call the prop callback if provided
+      onTaskDatesChange?.(dragPreview.taskId, dragPreview.newStartDate, dragPreview.newEndDate)
+
+      addToast({
+        type: 'success',
+        title: 'Taak verplaatst',
+        description: 'De taakdatums zijn bijgewerkt.',
+      })
+    } catch {
+      addToast({
+        type: 'error',
+        title: 'Fout bij verplaatsen',
+        description: 'Kon de taak niet verplaatsen. Probeer het opnieuw.',
+      })
+    }
+
+    setActiveTaskId(null)
+    setDragPreview(null)
+  }, [dragPreview, project.id, updateTaskDates, onTaskDatesChange, addToast])
+
+  // ---------------------------------------------------------------------------
+  // Resize Handlers
+  // ---------------------------------------------------------------------------
+
+  const handleResizeStart = React.useCallback((taskId: string, handle: 'start' | 'end', startX: number) => {
+    const task = project.tasks.find(t => t.id === taskId)
+    if (!task) return
+
+    setResizingTask({
+      taskId,
+      handle,
+      originalStart: task.startDate,
+      originalEnd: task.endDate,
+      startX,
+    })
+  }, [project.tasks])
+
+  // Mouse move handler for resize - use ref to capture current state
+  const resizingTaskRef = React.useRef<ResizingTaskState | null>(null)
+  resizingTaskRef.current = resizingTask
+
+  React.useEffect(() => {
+    if (!resizingTask) return
+
+    function handleMouseMove(e: MouseEvent) {
+      const currentResizing = resizingTaskRef.current
+      if (!currentResizing) return
+
+      const deltaX = e.clientX - currentResizing.startX
+      const daysDelta = pixelsToDays(deltaX, timelineConfig.columnWidth)
+
+      let newStartDate = currentResizing.originalStart
+      let newEndDate = currentResizing.originalEnd
+
+      if (currentResizing.handle === 'start') {
+        newStartDate = addDaysToDate(currentResizing.originalStart, daysDelta)
+        // Don't allow start after end (minimum 1 day duration)
+        const newStartMs = new Date(newStartDate).getTime()
+        const endMs = new Date(newEndDate).getTime()
+        if (newStartMs >= endMs) {
+          newStartDate = addDaysToDate(newEndDate, -1)
+        }
+      } else {
+        newEndDate = addDaysToDate(currentResizing.originalEnd, daysDelta)
+        // Don't allow end before start (minimum 1 day duration)
+        const startMs = new Date(newStartDate).getTime()
+        const newEndMs = new Date(newEndDate).getTime()
+        if (newEndMs <= startMs) {
+          newEndDate = addDaysToDate(newStartDate, 1)
+        }
+      }
+
+      setDragPreview({
+        taskId: currentResizing.taskId,
+        newStartDate,
+        newEndDate,
+      })
+    }
+
+    async function handleMouseUp() {
+      const currentPreview = dragPreview
+      if (currentPreview) {
+        // Apply the resize
+        try {
+          await updateTaskDates.mutateAsync({
+            taskId: currentPreview.taskId,
+            projectId: project.id,
+            startDate: currentPreview.newStartDate,
+            endDate: currentPreview.newEndDate,
+          })
+
+          // Call the prop callback if provided
+          onTaskDatesChange?.(currentPreview.taskId, currentPreview.newStartDate, currentPreview.newEndDate)
+
+          addToast({
+            type: 'success',
+            title: 'Taakduur aangepast',
+            description: 'De taakdatums zijn bijgewerkt.',
+          })
+        } catch {
+          addToast({
+            type: 'error',
+            title: 'Fout bij aanpassen',
+            description: 'Kon de taak niet aanpassen. Probeer het opnieuw.',
+          })
+        }
+      }
+
+      setResizingTask(null)
+      setDragPreview(null)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [resizingTask, dragPreview, timelineConfig.columnWidth, project.id, updateTaskDates, onTaskDatesChange, addToast])
 
   // ---------------------------------------------------------------------------
   // Synchronized Scrolling
@@ -238,107 +478,124 @@ export function ProjectGanttScheduler({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="flex h-full flex-col bg-background">
-      {/* Project Header */}
-      <ProjectHeader
-        project={project}
-        stats={stats}
-        onBack={onBack}
-        onEdit={onEditProject}
-        onDelete={onDeleteProject}
-        onClientClick={onClientClick}
-      />
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex h-full flex-col bg-background">
+        {/* Project Header */}
+        <ProjectHeader
+          project={project}
+          stats={stats}
+          criticalPathData={showCriticalPath ? criticalPathData : undefined}
+          onBack={onBack}
+          onEdit={onEditProject}
+          onDelete={onDeleteProject}
+          onClientClick={onClientClick}
+        />
 
-      {/* Toolbar */}
-      <GanttToolbar
-        projectId={project.id}
-        zoomLevel={zoomLevel}
-        viewOptions={viewOptions}
-        onZoomChange={setZoomLevel}
-        onViewOptionsChange={setViewOptions}
-        onAddTask={() => onTaskAdd?.()}
-        onScrollToToday={() => {
-          const todayPos = timelineConfig.todayPosition - 200
-          if (ganttTimelineRef.current) {
-            ganttTimelineRef.current.scrollLeft = todayPos
-          }
-          if (schedulerTimelineRef.current) {
-            schedulerTimelineRef.current.scrollLeft = todayPos
-          }
-          setScrollLeft(todayPos)
-        }}
-      />
-
-      {/* Split Screen Container */}
-      <div
-        id="gantt-scheduler-container"
-        className="relative flex-1 overflow-hidden"
-      >
-        {/* Gantt Panel (Top) */}
-        <div
-          className="overflow-hidden border-b border-border"
-          style={{ height: `${splitRatio}%` }}
-        >
-          <GanttPanel
-            tasks={project.tasks}
-            timelineConfig={timelineConfig}
-            viewOptions={viewOptions}
-            selectedTaskId={selectedTaskId}
-            scrollLeft={scrollLeft}
-            timelineRef={ganttTimelineRef}
-            onScroll={handleTimelineScroll}
-            onTaskSelect={handleTaskSelect}
-            onTaskDoubleClick={handleTaskDoubleClick}
-            onTaskDatesChange={onTaskDatesChange}
-          />
-        </div>
-
-        {/* Resizable Splitter */}
-        <div
-          className="group absolute left-0 right-0 z-10 flex h-2 cursor-row-resize items-center justify-center bg-border hover:bg-stone-300 dark:hover:bg-stone-600"
-          style={{ top: `calc(${splitRatio}% - 4px)` }}
-          onMouseDown={handleSplitterMouseDown}
-        >
-          <div className="h-0.5 w-12 rounded-full bg-stone-400 transition-all group-hover:w-20 group-hover:bg-stone-500 dark:bg-stone-500 dark:group-hover:bg-stone-400" />
-        </div>
-
-        {/* Scheduler Panel (Bottom) */}
-        <div
-          className="overflow-hidden"
-          style={{ height: `${100 - splitRatio}%` }}
-        >
-          <SchedulerPanel
-            resources={resourceData}
-            timelineConfig={timelineConfig}
-            viewOptions={viewOptions}
-            selectedTaskId={selectedTaskId}
-            scrollLeft={scrollLeft}
-            timelineRef={schedulerTimelineRef}
-            onScroll={handleTimelineScroll}
-            onTaskSelect={handleTaskSelect}
-            onTaskDoubleClick={handleTaskDoubleClick}
-          />
-        </div>
-      </div>
-
-      {/* Task Editor Side Panel */}
-      {editingTask && (
-        <TaskEditor
-          task={editingTask}
+        {/* Toolbar */}
+        <GanttToolbar
           projectId={project.id}
-          allTasks={project.tasks}
-          employees={employees}
-          onSave={(updatedTask) => {
-            onTaskEdit?.(updatedTask)
-            setEditingTask(null)
-          }}
-          onClose={() => setEditingTask(null)}
-          onDelete={() => {
-            onTaskDelete?.(editingTask.id)
-            setEditingTask(null)
+          zoomLevel={zoomLevel}
+          viewOptions={viewOptions}
+          showCriticalPath={showCriticalPath}
+          onZoomChange={setZoomLevel}
+          onViewOptionsChange={setViewOptions}
+          onShowCriticalPathChange={setShowCriticalPath}
+          onAddTask={() => onTaskAdd?.()}
+          onScrollToToday={() => {
+            const todayPos = timelineConfig.todayPosition - 200
+            if (ganttTimelineRef.current) {
+              ganttTimelineRef.current.scrollLeft = todayPos
+            }
+            if (schedulerTimelineRef.current) {
+              schedulerTimelineRef.current.scrollLeft = todayPos
+            }
+            setScrollLeft(todayPos)
           }}
         />
-      )}
-    </div>
+
+        {/* Split Screen Container */}
+        <div
+          id="gantt-scheduler-container"
+          className="relative flex-1 overflow-hidden"
+        >
+          {/* Gantt Panel (Top) */}
+          <div
+            className="overflow-hidden border-b border-border"
+            style={{ height: `${splitRatio}%` }}
+          >
+            <GanttPanel
+              tasks={project.tasks}
+              timelineConfig={timelineConfig}
+              viewOptions={viewOptions}
+              selectedTaskId={selectedTaskId}
+              scrollLeft={scrollLeft}
+              timelineRef={ganttTimelineRef}
+              criticalPathData={criticalPathData}
+              showCriticalPath={showCriticalPath}
+              onScroll={handleTimelineScroll}
+              onTaskSelect={handleTaskSelect}
+              onTaskDoubleClick={handleTaskDoubleClick}
+              onTaskDatesChange={onTaskDatesChange}
+              activeTaskId={activeTaskId}
+              dragPreview={dragPreview}
+              onResizeStart={handleResizeStart}
+              resizingTaskId={resizingTask?.taskId ?? null}
+              resizeHandle={resizingTask?.handle ?? null}
+            />
+          </div>
+
+          {/* Resizable Splitter */}
+          <div
+            className="group absolute left-0 right-0 z-10 flex h-2 cursor-row-resize items-center justify-center bg-border hover:bg-stone-300 dark:hover:bg-stone-600"
+            style={{ top: `calc(${splitRatio}% - 4px)` }}
+            onMouseDown={handleSplitterMouseDown}
+          >
+            <div className="h-0.5 w-12 rounded-full bg-stone-400 transition-all group-hover:w-20 group-hover:bg-stone-500 dark:bg-stone-500 dark:group-hover:bg-stone-400" />
+          </div>
+
+          {/* Scheduler Panel (Bottom) */}
+          <div
+            className="overflow-hidden"
+            style={{ height: `${100 - splitRatio}%` }}
+          >
+            <SchedulerPanel
+              resources={resourceData}
+              timelineConfig={timelineConfig}
+              viewOptions={viewOptions}
+              selectedTaskId={selectedTaskId}
+              scrollLeft={scrollLeft}
+              timelineRef={schedulerTimelineRef}
+              onScroll={handleTimelineScroll}
+              onTaskSelect={handleTaskSelect}
+              onTaskDoubleClick={handleTaskDoubleClick}
+            />
+          </div>
+        </div>
+
+        {/* Task Editor Side Panel */}
+        {editingTask && (
+          <TaskEditor
+            task={editingTask}
+            projectId={project.id}
+            allTasks={project.tasks}
+            employees={employees}
+            onSave={(updatedTask) => {
+              onTaskEdit?.(updatedTask)
+              setEditingTask(null)
+            }}
+            onClose={() => setEditingTask(null)}
+            onDelete={() => {
+              onTaskDelete?.(editingTask.id)
+              setEditingTask(null)
+            }}
+          />
+        )}
+      </div>
+    </DndContext>
   )
 }
