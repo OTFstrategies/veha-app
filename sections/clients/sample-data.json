@@ -1,0 +1,276 @@
+{
+  "_meta": {
+    "models": {
+      "clients": "Een bedrijf of organisatie waarvoor projecten worden uitgevoerd. Bevat basisgegevens en hiërarchische children.",
+      "contacts": "Een contactpersoon bij een klant. De persoon waarmee gecommuniceerd wordt over projecten.",
+      "locations": "Een fysieke werklocatie van een klant, zoals het hoofdkantoor of een filiaal.",
+      "projects": "Een project voor deze klant met status en voortgang."
+    },
+    "relationships": [
+      "Elke Client heeft meerdere Contacts (contactpersonen)",
+      "Elke Client kan meerdere Locations (werklocaties) hebben",
+      "Elke Client heeft meerdere Projects met status en voortgang"
+    ]
+  },
+  "clients": [
+    {
+      "id": "client-001",
+      "name": "Gemeente Amsterdam",
+      "address": "Amstel 1",
+      "city": "Amsterdam",
+      "postal_code": "1011 PN",
+      "phone": "020-624 1111",
+      "email": "inkoop@amsterdam.nl",
+      "notes": "Raamcontract voor straatwerk in stadsdeel Oost. Contactpersoon Johan is de projectcoördinator.",
+      "is_active": true,
+      "contacts": [
+        {
+          "id": "contact-001",
+          "name": "Johan van der Berg",
+          "role": "Projectcoördinator",
+          "phone": "06-12345678",
+          "email": "j.vanderberg@amsterdam.nl",
+          "is_primary": true
+        },
+        {
+          "id": "contact-002",
+          "name": "Lisa de Vries",
+          "role": "Financieel medewerker",
+          "phone": "06-87654321",
+          "email": "l.devries@amsterdam.nl",
+          "is_primary": false
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc-001",
+          "name": "Hoofdkantoor",
+          "address": "Amstel 1",
+          "city": "Amsterdam",
+          "postal_code": "1011 PN",
+          "is_primary": true
+        },
+        {
+          "id": "loc-002",
+          "name": "Stadsdeel Oost",
+          "address": "Oranje-Vrijstaatkade 2",
+          "city": "Amsterdam",
+          "postal_code": "1093 KS",
+          "is_primary": false
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-001",
+          "name": "Herinrichting Oosterpark",
+          "status": "actief",
+          "progress": 25,
+          "start_date": "2026-02-03",
+          "end_date": "2026-03-14"
+        },
+        {
+          "id": "proj-004",
+          "name": "Onderhoud Vondelpark paden",
+          "status": "gepland",
+          "progress": 0,
+          "start_date": "2026-04-01"
+        }
+      ]
+    },
+    {
+      "id": "client-002",
+      "name": "Woningcorporatie Eigen Haard",
+      "address": "Arlandaweg 88",
+      "city": "Amsterdam",
+      "postal_code": "1043 EX",
+      "phone": "020-550 9000",
+      "email": "onderhoud@eigenhaard.nl",
+      "notes": "Groot renovatieproject in Nieuw-West. Facturatie via SAP.",
+      "is_active": true,
+      "contacts": [
+        {
+          "id": "contact-003",
+          "name": "Pieter Janssen",
+          "role": "Technisch beheerder",
+          "phone": "06-11223344",
+          "email": "p.janssen@eigenhaard.nl",
+          "is_primary": true
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc-003",
+          "name": "Hoofdkantoor",
+          "address": "Arlandaweg 88",
+          "city": "Amsterdam",
+          "postal_code": "1043 EX",
+          "is_primary": true
+        },
+        {
+          "id": "loc-004",
+          "name": "Complex Nieuw-West",
+          "address": "Burgemeester de Vlugtlaan 125",
+          "city": "Amsterdam",
+          "postal_code": "1063 BK",
+          "is_primary": false
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-002",
+          "name": "Renovatie Eigen Haard Fase 1",
+          "status": "actief",
+          "progress": 10,
+          "start_date": "2026-02-03",
+          "end_date": "2026-03-28"
+        },
+        {
+          "id": "proj-005",
+          "name": "Renovatie Eigen Haard Fase 2",
+          "status": "gepland",
+          "progress": 0,
+          "start_date": "2026-04-01"
+        },
+        {
+          "id": "proj-006",
+          "name": "Dak isolatie complex Zuid",
+          "status": "afgerond",
+          "progress": 100
+        }
+      ]
+    },
+    {
+      "id": "client-003",
+      "name": "Bakkerij Van Loon B.V.",
+      "address": "Industrieweg 45",
+      "city": "Zaandam",
+      "postal_code": "1521 NA",
+      "phone": "075-612 3456",
+      "email": "info@bakkerijvanloon.nl",
+      "notes": "Uitbreiding productiehal. Let op: werk alleen toegestaan buiten productietijden (06:00-18:00).",
+      "is_active": true,
+      "contacts": [
+        {
+          "id": "contact-004",
+          "name": "Sandra van Loon",
+          "role": "Directeur",
+          "phone": "06-55566677",
+          "email": "sandra@bakkerijvanloon.nl",
+          "is_primary": true
+        },
+        {
+          "id": "contact-005",
+          "name": "Kees Bakker",
+          "role": "Facilitair manager",
+          "phone": "06-99988877",
+          "email": "kees@bakkerijvanloon.nl",
+          "is_primary": false
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc-005",
+          "name": "Productielocatie",
+          "address": "Industrieweg 45",
+          "city": "Zaandam",
+          "postal_code": "1521 NA",
+          "is_primary": true
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-003",
+          "name": "Uitbreiding Bakkerij Van Loon",
+          "status": "actief",
+          "progress": 15,
+          "start_date": "2026-02-01",
+          "end_date": "2026-02-21"
+        }
+      ]
+    },
+    {
+      "id": "client-004",
+      "name": "VVE Parkzicht",
+      "address": "Parkweg 100-200",
+      "city": "Haarlem",
+      "postal_code": "2011 KP",
+      "phone": "023-531 2222",
+      "email": "vve@parkzicht-haarlem.nl",
+      "notes": "VVE met 50 appartementen. Besluitvorming via ALV, facturen naar beheerder.",
+      "is_active": true,
+      "contacts": [
+        {
+          "id": "contact-006",
+          "name": "Martijn de Groot",
+          "role": "VVE Beheerder",
+          "phone": "06-44433322",
+          "email": "m.degroot@vvebeheer.nl",
+          "is_primary": true
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc-006",
+          "name": "Complex Parkzicht",
+          "address": "Parkweg 100-200",
+          "city": "Haarlem",
+          "postal_code": "2011 KP",
+          "is_primary": true
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-007",
+          "name": "Gevelrenovatie blok A",
+          "status": "afgerond",
+          "progress": 100
+        },
+        {
+          "id": "proj-008",
+          "name": "Gevelrenovatie blok B",
+          "status": "on-hold",
+          "progress": 30
+        }
+      ]
+    },
+    {
+      "id": "client-005",
+      "name": "Tandartspraktijk Smit & Partners",
+      "address": "Dorpsstraat 78",
+      "city": "Amstelveen",
+      "postal_code": "1181 HJ",
+      "phone": "020-641 5555",
+      "email": "praktijk@tandarts-smit.nl",
+      "notes": "Kleine verbouwing behandelkamer. Alleen weekend werken ivm praktijk.",
+      "is_active": false,
+      "contacts": [
+        {
+          "id": "contact-007",
+          "name": "Dr. A. Smit",
+          "role": "Eigenaar",
+          "phone": "06-22211100",
+          "email": "a.smit@tandarts-smit.nl",
+          "is_primary": true
+        }
+      ],
+      "locations": [
+        {
+          "id": "loc-007",
+          "name": "Praktijk",
+          "address": "Dorpsstraat 78",
+          "city": "Amstelveen",
+          "postal_code": "1181 HJ",
+          "is_primary": true
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj-009",
+          "name": "Verbouwing behandelkamer",
+          "status": "afgerond",
+          "progress": 100
+        }
+      ]
+    }
+  ]
+}

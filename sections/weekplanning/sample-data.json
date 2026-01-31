@@ -1,0 +1,480 @@
+{
+  "_meta": {
+    "models": {
+      "weekData": "De weekplanning data met alle medewerkers, hun taken per dag en beschikbaarheid voor een specifieke week.",
+      "dayEntry": "Een dagentry voor een medewerker: bevat de taken voor die dag en/of beschikbaarheidsstatus.",
+      "dayTask": "Een specifieke taak toegewezen aan een medewerker op een dag, met verwijzing naar project en klant."
+    },
+    "relationships": [
+      "WeekData bevat meerdere employees met hun planning",
+      "Per employee zijn er DayEntries voor elke werkdag (ma-vr)",
+      "DayEntries kunnen DayTasks bevatten (werk) of een availability status (niet-werkbaar)"
+    ]
+  },
+  "currentWeek": {
+    "weekNumber": 6,
+    "year": 2026,
+    "startDate": "2026-02-02",
+    "endDate": "2026-02-06",
+    "days": [
+      { "date": "2026-02-02", "dayName": "Ma", "dayNumber": 2, "isToday": false },
+      { "date": "2026-02-03", "dayName": "Di", "dayNumber": 3, "isToday": false },
+      { "date": "2026-02-04", "dayName": "Wo", "dayNumber": 4, "isToday": false },
+      { "date": "2026-02-05", "dayName": "Do", "dayNumber": 5, "isToday": true },
+      { "date": "2026-02-06", "dayName": "Vr", "dayNumber": 6, "isToday": false }
+    ]
+  },
+  "employees": [
+    {
+      "id": "emp-001",
+      "name": "Jan de Vries",
+      "role": "Voorman",
+      "color": "#3b82f6",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-04": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-06": {
+          "availability": {
+            "status": "ziek",
+            "notes": "Griep, verwacht maandag terug"
+          },
+          "tasks": []
+        }
+      }
+    },
+    {
+      "id": "emp-002",
+      "name": "Pieter Bakker",
+      "role": "Uitvoerder",
+      "color": "#22c55e",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-04": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-06": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "emp-003",
+      "name": "Mohammed El Amrani",
+      "role": "Uitvoerder",
+      "color": "#f59e0b",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-04": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        },
+        "2026-02-06": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-002",
+              "name": "Bestrating verwijderen",
+              "projectId": "proj-001",
+              "projectName": "Herinrichting Oosterpark",
+              "clientName": "Gemeente Amsterdam"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "emp-004",
+      "name": "Klaas Jansen",
+      "role": "Specialist",
+      "color": "#8b5cf6",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-010",
+              "name": "Kozijnen kitten blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-010",
+              "name": "Kozijnen kitten blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-04": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-010",
+              "name": "Kozijnen kitten blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-010",
+              "name": "Kozijnen kitten blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-06": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-010",
+              "name": "Kozijnen kitten blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "emp-005",
+      "name": "Erik van Dam",
+      "role": "Projectleider",
+      "color": "#ec4899",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": []
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": []
+        },
+        "2026-02-04": {
+          "availability": null,
+          "tasks": []
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": []
+        },
+        "2026-02-06": {
+          "availability": {
+            "status": "vrij",
+            "notes": "Kind ophalen school"
+          },
+          "tasks": []
+        }
+      }
+    },
+    {
+      "id": "emp-006",
+      "name": "Stefan Willems",
+      "role": "Uitvoerder",
+      "color": "#06b6d4",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-015",
+              "name": "Vloer leggen hal",
+              "projectId": "proj-003",
+              "projectName": "Uitbreiding Bakkerij Van Loon",
+              "clientName": "Bakkerij Van Loon B.V."
+            }
+          ]
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-015",
+              "name": "Vloer leggen hal",
+              "projectId": "proj-003",
+              "projectName": "Uitbreiding Bakkerij Van Loon",
+              "clientName": "Bakkerij Van Loon B.V."
+            }
+          ]
+        },
+        "2026-02-04": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-015",
+              "name": "Vloer leggen hal",
+              "projectId": "proj-003",
+              "projectName": "Uitbreiding Bakkerij Van Loon",
+              "clientName": "Bakkerij Van Loon B.V."
+            }
+          ]
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-015",
+              "name": "Vloer leggen hal",
+              "projectId": "proj-003",
+              "projectName": "Uitbreiding Bakkerij Van Loon",
+              "clientName": "Bakkerij Van Loon B.V."
+            }
+          ]
+        },
+        "2026-02-06": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-015",
+              "name": "Vloer leggen hal",
+              "projectId": "proj-003",
+              "projectName": "Uitbreiding Bakkerij Van Loon",
+              "clientName": "Bakkerij Van Loon B.V."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "emp-007",
+      "name": "Dennis Smit",
+      "role": "Uitvoerder",
+      "color": "#84cc16",
+      "schedule": {
+        "2026-02-02": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-011",
+              "name": "Gevelreiniging blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-03": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-011",
+              "name": "Gevelreiniging blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-04": {
+          "availability": {
+            "status": "training",
+            "notes": "VCA cursus"
+          },
+          "tasks": []
+        },
+        "2026-02-05": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-011",
+              "name": "Gevelreiniging blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        },
+        "2026-02-06": {
+          "availability": null,
+          "tasks": [
+            {
+              "id": "task-011",
+              "name": "Gevelreiniging blok A",
+              "projectId": "proj-002",
+              "projectName": "Renovatie Eigen Haard Fase 1",
+              "clientName": "Woningcorporatie Eigen Haard"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "availabilityStyles": {
+    "ziek": {
+      "bgColor": "bg-red-100 dark:bg-red-900/30",
+      "textColor": "text-red-700 dark:text-red-300",
+      "label": "ZIEK"
+    },
+    "vakantie": {
+      "bgColor": "bg-amber-100 dark:bg-amber-900/30",
+      "textColor": "text-amber-700 dark:text-amber-300",
+      "label": "VAKANTIE"
+    },
+    "vrij": {
+      "bgColor": "bg-stone-100 dark:bg-stone-800",
+      "textColor": "text-stone-500 dark:text-stone-400",
+      "label": "VRIJ"
+    },
+    "training": {
+      "bgColor": "bg-purple-100 dark:bg-purple-900/30",
+      "textColor": "text-purple-700 dark:text-purple-300",
+      "label": "TRAINING"
+    }
+  }
+}

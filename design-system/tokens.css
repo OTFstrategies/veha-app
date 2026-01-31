@@ -1,0 +1,93 @@
+/* Design Tokens for VEHA Dashboard */
+
+:root {
+  /* Colors - Primary (VEHA Zwart) */
+  --color-primary: #2e2d2c;
+  --color-primary-light: #57534e; /* stone-600 */
+  --color-primary-dark: #1c1917; /* stone-900 */
+
+  /* Colors - Secondary (VEHA Beige) */
+  --color-secondary: #CBC4B5;
+  --color-secondary-light: #d6d3d1; /* stone-300 */
+  --color-secondary-dark: #b5ad9e;
+
+  /* Colors - Neutral (VEHA Light) */
+  --color-neutral: #f8f7f5;
+  --color-neutral-50: #fafaf9;
+  --color-neutral-100: #f5f5f4;
+  --color-neutral-200: #e7e5e4;
+  --color-neutral-300: #d6d3d1;
+  --color-neutral-400: #a8a29e;
+  --color-neutral-500: #78716c;
+  --color-neutral-600: #57534e;
+  --color-neutral-700: #44403c;
+  --color-neutral-800: #292524;
+  --color-neutral-900: #1c1917;
+
+  /* Semantic Colors */
+  --color-success: #22c55e; /* green-500 */
+  --color-warning: #f59e0b; /* amber-500 */
+  --color-error: #ef4444; /* red-500 */
+  --color-info: #3b82f6; /* blue-500 */
+
+  /* Gantt-specific Colors */
+  --gantt-task-bar: #CBC4B5;
+  --gantt-task-bar-hover: #b5ad9e;
+  --gantt-progress: #2e2d2c;
+  --gantt-milestone: #2e2d2c;
+  --gantt-summary: #9ca3af;
+  --gantt-dependency: #6b7280;
+  --gantt-critical-path: #ef4444;
+  --gantt-today-line: #3b82f6;
+  --gantt-weekend: #f3f4f6;
+
+  /* Typography */
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-neutral: #1c1917;
+  --color-neutral-50: #0c0a09;
+  --color-neutral-100: #1c1917;
+  --color-neutral-200: #292524;
+  --color-neutral-300: #44403c;
+  --color-neutral-400: #57534e;
+  --color-neutral-500: #78716c;
+  --color-neutral-600: #a8a29e;
+  --color-neutral-700: #d6d3d1;
+  --color-neutral-800: #e7e5e4;
+  --color-neutral-900: #fafaf9;
+}
