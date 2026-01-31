@@ -46,14 +46,22 @@ export function useCurrentWorkspace() {
     (w) => w.id === currentWorkspaceId
   );
 
-  // Auto-select first workspace if none selected
-  if (!currentWorkspaceId && workspaces && workspaces.length > 0) {
+  // Auto-select first workspace if none selected or current is invalid
+  const shouldAutoSelect = !isLoading && workspaces && workspaces.length > 0 && 
+    (!currentWorkspaceId || !currentWorkspace);
+  
+  if (shouldAutoSelect) {
     setCurrentWorkspace(workspaces[0].id);
   }
 
+  // Return the actual workspace ID (either current or first available)
+  const effectiveWorkspaceId = currentWorkspaceId && currentWorkspace 
+    ? currentWorkspaceId 
+    : (workspaces?.[0]?.id ?? null);
+
   return {
-    workspace: currentWorkspace,
-    workspaceId: currentWorkspaceId,
+    workspace: currentWorkspace ?? workspaces?.[0],
+    workspaceId: effectiveWorkspaceId,
     isLoading,
     setWorkspace: setCurrentWorkspace,
   };
