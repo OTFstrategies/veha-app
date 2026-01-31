@@ -2,9 +2,12 @@ import * as React from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { ConflictBadge } from './ConflictBadge'
 import { TimelineHeader } from './TimelineHeader'
 import type { TimelineConfig, ViewOptions } from './types'
 import type { Task } from '@/types/projects'
+import type { ProjectConflict } from '@/queries/conflicts'
+import { parseISO } from 'date-fns'
 
 // =============================================================================
 // Props
@@ -34,6 +37,10 @@ interface SchedulerPanelProps {
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void
   onTaskSelect: (taskId: string) => void
   onTaskDoubleClick: (taskId: string) => void
+  /** Conflicts grouped by employee ID */
+  conflictsByEmployee?: Map<string, ProjectConflict[]>
+  /** All project conflicts (for timeline highlighting) */
+  conflicts?: ProjectConflict[]
 }
 
 // =============================================================================
@@ -63,6 +70,8 @@ export function SchedulerPanel({
   onScroll,
   onTaskSelect,
   onTaskDoubleClick,
+  conflictsByEmployee,
+  conflicts,
 }: SchedulerPanelProps) {
   // Note: scrollLeft is passed for synchronized scrolling state
   void _scrollLeft
@@ -103,6 +112,39 @@ export function SchedulerPanel({
     )
     return dayOffset * timelineConfig.columnWidth
   }, [timelineConfig])
+
+  // Calculate conflict highlight ranges for each employee
+  const conflictRangesByEmployee = React.useMemo(() => {
+    const rangesByEmployee = new Map<
+      string,
+      Array<{ start: Date; end: Date; left: number; width: number }>
+    >()
+
+    if (!conflicts) return rangesByEmployee
+
+    conflicts.forEach((conflict) => {
+      const employeeRanges = rangesByEmployee.get(conflict.employeeId) || []
+
+      const startDate = parseISO(conflict.overlapStart)
+      const endDate = parseISO(conflict.overlapEnd)
+
+      // Calculate position in timeline
+      const startOffset = Math.floor(
+        (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
+      )
+      const endOffset = Math.floor(
+        (endDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
+      )
+
+      const left = startOffset * timelineConfig.columnWidth
+      const width = (endOffset - startOffset + 1) * timelineConfig.columnWidth
+
+      employeeRanges.push({ start: startDate, end: endDate, left, width })
+      rangesByEmployee.set(conflict.employeeId, employeeRanges)
+    })
+
+    return rangesByEmployee
+  }, [conflicts, timelineConfig])
 
   // ---------------------------------------------------------------------------
   // Helpers
@@ -185,13 +227,16 @@ export function SchedulerPanel({
         >
           {resources.map((resource) => {
             const overbooked = isOverbooked(resource)
+            const employeeConflicts = conflictsByEmployee?.get(resource.employee.id) || []
+            const hasConflicts = employeeConflicts.length > 0
 
             return (
               <div
                 key={resource.employee.id}
                 className={cn(
                   'flex items-center border-b border-border transition-colors hover:bg-stone-100 dark:hover:bg-stone-800',
-                  overbooked && 'bg-red-50 dark:bg-red-900/10'
+                  overbooked && 'bg-red-50 dark:bg-red-900/10',
+                  hasConflicts && !overbooked && 'bg-orange-50/50 dark:bg-orange-900/10'
                 )}
                 style={{ height: ROW_HEIGHT }}
               >
@@ -213,7 +258,11 @@ export function SchedulerPanel({
                       <span className="truncate text-sm font-medium">
                         {resource.employee.name}
                       </span>
-                      {overbooked && (
+                      {/* Conflict Badge */}
+                      {hasConflicts && (
+                        <ConflictBadge conflicts={employeeConflicts} size="sm" />
+                      )}
+                      {overbooked && !hasConflicts && (
                         <AlertTriangle className="h-3 w-3 shrink-0 text-red-500" />
                       )}
                     </div>
@@ -281,6 +330,23 @@ export function SchedulerPanel({
                   />
                 )
               })}
+
+            {/* Conflict Highlight Zones */}
+            {resources.map((resource, rowIndex) => {
+              const conflictRanges = conflictRangesByEmployee.get(resource.employee.id) || []
+              return conflictRanges.map((range, rangeIndex) => (
+                <div
+                  key={`conflict-${resource.employee.id}-${rangeIndex}`}
+                  className="absolute bg-orange-200/30 dark:bg-orange-800/20 border-l-2 border-r-2 border-orange-400"
+                  style={{
+                    left: range.left,
+                    top: rowIndex * ROW_HEIGHT,
+                    width: range.width,
+                    height: ROW_HEIGHT,
+                  }}
+                />
+              ))
+            })}
 
             {/* Today Line */}
             {viewOptions.showTodayLine && todayPosition > 0 && (

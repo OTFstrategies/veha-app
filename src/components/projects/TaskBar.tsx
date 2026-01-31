@@ -13,6 +13,7 @@ interface TaskBarProps {
   top: number
   height: number
   isSelected: boolean
+  isHighlighted?: boolean
   showProgress: boolean
   onClick: () => void
   onDoubleClick: () => void
@@ -29,6 +30,7 @@ export function TaskBar({
   top,
   height,
   isSelected,
+  isHighlighted = false,
   showProgress,
   onClick,
   onDoubleClick,
@@ -57,6 +59,7 @@ export function TaskBar({
           className={cn(
             'h-4 w-4 cursor-pointer fill-stone-800 text-stone-800 transition-all dark:fill-stone-200 dark:text-stone-200',
             isSelected && 'fill-blue-600 text-blue-600 dark:fill-blue-400 dark:text-blue-400',
+            isHighlighted && 'animate-pulse fill-orange-500 text-orange-500 dark:fill-orange-400 dark:text-orange-400',
             'hover:scale-110'
           )}
         />
@@ -76,7 +79,10 @@ export function TaskBar({
     return (
       <div
         className={cn(
-          'group absolute cursor-pointer rounded-sm bg-stone-400 transition-all dark:bg-stone-500',
+          'group absolute cursor-pointer rounded-sm transition-all',
+          isHighlighted
+            ? 'animate-pulse bg-orange-400 dark:bg-orange-500'
+            : 'bg-stone-400 dark:bg-stone-500',
           isSelected
             ? 'ring-2 ring-blue-500 ring-offset-1'
             : 'hover:brightness-95'
@@ -92,12 +98,18 @@ export function TaskBar({
       >
         {/* Left bracket */}
         <div
-          className="absolute -bottom-1 left-0 w-1 rounded-b-sm bg-stone-400 dark:bg-stone-500"
+          className={cn(
+            'absolute -bottom-1 left-0 w-1 rounded-b-sm',
+            isHighlighted ? 'bg-orange-400 dark:bg-orange-500' : 'bg-stone-400 dark:bg-stone-500'
+          )}
           style={{ height: 6 }}
         />
         {/* Right bracket */}
         <div
-          className="absolute -bottom-1 right-0 w-1 rounded-b-sm bg-stone-400 dark:bg-stone-500"
+          className={cn(
+            'absolute -bottom-1 right-0 w-1 rounded-b-sm',
+            isHighlighted ? 'bg-orange-400 dark:bg-orange-500' : 'bg-stone-400 dark:bg-stone-500'
+          )}
           style={{ height: 6 }}
         />
 
@@ -115,6 +127,9 @@ export function TaskBar({
 
   // Status-based styling classes
   const getTaskBarClasses = () => {
+    if (isHighlighted) {
+      return 'animate-pulse bg-orange-400 dark:bg-orange-500'
+    }
     if (task.status === 'done') {
       return 'bg-green-500 dark:bg-green-600'
     }
@@ -123,6 +138,9 @@ export function TaskBar({
   }
 
   const getProgressBarClasses = () => {
+    if (isHighlighted) {
+      return 'bg-orange-600 dark:bg-orange-400'
+    }
     if (task.status === 'done') {
       return 'bg-green-600 dark:bg-green-500'
     }
@@ -152,7 +170,7 @@ export function TaskBar({
       {showProgress && task.progress > 0 && (
         <div
           className={cn(
-            'absolute left-0 top-0 bottom-0 transition-all',
+            'absolute bottom-0 left-0 top-0 transition-all',
             getProgressBarClasses(),
             task.progress === 100 ? 'rounded' : 'rounded-l'
           )}
@@ -176,8 +194,8 @@ export function TaskBar({
       )}
 
       {/* Resize Handles (visual only for now) */}
-      <div className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize opacity-0 transition-opacity group-hover:opacity-100" />
-      <div className="absolute right-0 top-0 bottom-0 w-1 cursor-ew-resize opacity-0 transition-opacity group-hover:opacity-100" />
+      <div className="absolute bottom-0 left-0 top-0 w-1 cursor-ew-resize opacity-0 transition-opacity group-hover:opacity-100" />
+      <div className="absolute bottom-0 right-0 top-0 w-1 cursor-ew-resize opacity-0 transition-opacity group-hover:opacity-100" />
 
       {/* Tooltip */}
       <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-stone-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-stone-200 dark:text-stone-900">

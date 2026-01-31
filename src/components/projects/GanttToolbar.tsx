@@ -4,6 +4,8 @@ import {
   Eye,
   Minus,
   Plus,
+  Redo2,
+  Undo2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +16,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useToast } from '@/components/ui/toast'
+import { useTaskHistoryStore } from '@/stores/task-history-store'
+import { useUndoTaskChanges } from '@/queries/tasks'
 import type { GanttZoomLevel, ViewOptions } from './types'
 
 // =============================================================================
@@ -21,6 +26,7 @@ import type { GanttZoomLevel, ViewOptions } from './types'
 // =============================================================================
 
 interface GanttToolbarProps {
+  projectId: string
   zoomLevel: GanttZoomLevel
   viewOptions: ViewOptions
   onZoomChange: (level: GanttZoomLevel) => void
@@ -47,6 +53,7 @@ const ZOOM_ORDER: GanttZoomLevel[] = ['day', 'week', 'month', 'quarter']
 // =============================================================================
 
 export function GanttToolbar({
+  projectId,
   zoomLevel,
   viewOptions,
   onZoomChange,
@@ -54,6 +61,15 @@ export function GanttToolbar({
   onAddTask,
   onScrollToToday,
 }: GanttToolbarProps) {
+  // ---------------------------------------------------------------------------
+  // Undo/Redo State
+  // ---------------------------------------------------------------------------
+
+  const canUndo = useTaskHistoryStore((state) => state.canUndo)
+  const canRedo = useTaskHistoryStore((state) => state.canRedo)
+  const undoMutation = useUndoTaskChanges()
+  const { addToast } = useToast()
+
   // ---------------------------------------------------------------------------
   // Zoom Handlers
   // ---------------------------------------------------------------------------
@@ -87,6 +103,28 @@ export function GanttToolbar({
   }
 
   // ---------------------------------------------------------------------------
+  // Undo Handler
+  // ---------------------------------------------------------------------------
+
+  async function handleUndo() {
+    try {
+      const entry = await undoMutation.mutateAsync(projectId)
+      addToast({
+        type: 'info',
+        title: 'Ongedaan gemaakt',
+        description: entry.description,
+      })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Fout bij ongedaan maken'
+      addToast({
+        type: 'error',
+        title: 'Fout',
+        description: message,
+      })
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
 
@@ -104,8 +142,31 @@ export function GanttToolbar({
         </Button>
       </div>
 
-      {/* Right: Zoom & View Controls */}
+      {/* Right: Undo, Zoom & View Controls */}
       <div className="flex items-center gap-2">
+        {/* Undo/Redo buttons */}
+        <div className="flex items-center rounded-md border border-border">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-r-none"
+            onClick={handleUndo}
+            disabled={!canUndo() || undoMutation.isPending}
+            title="Ongedaan maken (Ctrl+Z)"
+          >
+            <Undo2 className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-l-none border-l border-border"
+            disabled={!canRedo()}
+            title="Opnieuw (Ctrl+Y)"
+          >
+            <Redo2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+
         {/* Today Button */}
         <Button
           variant="outline"

@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   ArrowLeft,
   Building2,
   Calendar,
@@ -30,6 +31,8 @@ interface ProjectHeaderProps {
     completed: number
     inProgress: number
   }
+  /** Number of scheduling conflicts in the project */
+  conflictCount?: number
   onBack?: () => void
   onEdit?: () => void
   onDelete?: () => void
@@ -70,6 +73,7 @@ const STATUS_CONFIG: Record<ProjectStatus, { label: string; className: string }>
 export function ProjectHeader({
   project,
   stats,
+  conflictCount = 0,
   onBack,
   onEdit,
   onDelete,
@@ -111,8 +115,18 @@ export function ProjectHeader({
           </div>
         </div>
 
-        {/* Client & Actions */}
+        {/* Conflict Summary, Client & Actions */}
         <div className="flex items-center gap-3">
+          {/* Conflict Summary */}
+          {conflictCount > 0 && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+              <AlertTriangle className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {conflictCount} {conflictCount === 1 ? 'conflict' : 'conflicten'}
+              </span>
+            </div>
+          )}
+
           {/* Client Link */}
           <button
             onClick={() => onClientClick?.(project.clientId)}

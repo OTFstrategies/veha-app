@@ -17,6 +17,7 @@ interface GanttPanelProps {
   timelineConfig: TimelineConfig
   viewOptions: ViewOptions
   selectedTaskId: string | null
+  recentlyChangedTaskIds?: Set<string>
   scrollLeft: number
   timelineRef: React.RefObject<HTMLDivElement | null>
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void
@@ -52,6 +53,7 @@ export function GanttPanel({
   timelineConfig,
   viewOptions,
   selectedTaskId,
+  recentlyChangedTaskIds = new Set(),
   scrollLeft: _scrollLeft,
   timelineRef,
   onScroll,
@@ -74,7 +76,7 @@ export function GanttPanel({
 
     // Build parent-children map
     const childrenMap = new Map<string | null, Task[]>()
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
       const parentId = task.parentId
       if (!childrenMap.has(parentId)) {
         childrenMap.set(parentId, [])
@@ -87,7 +89,7 @@ export function GanttPanel({
       const children = childrenMap.get(parentId) || []
       children.sort((a, b) => a.sortOrder - b.sortOrder)
 
-      children.forEach(task => {
+      children.forEach((task) => {
         depthMap.set(task.id, depth)
         flat.push(task)
 
@@ -105,13 +107,16 @@ export function GanttPanel({
   }, [tasks, expandedTasks])
 
   // Check if task has children
-  const hasChildren = React.useCallback((taskId: string) => {
-    return tasks.some(t => t.parentId === taskId)
-  }, [tasks])
+  const hasChildren = React.useCallback(
+    (taskId: string) => {
+      return tasks.some((t) => t.parentId === taskId)
+    },
+    [tasks]
+  )
 
   // Toggle expand
   const toggleExpand = (taskId: string) => {
-    setExpandedTasks(prev => {
+    setExpandedTasks((prev) => {
       const next = new Set(prev)
       if (next.has(taskId)) {
         next.delete(taskId)
@@ -172,7 +177,7 @@ export function GanttPanel({
   const getInitials = (name: string) => {
     return name
       .split(' ')
-      .map(n => n[0])
+      .map((n) => n[0])
       .join('')
       .toUpperCase()
       .slice(0, 2)
@@ -187,19 +192,30 @@ export function GanttPanel({
       {/* Header Row */}
       <div className="flex shrink-0 border-b border-border bg-stone-50 dark:bg-stone-900">
         {/* Grid Header */}
-        <div
-          className="shrink-0 border-r border-border"
-          style={{ width: GRID_WIDTH }}
-        >
+        <div className="shrink-0 border-r border-border" style={{ width: GRID_WIDTH }}>
           <div className="flex h-10 items-center text-xs font-medium text-muted-foreground">
             <div className="px-1" style={{ width: GRID_COLUMNS.expand }} />
-            <div className="px-1" style={{ width: GRID_COLUMNS.wbs }}>WBS</div>
-            <div className="px-2" style={{ width: GRID_COLUMNS.task }}>Taak</div>
-            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.start }}>Start</div>
-            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.end }}>Eind</div>
-            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.duration }}>Duur</div>
-            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.progress }}>%</div>
-            <div className="px-1" style={{ width: GRID_COLUMNS.resources }}>Resources</div>
+            <div className="px-1" style={{ width: GRID_COLUMNS.wbs }}>
+              WBS
+            </div>
+            <div className="px-2" style={{ width: GRID_COLUMNS.task }}>
+              Taak
+            </div>
+            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.start }}>
+              Start
+            </div>
+            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.end }}>
+              Eind
+            </div>
+            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.duration }}>
+              Duur
+            </div>
+            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.progress }}>
+              %
+            </div>
+            <div className="px-1" style={{ width: GRID_COLUMNS.resources }}>
+              Resources
+            </div>
           </div>
         </div>
 
@@ -229,15 +245,16 @@ export function GanttPanel({
             const isExpanded = expandedTasks.has(task.id)
             const isSelected = selectedTaskId === task.id
             const taskHasChildren = hasChildren(task.id)
+            const isRecentlyChanged = recentlyChangedTaskIds.has(task.id)
 
             return (
               <div
                 key={task.id}
                 className={cn(
                   'flex items-center border-b border-border transition-colors',
-                  isSelected
-                    ? 'bg-stone-100 dark:bg-stone-800'
-                    : 'hover:bg-stone-50 dark:hover:bg-stone-900'
+                  isRecentlyChanged && 'animate-pulse bg-orange-50 dark:bg-orange-900/20',
+                  isSelected && !isRecentlyChanged && 'bg-stone-100 dark:bg-stone-800',
+                  !isSelected && !isRecentlyChanged && 'hover:bg-stone-50 dark:hover:bg-stone-900'
                 )}
                 style={{ height: ROW_HEIGHT }}
                 onClick={() => onTaskSelect(task.id)}
@@ -277,21 +294,21 @@ export function GanttPanel({
 
                 {/* Task Name */}
                 <div
-                  className={cn(
-                    'truncate px-2 text-sm',
-                    task.isSummary && 'font-medium'
-                  )}
+                  className={cn('truncate px-2 text-sm', task.isSummary && 'font-medium')}
                   style={{ width: GRID_COLUMNS.task }}
                 >
-                  {task.isMilestone && (
-                    <Diamond className="mr-1 inline h-3 w-3 fill-current" />
-                  )}
+                  {task.isMilestone && <Diamond className="mr-1 inline h-3 w-3 fill-current" />}
                   {task.name}
                 </div>
 
                 {/* Start Date */}
                 <div
-                  className="px-1 text-center font-mono text-xs text-muted-foreground"
+                  className={cn(
+                    'px-1 text-center font-mono text-xs',
+                    isRecentlyChanged
+                      ? 'font-medium text-orange-600 dark:text-orange-400'
+                      : 'text-muted-foreground'
+                  )}
                   style={{ width: GRID_COLUMNS.start }}
                 >
                   {formatDate(task.startDate)}
@@ -299,7 +316,12 @@ export function GanttPanel({
 
                 {/* End Date */}
                 <div
-                  className="px-1 text-center font-mono text-xs text-muted-foreground"
+                  className={cn(
+                    'px-1 text-center font-mono text-xs',
+                    isRecentlyChanged
+                      ? 'font-medium text-orange-600 dark:text-orange-400'
+                      : 'text-muted-foreground'
+                  )}
                   style={{ width: GRID_COLUMNS.end }}
                 >
                   {formatDate(task.endDate)}
@@ -378,7 +400,7 @@ export function GanttPanel({
                 return (
                   <div
                     key={i}
-                    className="absolute top-0 bottom-0 bg-stone-100/50 dark:bg-stone-800/30"
+                    className="absolute bottom-0 top-0 bg-stone-100/50 dark:bg-stone-800/30"
                     style={{
                       left: i * timelineConfig.columnWidth,
                       width: timelineConfig.columnWidth,
@@ -390,7 +412,7 @@ export function GanttPanel({
             {/* Today Line */}
             {viewOptions.showTodayLine && todayPosition > 0 && (
               <div
-                className="absolute top-0 bottom-0 z-10 w-0.5 bg-blue-500"
+                className="absolute bottom-0 top-0 z-10 w-0.5 bg-blue-500"
                 style={{ left: todayPosition }}
               >
                 <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-blue-500" />
@@ -410,6 +432,7 @@ export function GanttPanel({
             {flatTasks.map((task, rowIndex) => {
               const { left, width } = getTaskBarPosition(task)
               const isSelected = selectedTaskId === task.id
+              const isRecentlyChanged = recentlyChangedTaskIds.has(task.id)
 
               return (
                 <TaskBar
@@ -420,6 +443,7 @@ export function GanttPanel({
                   top={rowIndex * ROW_HEIGHT}
                   height={ROW_HEIGHT}
                   isSelected={isSelected}
+                  isHighlighted={isRecentlyChanged}
                   showProgress={viewOptions.showProgress}
                   onClick={() => onTaskSelect(task.id)}
                   onDoubleClick={() => onTaskDoubleClick(task.id)}
@@ -431,9 +455,7 @@ export function GanttPanel({
             {viewOptions.showDependencies &&
               flatTasks.map((task, rowIndex) =>
                 task.dependencies.map((dep) => {
-                  const predecessorIndex = flatTasks.findIndex(
-                    t => t.id === dep.predecessorId
-                  )
+                  const predecessorIndex = flatTasks.findIndex((t) => t.id === dep.predecessorId)
                   if (predecessorIndex === -1) return null
 
                   const predecessor = flatTasks[predecessorIndex]
