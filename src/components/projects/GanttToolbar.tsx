@@ -2,9 +2,11 @@ import {
   CalendarDays,
   ChevronDown,
   Eye,
+  GitBranch,
   Minus,
   Plus,
   Redo2,
+  Route,
   Undo2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -29,8 +31,10 @@ interface GanttToolbarProps {
   projectId: string
   zoomLevel: GanttZoomLevel
   viewOptions: ViewOptions
+  showCriticalPath: boolean
   onZoomChange: (level: GanttZoomLevel) => void
   onViewOptionsChange: (options: ViewOptions) => void
+  onShowCriticalPathChange: (show: boolean) => void
   onAddTask: () => void
   onScrollToToday: () => void
 }
@@ -56,8 +60,10 @@ export function GanttToolbar({
   projectId,
   zoomLevel,
   viewOptions,
+  showCriticalPath,
   onZoomChange,
   onViewOptionsChange,
+  onShowCriticalPathChange,
   onAddTask,
   onScrollToToday,
 }: GanttToolbarProps) {
@@ -142,8 +148,33 @@ export function GanttToolbar({
         </Button>
       </div>
 
-      {/* Right: Undo, Zoom & View Controls */}
+      {/* Right: Dependencies, Critical Path, Undo, Zoom & View Controls */}
       <div className="flex items-center gap-2">
+        {/* Dependencies Toggle */}
+        <Button
+          variant={viewOptions.showDependencies ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => handleViewOptionToggle('showDependencies')}
+          className="h-8 gap-1.5"
+          title="Toon/verberg afhankelijkheden"
+        >
+          <GitBranch className="h-3.5 w-3.5" />
+          Afhankelijkheden
+        </Button>
+
+        {/* Critical Path Toggle */}
+        <div className="flex items-center gap-2 border-r border-border pr-2">
+          <Button
+            variant={showCriticalPath ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => onShowCriticalPathChange(!showCriticalPath)}
+            className="h-8 gap-1.5"
+          >
+            <Route className="h-3.5 w-3.5" />
+            Kritiek Pad
+          </Button>
+        </div>
+
         {/* Undo/Redo buttons */}
         <div className="flex items-center rounded-md border border-border">
           <Button
@@ -240,7 +271,7 @@ export function GanttToolbar({
               checked={viewOptions.showDependencies}
               onCheckedChange={() => handleViewOptionToggle('showDependencies')}
             >
-              Dependencies
+              Afhankelijkheden
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={viewOptions.showProgress}

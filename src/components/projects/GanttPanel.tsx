@@ -5,8 +5,10 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { TimelineHeader } from './TimelineHeader'
 import { TaskBar } from './TaskBar'
 import { DependencyArrow } from './DependencyArrow'
+import { GanttLegend } from './GanttLegend'
 import type { TimelineConfig, ViewOptions } from './types'
-import type { Task } from '@/types/projects'
+import type { Task, TaskDependency, DependencyType } from '@/types/projects'
+import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
 
 // =============================================================================
 // Props
@@ -20,6 +22,8 @@ interface GanttPanelProps {
   recentlyChangedTaskIds?: Set<string>
   scrollLeft: number
   timelineRef: React.RefObject<HTMLDivElement | null>
+  criticalPathData?: CriticalPathResult
+  showCriticalPath: boolean
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void
   onTaskSelect: (taskId: string) => void
   onTaskDoubleClick: (taskId: string) => void
@@ -38,11 +42,27 @@ const GRID_COLUMNS = {
   end: 80,
   duration: 48,
   progress: 56,
+  slack: 50,
   resources: 96,
 }
 
 const GRID_WIDTH = Object.values(GRID_COLUMNS).reduce((a, b) => a + b, 0)
 const ROW_HEIGHT = 36
+
+// =============================================================================
+// Types
+// =============================================================================
+
+interface DependencyArrowData {
+  id: string
+  predecessorId: string
+  successorId: string
+  type: DependencyType
+  fromX: number
+  fromY: number
+  toX: number
+  toY: number
+}
 
 // =============================================================================
 // Component
@@ -56,6 +76,8 @@ export function GanttPanel({
   recentlyChangedTaskIds = new Set(),
   scrollLeft: _scrollLeft,
   timelineRef,
+  criticalPathData,
+  showCriticalPath,
   onScroll,
   onTaskSelect,
   onTaskDoubleClick,
@@ -65,6 +87,7 @@ export function GanttPanel({
   void _scrollLeft
   void _onTaskDatesChange
   const [expandedTasks, setExpandedTasks] = React.useState<Set<string>>(new Set())
+  const [hoveredDependencyId, setHoveredDependencyId] = React.useState<string | null>(null)
 
   // ---------------------------------------------------------------------------
   // Build Hierarchical Task List
@@ -144,16 +167,19 @@ export function GanttPanel({
   const timelineWidth = timelineDays.length * timelineConfig.columnWidth
 
   // Calculate task bar position
-  const getTaskBarPosition = (task: Task) => {
-    const startDate = new Date(task.startDate)
-    const dayOffset = Math.floor(
-      (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
-    )
-    const left = dayOffset * timelineConfig.columnWidth
-    const width = task.duration * timelineConfig.columnWidth
+  const getTaskBarPosition = React.useCallback(
+    (task: Task) => {
+      const startDate = new Date(task.startDate)
+      const dayOffset = Math.floor(
+        (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
+      )
+      const left = dayOffset * timelineConfig.columnWidth
+      const width = task.duration * timelineConfig.columnWidth
 
-    return { left, width }
-  }
+      return { left, width }
+    },
+    [timelineConfig.startDate, timelineConfig.columnWidth]
+  )
 
   // Get today's position
   const todayPosition = React.useMemo(() => {
@@ -164,6 +190,86 @@ export function GanttPanel({
     )
     return dayOffset * timelineConfig.columnWidth
   }, [timelineConfig])
+
+  // ---------------------------------------------------------------------------
+  // Dependency Arrows Calculation
+  // ---------------------------------------------------------------------------
+
+  const dependencyArrows = React.useMemo<DependencyArrowData[]>(() => {
+    if (!viewOptions.showDependencies) return []
+
+    const arrows: DependencyArrowData[] = []
+
+    flatTasks.forEach((task, rowIndex) => {
+      task.dependencies.forEach((dep: TaskDependency) => {
+        const predecessorIndex = flatTasks.findIndex((t) => t.id === dep.predecessorId)
+        if (predecessorIndex === -1) return
+
+        const predecessor = flatTasks[predecessorIndex]
+        const predPos = getTaskBarPosition(predecessor)
+        const taskPos = getTaskBarPosition(task)
+
+        // Calculate start and end points based on dependency type
+        let fromX: number
+        let toX: number
+
+        switch (dep.type) {
+          case 'FS': // Finish-to-Start (most common)
+            fromX = predPos.left + predPos.width
+            toX = taskPos.left
+            break
+          case 'SS': // Start-to-Start
+            fromX = predPos.left
+            toX = taskPos.left
+            break
+          case 'FF': // Finish-to-Finish
+            fromX = predPos.left + predPos.width
+            toX = taskPos.left + taskPos.width
+            break
+          case 'SF': // Start-to-Finish
+            fromX = predPos.left
+            toX = taskPos.left + taskPos.width
+            break
+          default:
+            fromX = predPos.left + predPos.width
+            toX = taskPos.left
+        }
+
+        arrows.push({
+          id: dep.id,
+          predecessorId: dep.predecessorId,
+          successorId: task.id,
+          type: dep.type,
+          fromX,
+          fromY: predecessorIndex * ROW_HEIGHT + ROW_HEIGHT / 2,
+          toX,
+          toY: rowIndex * ROW_HEIGHT + ROW_HEIGHT / 2,
+        })
+      })
+    })
+
+    return arrows
+  }, [flatTasks, getTaskBarPosition, viewOptions.showDependencies])
+
+  // ---------------------------------------------------------------------------
+  // Hovered Dependency Info (for task highlighting)
+  // ---------------------------------------------------------------------------
+
+  const hoveredDependency = React.useMemo(() => {
+    if (!hoveredDependencyId) return null
+    return dependencyArrows.find((a) => a.id === hoveredDependencyId) || null
+  }, [hoveredDependencyId, dependencyArrows])
+
+  // Check if a task should be highlighted due to hovered dependency
+  const isTaskHighlightedByDependency = React.useCallback(
+    (taskId: string) => {
+      if (!hoveredDependency) return false
+      return (
+        hoveredDependency.predecessorId === taskId || hoveredDependency.successorId === taskId
+      )
+    },
+    [hoveredDependency]
+  )
 
   // ---------------------------------------------------------------------------
   // Format Helpers
@@ -213,6 +319,9 @@ export function GanttPanel({
             <div className="px-1 text-center" style={{ width: GRID_COLUMNS.progress }}>
               %
             </div>
+            <div className="px-1 text-center" style={{ width: GRID_COLUMNS.slack }}>
+              Slack
+            </div>
             <div className="px-1" style={{ width: GRID_COLUMNS.resources }}>
               Resources
             </div>
@@ -246,6 +355,8 @@ export function GanttPanel({
             const isSelected = selectedTaskId === task.id
             const taskHasChildren = hasChildren(task.id)
             const isRecentlyChanged = recentlyChangedTaskIds.has(task.id)
+            const criticalPathInfo = showCriticalPath ? criticalPathData?.scheduleInfo.get(task.id) : undefined
+            const isDependencyHighlighted = isTaskHighlightedByDependency(task.id)
 
             return (
               <div
@@ -253,8 +364,17 @@ export function GanttPanel({
                 className={cn(
                   'flex items-center border-b border-border transition-colors',
                   isRecentlyChanged && 'animate-pulse bg-orange-50 dark:bg-orange-900/20',
-                  isSelected && !isRecentlyChanged && 'bg-stone-100 dark:bg-stone-800',
-                  !isSelected && !isRecentlyChanged && 'hover:bg-stone-50 dark:hover:bg-stone-900'
+                  isDependencyHighlighted &&
+                    !isRecentlyChanged &&
+                    'bg-blue-50 dark:bg-blue-900/20',
+                  isSelected &&
+                    !isRecentlyChanged &&
+                    !isDependencyHighlighted &&
+                    'bg-stone-100 dark:bg-stone-800',
+                  !isSelected &&
+                    !isRecentlyChanged &&
+                    !isDependencyHighlighted &&
+                    'hover:bg-stone-50 dark:hover:bg-stone-900'
                 )}
                 style={{ height: ROW_HEIGHT }}
                 onClick={() => onTaskSelect(task.id)}
@@ -353,6 +473,23 @@ export function GanttPanel({
                   </div>
                 </div>
 
+                {/* Slack Column */}
+                <div
+                  className={cn(
+                    'px-1 text-center font-mono text-xs',
+                    criticalPathInfo?.isCritical
+                      ? 'font-semibold text-red-500'
+                      : 'text-muted-foreground'
+                  )}
+                  style={{ width: GRID_COLUMNS.slack }}
+                >
+                  {showCriticalPath && criticalPathInfo
+                    ? criticalPathInfo.isCritical
+                      ? '0d'
+                      : `${criticalPathInfo.totalFloat}d`
+                    : '-'}
+                </div>
+
                 {/* Resources */}
                 <div
                   className="flex items-center gap-0.5 px-1"
@@ -433,6 +570,8 @@ export function GanttPanel({
               const { left, width } = getTaskBarPosition(task)
               const isSelected = selectedTaskId === task.id
               const isRecentlyChanged = recentlyChangedTaskIds.has(task.id)
+              const criticalPathInfo = showCriticalPath ? criticalPathData?.scheduleInfo.get(task.id) : undefined
+              const isDependencyHighlighted = isTaskHighlightedByDependency(task.id)
 
               return (
                 <TaskBar
@@ -444,7 +583,9 @@ export function GanttPanel({
                   height={ROW_HEIGHT}
                   isSelected={isSelected}
                   isHighlighted={isRecentlyChanged}
+                  isDependencyHighlighted={isDependencyHighlighted}
                   showProgress={viewOptions.showProgress}
+                  criticalPathInfo={criticalPathInfo}
                   onClick={() => onTaskSelect(task.id)}
                   onDoubleClick={() => onTaskDoubleClick(task.id)}
                 />
@@ -453,29 +594,25 @@ export function GanttPanel({
 
             {/* Dependency Arrows */}
             {viewOptions.showDependencies &&
-              flatTasks.map((task, rowIndex) =>
-                task.dependencies.map((dep) => {
-                  const predecessorIndex = flatTasks.findIndex((t) => t.id === dep.predecessorId)
-                  if (predecessorIndex === -1) return null
-
-                  const predecessor = flatTasks[predecessorIndex]
-                  const predPos = getTaskBarPosition(predecessor)
-                  const taskPos = getTaskBarPosition(task)
-
-                  return (
-                    <DependencyArrow
-                      key={dep.id}
-                      fromX={predPos.left + predPos.width}
-                      fromY={predecessorIndex * ROW_HEIGHT + ROW_HEIGHT / 2}
-                      toX={taskPos.left}
-                      toY={rowIndex * ROW_HEIGHT + ROW_HEIGHT / 2}
-                    />
-                  )
-                })
-              )}
+              dependencyArrows.map((arrow) => (
+                <DependencyArrow
+                  key={arrow.id}
+                  fromX={arrow.fromX}
+                  fromY={arrow.fromY}
+                  toX={arrow.toX}
+                  toY={arrow.toY}
+                  type={arrow.type}
+                  isHighlighted={hoveredDependencyId === arrow.id}
+                  onMouseEnter={() => setHoveredDependencyId(arrow.id)}
+                  onMouseLeave={() => setHoveredDependencyId(null)}
+                />
+              ))}
           </div>
         </div>
       </div>
+
+      {/* Legend */}
+      <GanttLegend showCriticalPath={showCriticalPath} />
     </div>
   )
 }
