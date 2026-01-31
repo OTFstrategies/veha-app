@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Circle,
   Clock,
+  Eye,
   Flag,
   Loader2,
   Mail,
@@ -18,7 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { ClientNotes } from "./ClientNotes";
 import type { PortalProjectDetail, PortalTaskSummary } from "@/types/portal";
 
 // =============================================================================
@@ -27,6 +28,8 @@ import type { PortalProjectDetail, PortalTaskSummary } from "@/types/portal";
 
 interface PortalProjectViewProps {
   project: PortalProjectDetail;
+  userRole: "klant_editor" | "klant_viewer";
+  userId: string;
 }
 
 // =============================================================================
@@ -107,7 +110,7 @@ function TaskItem({ task }: TaskItemProps) {
   return (
     <div
       className={cn(
-        "flex items-start gap-3 rounded-lg border p-4 transition-colors",
+        "flex items-start gap-3 rounded-lg border p-3 sm:p-4 transition-colors",
         isDone
           ? "border-green-200 bg-green-50 dark:border-green-800/50 dark:bg-green-900/20"
           : isInProgress
@@ -128,11 +131,11 @@ function TaskItem({ task }: TaskItemProps) {
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-2">
             <h4
               className={cn(
-                "font-medium",
+                "font-medium text-sm sm:text-base",
                 isDone && "text-green-700 dark:text-green-300",
                 isInProgress && "text-stone-900 dark:text-stone-100"
               )}
@@ -145,17 +148,17 @@ function TaskItem({ task }: TaskItemProps) {
           </div>
           <Badge
             variant={isDone ? "success" : isInProgress ? "secondary" : "outline"}
-            className="shrink-0 text-xs"
+            className="shrink-0 text-xs w-fit"
           >
             {getTaskStatusLabel(task.status)}
           </Badge>
         </div>
 
         {/* Progress and Dates */}
-        <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-muted-foreground">
           {/* Progress */}
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+            <div className="h-1.5 w-12 sm:w-16 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
               <div
                 className={cn(
                   "h-full rounded-full transition-all",
@@ -188,9 +191,10 @@ function TaskItem({ task }: TaskItemProps) {
 // Main Component
 // =============================================================================
 
-export function PortalProjectView({ project }: PortalProjectViewProps) {
+export function PortalProjectView({ project, userRole, userId }: PortalProjectViewProps) {
   const isComplete = project.status === "afgerond";
   const isActive = project.status === "actief";
+  const isViewer = userRole === "klant_viewer";
 
   return (
     <div className="space-y-6">
@@ -206,9 +210,17 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold sm:text-3xl">{project.name}</h1>
-          <p className="mt-1 text-muted-foreground">
+        <div className="space-y-1">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">{project.name}</h1>
+            {isViewer && (
+              <div className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 text-xs text-stone-600 dark:bg-stone-800 dark:text-stone-400">
+                <Eye className="h-3 w-3" />
+                Alleen lezen
+              </div>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground sm:text-base">
             {getWorkTypeLabel(project.workType)}
           </p>
         </div>
@@ -219,17 +231,17 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
 
       {/* Description */}
       {project.description && (
-        <p className="text-muted-foreground">{project.description}</p>
+        <p className="text-sm text-muted-foreground sm:text-base">{project.description}</p>
       )}
 
       {/* Stats Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {/* Progress */}
-        <div className="rounded-lg border bg-card p-4">
-          <div className="mb-2 text-sm text-muted-foreground">Voortgang</div>
-          <div className="flex items-end justify-between">
-            <span className="text-2xl font-bold tabular-nums">{project.progress}%</span>
-            <div className="flex-1 ml-4 mb-1">
+        <div className="rounded-lg border bg-card p-3 sm:p-4">
+          <div className="mb-2 text-xs text-muted-foreground sm:text-sm">Voortgang</div>
+          <div className="flex items-end justify-between gap-2">
+            <span className="text-xl font-bold tabular-nums sm:text-2xl">{project.progress}%</span>
+            <div className="mb-1 flex-1">
               <div className="h-2 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
                 <div
                   className={cn(
@@ -248,10 +260,10 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
         </div>
 
         {/* Tasks */}
-        <div className="rounded-lg border bg-card p-4">
-          <div className="mb-2 text-sm text-muted-foreground">Taken</div>
+        <div className="rounded-lg border bg-card p-3 sm:p-4">
+          <div className="mb-2 text-xs text-muted-foreground sm:text-sm">Taken</div>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold tabular-nums">
+            <span className="text-xl font-bold tabular-nums sm:text-2xl">
               {project.completedTaskCount}
             </span>
             <span className="text-muted-foreground">/ {project.taskCount}</span>
@@ -259,20 +271,20 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
         </div>
 
         {/* Start Date */}
-        <div className="rounded-lg border bg-card p-4">
-          <div className="mb-2 text-sm text-muted-foreground">Startdatum</div>
+        <div className="rounded-lg border bg-card p-3 sm:p-4">
+          <div className="mb-2 text-xs text-muted-foreground sm:text-sm">Startdatum</div>
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{formatDate(project.startDate)}</span>
+            <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="truncate text-sm font-medium sm:text-base">{formatDate(project.startDate)}</span>
           </div>
         </div>
 
         {/* End Date */}
-        <div className="rounded-lg border bg-card p-4">
-          <div className="mb-2 text-sm text-muted-foreground">Einddatum</div>
+        <div className="rounded-lg border bg-card p-3 sm:p-4">
+          <div className="mb-2 text-xs text-muted-foreground sm:text-sm">Einddatum</div>
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{formatDate(project.endDate)}</span>
+            <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="truncate text-sm font-medium sm:text-base">{formatDate(project.endDate)}</span>
           </div>
         </div>
       </div>
@@ -280,25 +292,37 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
       {/* Info Section */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left Column - Tasks */}
-        <div className="lg:col-span-2">
-          <h2 className="mb-4 text-lg font-semibold">Taken Overzicht</h2>
-          {project.tasks.length > 0 ? (
-            <div className="space-y-3">
-              {project.tasks.map((task) => (
-                <TaskItem key={task.id} task={task} />
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-dashed bg-stone-50 p-8 text-center dark:bg-stone-900">
-              <p className="text-muted-foreground">
-                Er zijn nog geen taken gedefinieerd voor dit project.
-              </p>
-            </div>
-          )}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Tasks */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Taken Overzicht</h2>
+            {project.tasks.length > 0 ? (
+              <div className="space-y-3">
+                {project.tasks.map((task) => (
+                  <TaskItem key={task.id} task={task} />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-lg border border-dashed bg-stone-50 p-6 text-center dark:bg-stone-900 sm:p-8">
+                <p className="text-sm text-muted-foreground">
+                  Er zijn nog geen taken gedefinieerd voor dit project.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Client Notes Section */}
+          <div className="border-t border-stone-200 pt-8 dark:border-stone-700">
+            <ClientNotes
+              projectId={project.id}
+              userRole={userRole}
+              currentUserId={userId}
+            />
+          </div>
         </div>
 
         {/* Right Column - Details */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Location */}
           {(project.locationName || project.locationAddress) && (
             <div className="rounded-lg border bg-card p-4">
@@ -335,7 +359,7 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
                     className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
                   >
                     <Mail className="h-4 w-4" />
-                    {project.projectManager.email}
+                    <span className="break-all">{project.projectManager.email}</span>
                   </a>
                 )}
                 {project.projectManager.phone && (
@@ -351,10 +375,10 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
             </div>
           )}
 
-          {/* Notes (only for klant_editor) */}
+          {/* Project Notes (internal notes from the project) */}
           {project.notes && (
             <div className="rounded-lg border bg-card p-4">
-              <h3 className="mb-3 font-semibold">Notities</h3>
+              <h3 className="mb-3 font-semibold">Project Notities</h3>
               <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                 {project.notes}
               </p>
@@ -372,38 +396,38 @@ export function PortalProjectView({ project }: PortalProjectViewProps) {
 
 export function PortalProjectViewSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div className="animate-pulse space-y-6">
       {/* Back Button */}
       <div className="h-9 w-40 rounded-md bg-stone-200 dark:bg-stone-800" />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-64 rounded-md bg-stone-200 dark:bg-stone-800" />
-          <div className="h-4 w-32 rounded-md bg-stone-200 dark:bg-stone-800" />
+          <div className="h-8 w-48 rounded-md bg-stone-200 sm:w-64 dark:bg-stone-800" />
+          <div className="h-4 w-24 rounded-md bg-stone-200 sm:w-32 dark:bg-stone-800" />
         </div>
         <div className="h-6 w-20 rounded-full bg-stone-200 dark:bg-stone-800" />
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-24 rounded-lg border bg-card p-4">
-            <div className="h-4 w-20 rounded bg-stone-200 dark:bg-stone-800 mb-2" />
-            <div className="h-6 w-16 rounded bg-stone-200 dark:bg-stone-800" />
+          <div key={i} className="h-20 rounded-lg border bg-card p-3 sm:h-24 sm:p-4">
+            <div className="mb-2 h-4 w-16 rounded bg-stone-200 sm:w-20 dark:bg-stone-800" />
+            <div className="h-6 w-12 rounded bg-stone-200 sm:w-16 dark:bg-stone-800" />
           </div>
         ))}
       </div>
 
       {/* Content */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-3">
-          <div className="h-6 w-32 rounded bg-stone-200 dark:bg-stone-800 mb-4" />
+        <div className="space-y-3 lg:col-span-2">
+          <div className="mb-4 h-6 w-32 rounded bg-stone-200 dark:bg-stone-800" />
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-20 rounded-lg border bg-card" />
           ))}
         </div>
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <div className="h-32 rounded-lg border bg-card" />
           <div className="h-40 rounded-lg border bg-card" />
         </div>

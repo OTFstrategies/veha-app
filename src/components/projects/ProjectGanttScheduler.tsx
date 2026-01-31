@@ -251,6 +251,7 @@ export function ProjectGanttScheduler({
 
       {/* Toolbar */}
       <GanttToolbar
+        projectId={project.id}
         zoomLevel={zoomLevel}
         viewOptions={viewOptions}
         onZoomChange={setZoomLevel}
@@ -324,6 +325,7 @@ export function ProjectGanttScheduler({
       {editingTask && (
         <TaskEditor
           task={editingTask}
+          projectId={project.id}
           allTasks={project.tasks}
           employees={employees}
           onSave={(updatedTask) => {

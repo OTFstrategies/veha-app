@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { EmployeeDetail } from "@/components/employees/EmployeeDetail";
 import { EmployeeFormModal } from "@/components/employees/EmployeeFormModal";
 import { AvailabilityFormModal } from "@/components/employees/AvailabilityFormModal";
+import { useToast } from "@/components/ui/toast";
 import {
   useEmployee,
   useUpdateEmployee,
@@ -47,6 +48,7 @@ export default function EmployeeDetailPage() {
   const router = useRouter();
   const params = useParams();
   const employeeId = params.id as string;
+  const { addToast } = useToast();
 
   // Modal states
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
@@ -92,9 +94,11 @@ export default function EmployeeDetailPage() {
         color: data.color,
         isActive: data.isActive,
       });
+      addToast({ type: "success", title: "Medewerker succesvol bijgewerkt" });
       setIsEditModalOpen(false);
     } catch (err) {
       console.error("Failed to update employee:", err);
+      addToast({ type: "error", title: "Fout bij opslaan van medewerker" });
     }
   }
 
@@ -108,8 +112,14 @@ export default function EmployeeDetailPage() {
           id: employee.id,
           isActive: !employee.isActive,
         });
+        if (employee.isActive) {
+          addToast({ type: "success", title: "Medewerker gedeactiveerd" });
+        } else {
+          addToast({ type: "success", title: "Medewerker geactiveerd" });
+        }
       } catch (err) {
         console.error("Failed to toggle employee status:", err);
+        addToast({ type: "error", title: "Fout bij wijzigen status" });
       }
     }
   }
@@ -128,8 +138,10 @@ export default function EmployeeDetailPage() {
     if (window.confirm("Weet je zeker dat je deze afwezigheid wilt verwijderen?")) {
       try {
         await deleteAvailability.mutateAsync(availabilityId);
+        addToast({ type: "success", title: "Afwezigheid verwijderd" });
       } catch (err) {
         console.error("Failed to delete availability:", err);
+        addToast({ type: "error", title: "Fout bij verwijderen van afwezigheid" });
       }
     }
   }
@@ -143,6 +155,7 @@ export default function EmployeeDetailPage() {
           status: data.status,
           notes: data.notes,
         });
+        addToast({ type: "success", title: "Beschikbaarheid opgeslagen" });
       } else {
         await addAvailability.mutateAsync({
           employeeId,
@@ -150,11 +163,13 @@ export default function EmployeeDetailPage() {
           status: data.status,
           notes: data.notes,
         });
+        addToast({ type: "success", title: "Beschikbaarheid opgeslagen" });
       }
       setIsAvailabilityModalOpen(false);
       setEditingAvailabilityId(null);
     } catch (err) {
       console.error("Failed to save availability:", err);
+      addToast({ type: "error", title: "Fout bij opslaan van beschikbaarheid" });
     }
   }
 

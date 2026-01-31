@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/toast";
 import { createClient } from "@/lib/supabase/client";
 
 interface FormState {
@@ -16,6 +17,7 @@ interface FormState {
 
 export default function SignupPage() {
   const router = useRouter();
+  const { addToast } = useToast();
   const [formState, setFormState] = React.useState<FormState>({
     error: null,
     success: null,
@@ -70,6 +72,11 @@ export default function SignupPage() {
 
     if (error) {
       setFormState({ error: error.message, success: null, isLoading: false });
+      if (error.message.includes("already registered") || error.message.includes("already exists")) {
+        addToast({ type: "error", title: "Dit emailadres is al in gebruik" });
+      } else {
+        addToast({ type: "error", title: "Fout bij registreren" });
+      }
       return;
     }
 
@@ -78,6 +85,7 @@ export default function SignupPage() {
       success: "Check your email for a confirmation link",
       isLoading: false,
     });
+    addToast({ type: "success", title: "Account aangemaakt! Controleer je email." });
   }
 
   return (

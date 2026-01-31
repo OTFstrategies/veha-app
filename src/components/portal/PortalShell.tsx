@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PortalHeader } from "@/components/portal/PortalHeader";
+import { ToastProvider } from "@/components/ui/toast";
 import { createClient } from "@/lib/supabase/client";
 import { useCurrentWorkspace } from "@/hooks/use-workspace";
 import type { UserRole } from "@/types/database";
@@ -20,7 +21,7 @@ interface PortalShellProps {
 interface PortalUserData {
   email: string | null;
   fullName: string | null;
-  role: UserRole | null;
+  role: "klant_editor" | "klant_viewer" | null;
   clientName: string | null;
 }
 
@@ -158,7 +159,7 @@ function usePortalAccess() {
       setUserData({
         email: profile.email,
         fullName: profile.full_name,
-        role,
+        role: role as "klant_editor" | "klant_viewer",
         clientName,
       });
       setIsAuthorized(true);
@@ -183,7 +184,7 @@ function PortalLayoutContent({ children }: PortalShellProps) {
     return (
       <div className="flex h-screen items-center justify-center bg-stone-50 dark:bg-stone-950">
         <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-stone-800 dark:border-stone-700 dark:border-t-stone-200 mx-auto" />
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-stone-800 dark:border-stone-700 dark:border-t-stone-200" />
           <p className="text-sm text-muted-foreground">Laden...</p>
         </div>
       </div>
@@ -201,13 +202,14 @@ function PortalLayoutContent({ children }: PortalShellProps) {
         userEmail={userData.email}
         userName={userData.fullName}
         clientName={userData.clientName}
+        userRole={userData.role}
       />
       <main className="flex-1 overflow-auto">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6 lg:px-8">
           {children}
         </div>
       </main>
-      <footer className="border-t border-stone-200 bg-white px-4 py-4 dark:border-stone-800 dark:bg-stone-900">
+      <footer className="border-t border-stone-200 bg-white px-3 py-3 sm:px-4 sm:py-4 dark:border-stone-800 dark:bg-stone-900">
         <div className="mx-auto max-w-6xl text-center text-xs text-muted-foreground">
           <p>VEHA Klantportaal - Projecten en voortgang</p>
         </div>
@@ -225,7 +227,9 @@ export function PortalShell({ children }: PortalShellProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PortalLayoutContent>{children}</PortalLayoutContent>
+      <ToastProvider>
+        <PortalLayoutContent>{children}</PortalLayoutContent>
+      </ToastProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

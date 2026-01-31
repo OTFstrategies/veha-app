@@ -8,6 +8,7 @@ import { ClientFormModal, type ClientFormData } from "@/components/clients/Clien
 import { ContactFormModal, type ContactFormData } from "@/components/clients/ContactFormModal"
 import { LocationFormModal, type LocationFormData } from "@/components/clients/LocationFormModal"
 import { AlertDialog } from "@/components/ui/alert-dialog"
+import { useToast } from "@/components/ui/toast"
 import {
   useClients,
   useCreateClient,
@@ -56,6 +57,7 @@ interface DeleteConfirmState {
 export default function ClientsPage() {
   const router = useRouter()
   const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
+  const { addToast } = useToast()
 
   // ---------------------------------------------------------------------------
   // Data Queries & Mutations
@@ -152,12 +154,15 @@ export default function ClientsPage() {
           id: clientModal.client.id,
           ...data,
         })
+        addToast({ type: "success", title: "Klant succesvol bijgewerkt" })
       } else {
         await createClientMutation.mutateAsync(data)
+        addToast({ type: "success", title: "Klant succesvol aangemaakt" })
       }
       handleClientModalClose()
     } catch (err) {
       console.error("Failed to save client:", err)
+      addToast({ type: "error", title: "Fout bij opslaan van klant" })
     }
   }
 
@@ -166,6 +171,7 @@ export default function ClientsPage() {
 
     try {
       await deleteClientMutation.mutateAsync(deleteConfirm.clientId)
+      addToast({ type: "success", title: "Klant verwijderd" })
       setDeleteConfirm({
         open: false,
         clientId: null,
@@ -173,6 +179,7 @@ export default function ClientsPage() {
       })
     } catch (err) {
       console.error("Failed to delete client:", err)
+      addToast({ type: "error", title: "Fout bij verwijderen van klant" })
     }
   }
 
@@ -202,9 +209,11 @@ export default function ClientsPage() {
         client_id: contactModal.clientId,
         ...data,
       })
+      addToast({ type: "success", title: "Contactpersoon succesvol aangemaakt" })
       handleContactModalClose()
     } catch (err) {
       console.error("Failed to create contact:", err)
+      addToast({ type: "error", title: "Fout bij opslaan van contactpersoon" })
     }
   }
 
@@ -234,9 +243,11 @@ export default function ClientsPage() {
         client_id: locationModal.clientId,
         ...data,
       })
+      addToast({ type: "success", title: "Locatie succesvol aangemaakt" })
       handleLocationModalClose()
     } catch (err) {
       console.error("Failed to create location:", err)
+      addToast({ type: "error", title: "Fout bij opslaan van locatie" })
     }
   }
 

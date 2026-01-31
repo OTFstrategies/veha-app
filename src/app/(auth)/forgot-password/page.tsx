@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/toast";
 import { createClient } from "@/lib/supabase/client";
 
 interface FormState {
@@ -14,6 +15,7 @@ interface FormState {
 }
 
 export default function ForgotPasswordPage() {
+  const { addToast } = useToast();
   const [formState, setFormState] = React.useState<FormState>({
     error: null,
     success: null,
@@ -44,6 +46,7 @@ export default function ForgotPasswordPage() {
 
     if (error) {
       setFormState({ error: error.message, success: null, isLoading: false });
+      addToast({ type: "error", title: "Fout bij verzenden reset link" });
       return;
     }
 
@@ -52,6 +55,7 @@ export default function ForgotPasswordPage() {
       success: "Check your email for a password reset link",
       isLoading: false,
     });
+    addToast({ type: "success", title: "Wachtwoord reset link verzonden" });
   }
 
   return (

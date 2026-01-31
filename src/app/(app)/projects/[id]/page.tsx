@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { ProjectGanttScheduler } from '@/components/projects/ProjectGanttScheduler'
+import { useToast } from '@/components/ui/toast'
 import { useProject, useDeleteProject, useUpdateProject } from '@/queries/projects'
 import { useUpdateTask, useDeleteTask, useCreateTask } from '@/queries/tasks'
 import { ProjectFormModal, type ProjectFormData } from '@/components/projects/ProjectFormModal'
@@ -55,6 +56,7 @@ export default function ProjectDetailPage() {
   const params = useParams()
   const router = useRouter()
   const projectId = params.id as string
+  const { addToast } = useToast()
 
   // Queries
   const { data: project, isLoading, error } = useProject(projectId)
@@ -96,18 +98,26 @@ export default function ProjectDetailPage() {
         endDate: data.endDate,
         status: data.status,
       })
+      addToast({ type: 'success', title: 'Project succesvol bijgewerkt' })
       setIsEditModalOpen(false)
     } catch (error) {
       console.error("Failed to update project:", error)
+      addToast({ type: 'error', title: 'Fout bij opslaan van project' })
     }
-  }, [updateProjectMutation, projectId])
+  }, [updateProjectMutation, projectId, addToast])
 
   const handleDeleteProject = React.useCallback(async () => {
     if (confirm('Weet je zeker dat je dit project wilt verwijderen? Alle taken worden ook verwijderd.')) {
-      await deleteProject.mutateAsync(projectId)
-      router.push('/projects')
+      try {
+        await deleteProject.mutateAsync(projectId)
+        addToast({ type: 'success', title: 'Project verwijderd' })
+        router.push('/projects')
+      } catch (error) {
+        console.error("Failed to delete project:", error)
+        addToast({ type: 'error', title: 'Fout bij verwijderen van project' })
+      }
     }
-  }, [deleteProject, projectId, router])
+  }, [deleteProject, projectId, router, addToast])
 
   const handleTaskDatesChange = React.useCallback(async (
     taskId: string,
@@ -119,50 +129,72 @@ export default function ProjectDetailPage() {
     const end = new Date(endDate)
     const duration = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
 
-    await updateTask.mutateAsync({
-      id: taskId,
-      projectId,
-      startDate,
-      endDate,
-      duration,
-    })
-  }, [updateTask, projectId])
+    try {
+      await updateTask.mutateAsync({
+        id: taskId,
+        projectId,
+        startDate,
+        endDate,
+        duration,
+      })
+    } catch (error) {
+      console.error("Failed to update task dates:", error)
+      addToast({ type: 'error', title: 'Fout bij opslaan van taak' })
+    }
+  }, [updateTask, projectId, addToast])
 
   const handleTaskProgressChange = React.useCallback(async (
     taskId: string,
     progress: number
   ) => {
-    await updateTask.mutateAsync({
-      id: taskId,
-      projectId,
-      progress,
-    })
-  }, [updateTask, projectId])
+    try {
+      await updateTask.mutateAsync({
+        id: taskId,
+        projectId,
+        progress,
+      })
+    } catch (error) {
+      console.error("Failed to update task progress:", error)
+      addToast({ type: 'error', title: 'Fout bij opslaan van taak' })
+    }
+  }, [updateTask, projectId, addToast])
 
   const handleTaskEdit = React.useCallback(async (task: Task) => {
-    await updateTask.mutateAsync({
-      id: task.id,
-      projectId,
-      name: task.name,
-      description: task.description,
-      startDate: task.startDate,
-      endDate: task.endDate,
-      duration: task.duration,
-      progress: task.progress,
-      status: task.status,
-      priority: task.priority,
-      isMilestone: task.isMilestone,
-    })
-  }, [updateTask, projectId])
+    try {
+      await updateTask.mutateAsync({
+        id: task.id,
+        projectId,
+        name: task.name,
+        description: task.description,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        duration: task.duration,
+        progress: task.progress,
+        status: task.status,
+        priority: task.priority,
+        isMilestone: task.isMilestone,
+      })
+      addToast({ type: 'success', title: 'Taak opgeslagen' })
+    } catch (error) {
+      console.error("Failed to update task:", error)
+      addToast({ type: 'error', title: 'Fout bij opslaan van taak' })
+    }
+  }, [updateTask, projectId, addToast])
 
   const handleTaskDelete = React.useCallback(async (taskId: string) => {
     if (confirm('Weet je zeker dat je deze taak wilt verwijderen?')) {
-      await deleteTask.mutateAsync({
-        id: taskId,
-        projectId,
-      })
+      try {
+        await deleteTask.mutateAsync({
+          id: taskId,
+          projectId,
+        })
+        addToast({ type: 'success', title: 'Taak verwijderd' })
+      } catch (error) {
+        console.error("Failed to delete task:", error)
+        addToast({ type: 'error', title: 'Fout bij verwijderen van taak' })
+      }
     }
-  }, [deleteTask, projectId])
+  }, [deleteTask, projectId, addToast])
 
   const handleTaskAdd = React.useCallback(async (parentId?: string) => {
     // Get default dates
@@ -170,17 +202,23 @@ export default function ProjectDetailPage() {
     const endDate = new Date(today)
     endDate.setDate(endDate.getDate() + 5)
 
-    await createTask.mutateAsync({
-      projectId,
-      parentId: parentId ?? null,
-      name: 'Nieuwe taak',
-      startDate: today.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
-      duration: 5,
-      status: 'todo',
-      priority: 'normal',
-    })
-  }, [createTask, projectId])
+    try {
+      await createTask.mutateAsync({
+        projectId,
+        parentId: parentId ?? null,
+        name: 'Nieuwe taak',
+        startDate: today.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+        duration: 5,
+        status: 'todo',
+        priority: 'normal',
+      })
+      addToast({ type: 'success', title: 'Taak aangemaakt' })
+    } catch (error) {
+      console.error("Failed to create task:", error)
+      addToast({ type: 'error', title: 'Fout bij aanmaken van taak' })
+    }
+  }, [createTask, projectId, addToast])
 
   const handleClientClick = React.useCallback((clientId: string) => {
     router.push(`/clients/${clientId}`)

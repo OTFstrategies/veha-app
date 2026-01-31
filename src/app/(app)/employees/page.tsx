@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { EmployeeList } from "@/components/employees/EmployeeList";
 import { EmployeeFormModal } from "@/components/employees/EmployeeFormModal";
+import { useToast } from "@/components/ui/toast";
 import { useEmployees, useCreateEmployee, useDeleteEmployee, useUpdateEmployee } from "@/queries/employees";
 import { useWorkspaceStore } from "@/stores/workspace-store";
 import type { Employee, SelectOption } from "@/types/employees";
@@ -31,6 +32,7 @@ const skillOptions: SelectOption[] = [
 export default function EmployeesPage() {
   const router = useRouter();
   const { currentWorkspaceId } = useWorkspaceStore();
+  const { addToast } = useToast();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
   const [editingEmployeeId, setEditingEmployeeId] = React.useState<string | null>(null);
@@ -59,7 +61,14 @@ export default function EmployeesPage() {
 
   function handleDelete(id: string) {
     if (window.confirm("Weet je zeker dat je deze medewerker wilt deactiveren?")) {
-      deleteEmployee.mutate(id);
+      deleteEmployee.mutate(id, {
+        onSuccess: () => {
+          addToast({ type: "success", title: "Medewerker gedeactiveerd" });
+        },
+        onError: () => {
+          addToast({ type: "error", title: "Fout bij deactiveren van medewerker" });
+        },
+      });
     }
   }
 
@@ -82,9 +91,11 @@ export default function EmployeesPage() {
         skills: data.skills,
         color: data.color,
       });
+      addToast({ type: "success", title: "Medewerker succesvol aangemaakt" });
       setIsCreateModalOpen(false);
     } catch (err) {
       console.error("Failed to create employee:", err);
+      addToast({ type: "error", title: "Fout bij opslaan van medewerker" });
     }
   }
 
@@ -104,9 +115,11 @@ export default function EmployeesPage() {
         color: data.color,
         isActive: data.isActive,
       });
+      addToast({ type: "success", title: "Medewerker succesvol bijgewerkt" });
       setEditingEmployeeId(null);
     } catch (err) {
       console.error("Failed to update employee:", err);
+      addToast({ type: "error", title: "Fout bij opslaan van medewerker" });
     }
   }
 

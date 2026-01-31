@@ -92,10 +92,16 @@ export default function PortalProjectPage() {
     );
   }
 
-  // Show not found if project is null
-  if (!project) {
+  // Show not found if project or user is null
+  if (!project || !portalUser) {
     return <ProjectNotFound />;
   }
 
-  return <PortalProjectView project={project} />;
+  return (
+    <PortalProjectView
+      project={project}
+      userRole={portalUser.role}
+      userId={portalUser.id}
+    />
+  );
 }

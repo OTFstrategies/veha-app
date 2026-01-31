@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useCurrentWorkspace } from "@/hooks/use-workspace";
 import type {
@@ -9,6 +9,7 @@ import type {
   PortalUser,
   PortalTaskSummary,
   ProjectManager,
+  ProjectClientNote,
 } from "@/types/portal";
 import type { UserRole } from "@/types/database";
 
@@ -23,6 +24,8 @@ export const portalKeys = {
     [...portalKeys.all, "projects", workspaceId, clientId] as const,
   project: (projectId: string) =>
     [...portalKeys.all, "project", projectId] as const,
+  notes: (projectId: string) =>
+    [...portalKeys.all, "notes", projectId] as const,
 };
 
 // =============================================================================
@@ -476,5 +479,114 @@ export function usePortalProject(projectId: string) {
     },
     enabled: !!workspaceId && !!portalUser?.clientId && !!projectId,
     staleTime: 2 * 60 * 1000, // 2 minutes - task status may update
+  });
+}
+
+// =============================================================================
+// Project Notes Query
+// =============================================================================
+
+export function useProjectNotes(projectId: string) {
+  const supabase = createClient();
+  const { workspaceId } = useCurrentWorkspace();
+
+  return useQuery({
+    queryKey: portalKeys.notes(projectId),
+    queryFn: async (): Promise<ProjectClientNote[]> => {
+      const { data, error } = await supabase
+        .from("project_client_notes")
+        .select(
+          `
+          id,
+          project_id,
+          profile_id,
+          content,
+          created_at,
+          updated_at,
+          profile:profiles (
+            email,
+            full_name
+          )
+        `
+        )
+        .eq("project_id", projectId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      return (data ?? []).map((note) => {
+        const profileData = note.profile as { email: string; full_name: string | null } | { email: string; full_name: string | null }[] | null;
+        const profile = Array.isArray(profileData) ? profileData[0] : profileData;
+
+        return {
+          id: note.id,
+          projectId: note.project_id,
+          profileId: note.profile_id,
+          content: note.content,
+          createdAt: note.created_at,
+          updatedAt: note.updated_at,
+          authorName: profile?.full_name ?? null,
+          authorEmail: profile?.email ?? null,
+        };
+      });
+    },
+    enabled: !!projectId && !!workspaceId,
+  });
+}
+
+// =============================================================================
+// Add Project Note Mutation
+// =============================================================================
+
+export function useAddProjectNote() {
+  const queryClient = useQueryClient();
+  const supabase = createClient();
+
+  return useMutation({
+    mutationFn: async ({ projectId, content }: { projectId: string; content: string }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error("Niet ingelogd");
+      }
+
+      const { error } = await supabase
+        .from("project_client_notes")
+        .insert({
+          project_id: projectId,
+          profile_id: user.id,
+          content,
+        });
+
+      if (error) throw error;
+    },
+    onSuccess: (_, { projectId }) => {
+      queryClient.invalidateQueries({ queryKey: portalKeys.notes(projectId) });
+    },
+  });
+}
+
+// =============================================================================
+// Delete Project Note Mutation
+// =============================================================================
+
+export function useDeleteProjectNote() {
+  const queryClient = useQueryClient();
+  const supabase = createClient();
+
+  return useMutation({
+    mutationFn: async ({ noteId, projectId }: { noteId: string; projectId: string }) => {
+      const { error } = await supabase
+        .from("project_client_notes")
+        .delete()
+        .eq("id", noteId);
+
+      if (error) throw error;
+
+      return { projectId };
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: portalKeys.notes(result.projectId) });
+    },
   });
 }

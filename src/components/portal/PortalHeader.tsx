@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, Moon, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun, User, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -24,13 +24,14 @@ interface PortalHeaderProps {
   userEmail?: string | null;
   userName?: string | null;
   clientName?: string | null;
+  userRole?: "klant_editor" | "klant_viewer" | null;
 }
 
 // =============================================================================
 // Component
 // =============================================================================
 
-export function PortalHeader({ userEmail, userName, clientName }: PortalHeaderProps) {
+export function PortalHeader({ userEmail, userName, clientName, userRole }: PortalHeaderProps) {
   const router = useRouter();
   const [isDarkMode, setIsDarkMode] = React.useState(false);
 
@@ -61,22 +62,24 @@ export function PortalHeader({ userEmail, userName, clientName }: PortalHeaderPr
     .join("")
     .slice(0, 2);
 
+  const isViewer = userRole === "klant_viewer";
+
   return (
-    <header className="flex h-16 items-center justify-between border-b border-stone-200 bg-white px-4 dark:border-stone-800 dark:bg-stone-900 sm:px-6">
+    <header className="flex h-14 items-center justify-between border-b border-stone-200 bg-white px-3 sm:h-16 sm:px-4 md:px-6 dark:border-stone-800 dark:bg-stone-900">
       {/* Logo and Title */}
-      <div className="flex items-center gap-4">
-        <Link href="/portal" className="flex items-center gap-3">
-          <span className="text-xl font-bold text-stone-900 dark:text-stone-50">
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
+        <Link href="/portal" className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <span className="text-lg font-bold text-stone-900 sm:text-xl dark:text-stone-50">
             VEHA
           </span>
-          <span className="hidden text-sm text-stone-500 dark:text-stone-400 sm:block">
+          <span className="hidden text-sm text-stone-500 sm:block dark:text-stone-400">
             Klantportaal
           </span>
         </Link>
         {clientName && (
           <>
-            <span className="hidden text-stone-300 dark:text-stone-600 md:block">|</span>
-            <span className="hidden text-sm font-medium text-stone-700 dark:text-stone-300 md:block">
+            <span className="hidden text-stone-300 md:block dark:text-stone-600">|</span>
+            <span className="hidden max-w-[200px] truncate text-sm font-medium text-stone-700 md:block dark:text-stone-300">
               {clientName}
             </span>
           </>
@@ -84,12 +87,13 @@ export function PortalHeader({ userEmail, userName, clientName }: PortalHeaderPr
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1 sm:gap-2">
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleDarkMode}
           aria-label={isDarkMode ? "Lichte modus" : "Donkere modus"}
+          className="h-9 w-9"
         >
           {isDarkMode ? (
             <Sun className="h-5 w-5" />
@@ -106,7 +110,7 @@ export function PortalHeader({ userEmail, userName, clientName }: PortalHeaderPr
               aria-label="Gebruikersmenu"
             >
               <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+                <AvatarFallback className="bg-stone-200 text-sm text-stone-700 dark:bg-stone-700 dark:text-stone-200">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
@@ -115,9 +119,17 @@ export function PortalHeader({ userEmail, userName, clientName }: PortalHeaderPr
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{displayName}</p>
+                <div className="flex items-center gap-2">
+                  <p className="truncate text-sm font-medium leading-none">{displayName}</p>
+                  {isViewer && (
+                    <span className="inline-flex shrink-0 items-center gap-0.5 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] text-stone-500 dark:bg-stone-800 dark:text-stone-400">
+                      <Eye className="h-2.5 w-2.5" />
+                      Viewer
+                    </span>
+                  )}
+                </div>
                 {userEmail && userName && (
-                  <p className="text-xs leading-none text-muted-foreground">
+                  <p className="truncate text-xs leading-none text-muted-foreground">
                     {userEmail}
                   </p>
                 )}

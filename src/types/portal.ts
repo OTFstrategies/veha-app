@@ -28,6 +28,20 @@ export interface PortalTaskSummary {
 }
 
 /**
+ * Client note on a project
+ */
+export interface ProjectClientNote {
+  id: string;
+  projectId: string;
+  profileId: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  authorName: string | null;
+  authorEmail: string | null;
+}
+
+/**
  * Project summary for portal dashboard
  */
 export interface PortalProject {
