@@ -151,7 +151,7 @@ export function useDashboardStats() {
       const { data: allProjectTasks, error: allTasksError } = await supabase
         .from("tasks")
         .select("id, status, project_id, start_date, end_date")
-        .in("project_id", projectIds.length > 0 ? projectIds : ["none"]);
+        .in("project_id", projectIds.length > 0 ? projectIds : ["00000000-0000-0000-0000-000000000000"]);
 
       if (allTasksError) throw allTasksError;
 
