@@ -11,7 +11,7 @@ import type { Project as DbProject, Task as DbTask } from '@/types/database'
 export const projectKeys = {
   all: ['projects'] as const,
   lists: () => [...projectKeys.all, 'list'] as const,
-  list: (filters?: Record<string, unknown>) => [...projectKeys.lists(), filters] as const,
+  list: (workspaceId: string) => [...projectKeys.lists(), workspaceId] as const,
   details: () => [...projectKeys.all, 'detail'] as const,
   detail: (id: string) => [...projectKeys.details(), id] as const,
 }
@@ -113,9 +113,15 @@ function transformProject(dbProject: DbProjectWithRelations, tasks: Task[] = [])
  * Fetch all projects with basic information
  */
 export function useProjects() {
+  const { workspaceId } = useCurrentWorkspace()
+
   return useQuery({
-    queryKey: projectKeys.lists(),
+    queryKey: projectKeys.list(workspaceId ?? ''),
     queryFn: async (): Promise<Project[]> => {
+      if (!workspaceId) {
+        throw new Error('No workspace selected')
+      }
+
       const supabase = createClient()
 
       const { data, error } = await supabase
@@ -125,6 +131,7 @@ export function useProjects() {
           clients (name),
           client_locations (name)
         `)
+        .eq('workspace_id', workspaceId)
         .order('start_date', { ascending: true })
 
       if (error) {
@@ -133,6 +140,8 @@ export function useProjects() {
 
       return (data as DbProjectWithRelations[]).map(p => transformProject(p))
     },
+    enabled: !!workspaceId,
+    staleTime: 5 * 60 * 1000, // 5 minutes - projects don't change frequently
   })
 }
 
@@ -192,6 +201,7 @@ export function useProject(id: string) {
       return transformProject(projectData as DbProjectWithRelations, tasks)
     },
     enabled: Boolean(id),
+    staleTime: 2 * 60 * 1000, // 2 minutes - task data may change more frequently
   })
 }
 
