@@ -47,10 +47,10 @@ const ZOOM_LABELS: Record<GanttZoomLevel, string> = {
   day: 'Dag',
   week: 'Week',
   month: 'Maand',
-  quarter: 'Kwartaal',
+  year: 'Jaar',
 }
 
-const ZOOM_ORDER: GanttZoomLevel[] = ['day', 'week', 'month', 'quarter']
+const ZOOM_ORDER: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
 
 // =============================================================================
 // Component

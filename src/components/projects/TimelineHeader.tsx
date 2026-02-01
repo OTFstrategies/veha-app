@@ -80,11 +80,10 @@ export function TimelineHeader({
         if (day.getDate() === 1 || index === 0) {
           bottomLabel = day.toLocaleDateString('nl-NL', { month: 'short' })
         }
-      } else if (zoomLevel === 'quarter') {
-        // Show quarter on first day of quarter
-        const month = day.getMonth()
-        if ((month === 0 || month === 3 || month === 6 || month === 9) && day.getDate() === 1) {
-          bottomLabel = `Q${Math.floor(month / 3) + 1}`
+      } else if (zoomLevel === 'year') {
+        // Show month abbreviation on first day of month for year view
+        if (day.getDate() === 1 || index === 0) {
+          bottomLabel = day.toLocaleDateString('nl-NL', { month: 'short' })
         }
       }
 

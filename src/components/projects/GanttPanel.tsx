@@ -340,7 +340,7 @@ export function GanttPanel({
     if (e.ctrlKey && onZoomChange) {
       e.preventDefault()
 
-      const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'quarter']
+      const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
       const currentIndex = zoomOrder.indexOf(timelineConfig.zoomLevel)
 
       if (e.deltaY < 0 && currentIndex > 0) {

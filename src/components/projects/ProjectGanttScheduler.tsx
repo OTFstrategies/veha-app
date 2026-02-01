@@ -151,7 +151,7 @@ export function ProjectGanttScheduler({
       day: 32,
       week: 100,
       month: 80,
-      quarter: 120,
+      year: 20,
     }
 
     const today = new Date()

@@ -1,7 +1,7 @@
 /**
  * Zoom level for the Gantt timeline
  */
-export type GanttZoomLevel = 'day' | 'week' | 'month' | 'quarter'
+export type GanttZoomLevel = 'day' | 'week' | 'month' | 'year'
 
 /**
  * View options for the Gantt chart
