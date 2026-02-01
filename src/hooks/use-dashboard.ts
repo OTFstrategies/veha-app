@@ -11,7 +11,6 @@ import type {
   TodayTaskGroup,
   ActiveProject,
   CapacityEntry,
-  QuickAction,
 } from "@/types/dashboard";
 
 // =============================================================================
@@ -25,12 +24,6 @@ const defaultStats: DashboardStats = {
   attentionNeeded: { count: 0 },
 };
 
-const defaultQuickActions: QuickAction[] = [
-  { id: "new-project", label: "Nieuw Project", icon: "plus" },
-  { id: "new-task", label: "Nieuwe Taak", icon: "check" },
-  { id: "week-planning", label: "Weekplanning", icon: "calendar" },
-];
-
 // =============================================================================
 // Combined Hook
 // =============================================================================
@@ -41,7 +34,6 @@ export interface UseDashboardResult {
   todayTasks: TodayTaskGroup[];
   activeProjects: ActiveProject[];
   capacityData: CapacityEntry[];
-  quickActions: QuickAction[];
 
   // Loading states
   isLoading: boolean;
@@ -99,7 +91,6 @@ export function useDashboard(): UseDashboardResult {
     todayTasks: todayTasksQuery.data ?? [],
     activeProjects: activeProjectsQuery.data ?? [],
     capacityData: capacityQuery.data ?? [],
-    quickActions: defaultQuickActions,
 
     // Loading states
     isLoading,

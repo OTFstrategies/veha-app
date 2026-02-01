@@ -45,6 +45,7 @@ export interface DayTask {
   projectId: string
   projectName: string
   clientName: string
+  hours?: number
 }
 
 /**
@@ -53,6 +54,8 @@ export interface DayTask {
 export interface DayEntry {
   availability: DayAvailability | null
   tasks: DayTask[]
+  plannedHours?: number
+  availableHours?: number
 }
 
 /**

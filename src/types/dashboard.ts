@@ -133,8 +133,6 @@ export interface DashboardProps {
   activeProjects: ActiveProject[]
   /** Capacity data for the capacity widget */
   capacityData: CapacityEntry[]
-  /** Quick action buttons */
-  quickActions?: QuickAction[]
   /** Called when user clicks on a stat card */
   onStatClick?: (statType: 'activeProjects' | 'todayTasks' | 'availableEmployees' | 'attentionNeeded') => void
   /** Called when user clicks on a task */
@@ -143,8 +141,8 @@ export interface DashboardProps {
   onProjectClick?: (projectId: string) => void
   /** Called when user clicks on a capacity row */
   onCapacityClick?: (employeeId: string) => void
-  /** Called when user clicks a quick action */
-  onQuickAction?: (actionId: string) => void
+  /** Called when user wants to go to week planning */
+  onViewWeekPlanning?: () => void
 }
 
 /**
@@ -189,12 +187,5 @@ export interface CapacityWidgetProps {
   onViewWeekPlanning?: () => void
 }
 
-/**
- * Props for the quick actions component
- */
-export interface QuickActionsProps {
-  /** Quick action buttons */
-  actions: QuickAction[]
-  /** Called when user clicks a quick action */
-  onAction?: (actionId: string) => void
-}
+// QuickAction type kept for backward compatibility
+// The FAB component now handles quick actions internally

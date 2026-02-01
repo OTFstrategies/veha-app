@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ChevronDown, Plus, Search } from 'lucide-react'
+import { ChevronDown, ChevronsDownUp, ChevronsUpDown, Plus, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ClientTreeNode } from './ClientTreeNode'
 import { ClientTreeEmpty } from './ClientTreeEmpty'
 import type { Client } from '@/types/clients'
@@ -181,14 +182,25 @@ export function ClientTree({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <div className="ml-auto flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={expandAll}>
-              Alles uitklappen
-            </Button>
-            <Button variant="ghost" size="sm" onClick={collapseAll}>
-              Alles inklappen
-            </Button>
-          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="ml-auto h-9 w-9"
+                onClick={expandedClients.size > 0 ? collapseAll : expandAll}
+              >
+                {expandedClients.size > 0 ? (
+                  <ChevronsDownUp className="h-4 w-4" />
+                ) : (
+                  <ChevronsUpDown className="h-4 w-4" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {expandedClients.size > 0 ? 'Alles inklappen' : 'Alles uitklappen'}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 

@@ -158,3 +158,30 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--foreground);
 }
+
+/* =============================================================================
+   Collapsible Animations
+   ============================================================================= */
+
+.collapsible-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms ease-out;
+}
+
+.collapsible-content[data-state="open"] {
+  grid-template-rows: 1fr;
+}
+
+.collapsible-content > div {
+  overflow: hidden;
+}
+
+/* Chevron rotation for collapsible triggers */
+.chevron-icon {
+  transition: transform 200ms ease-out;
+}
+
+[data-state="open"] .chevron-icon {
+  transform: rotate(180deg);
+}

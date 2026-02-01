@@ -23,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { Client, ClientContact, ClientLocation, ClientProject } from '@/types/clients'
 
 // =============================================================================
@@ -345,7 +346,12 @@ function ContactItem({ contact }: { contact: ClientContact }) {
         </span>
       )}
       {contact.is_primary && (
-        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+        <Tooltip>
+          <TooltipTrigger>
+            <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+          </TooltipTrigger>
+          <TooltipContent>Primair contactpersoon</TooltipContent>
+        </Tooltip>
       )}
     </div>
   )
@@ -364,7 +370,12 @@ function LocationItem({ location }: { location: ClientLocation }) {
       </span>
       {fullAddress && <span className="text-xs text-zinc-500">{fullAddress}</span>}
       {location.is_primary && (
-        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+        <Tooltip>
+          <TooltipTrigger>
+            <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+          </TooltipTrigger>
+          <TooltipContent>Primaire locatie</TooltipContent>
+        </Tooltip>
       )}
     </div>
   )

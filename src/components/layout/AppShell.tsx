@@ -37,7 +37,6 @@ function getQueryClient() {
 
 export function AppShell({ children }: AppShellProps) {
   const queryClient = getQueryClient();
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [userEmail, setUserEmail] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -51,25 +50,12 @@ export function AppShell({ children }: AppShellProps) {
     getUser();
   }, []);
 
-  React.useEffect(() => {
-    const saved = localStorage.getItem("sidebar-collapsed");
-    if (saved !== null) {
-      setSidebarCollapsed(saved === "true");
-    }
-  }, []);
-
-  function handleSidebarToggle() {
-    const newState = !sidebarCollapsed;
-    setSidebarCollapsed(newState);
-    localStorage.setItem("sidebar-collapsed", String(newState));
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex h-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950">
-        <Sidebar collapsed={sidebarCollapsed} onToggle={handleSidebarToggle} />
+        <Sidebar userEmail={userEmail} />
         <div className="flex flex-1 flex-col overflow-hidden">
-          <Header userEmail={userEmail} />
+          <Header />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>
       </div>

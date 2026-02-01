@@ -25,6 +25,10 @@ export type AvailabilityStatus = 'beschikbaar' | 'ziek' | 'vakantie' | 'vrij' | 
 export type EquipmentType = 'voertuig' | 'machine' | 'gereedschap'
 export type EquipmentStatus = 'beschikbaar' | 'in_gebruik' | 'onderhoud' | 'defect'
 
+// Materials enums
+export type MaterialType = 'verbruiksmateriaal' | 'voorraad' | 'onderdelen'
+export type MaterialStatus = 'op_voorraad' | 'bijna_op' | 'besteld' | 'niet_beschikbaar'
+
 // =============================================================================
 // Table Types
 // =============================================================================
@@ -198,6 +202,7 @@ export interface Equipment {
   equipment_type: EquipmentType
   license_plate: string | null
   daily_rate: number
+  daily_capacity_hours: number
   status: EquipmentStatus
   notes: string | null
   is_active: boolean
@@ -214,6 +219,57 @@ export interface EquipmentAssignment {
   notes: string | null
   created_at: string
   updated_at: string
+}
+
+export interface EquipmentAvailability {
+  id: string
+  equipment_id: string
+  date: string
+  status: string
+  available_hours: number | null
+  notes: string | null
+  created_at: string
+}
+
+export interface EquipmentDayAssignment {
+  id: string
+  equipment_id: string
+  project_id: string | null
+  task_id: string | null
+  date: string
+  hours: number
+  notes: string | null
+  created_at: string
+}
+
+export interface Material {
+  id: string
+  workspace_id: string
+  name: string
+  description: string | null
+  material_type: MaterialType
+  unit: string
+  unit_price: number
+  quantity_in_stock: number
+  min_stock_level: number
+  status: MaterialStatus
+  supplier: string | null
+  supplier_article_number: string | null
+  notes: string | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface MaterialAssignment {
+  id: string
+  material_id: string
+  project_id: string | null
+  task_id: string | null
+  quantity: number
+  assigned_date: string
+  notes: string | null
+  created_at: string
 }
 
 // =============================================================================
@@ -298,6 +354,26 @@ export interface Database {
         Insert: Omit<EquipmentAssignment, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<EquipmentAssignment, 'id' | 'created_at'>>
       }
+      equipment_availability: {
+        Row: EquipmentAvailability
+        Insert: Omit<EquipmentAvailability, 'id' | 'created_at'>
+        Update: Partial<Omit<EquipmentAvailability, 'id' | 'created_at'>>
+      }
+      equipment_day_assignments: {
+        Row: EquipmentDayAssignment
+        Insert: Omit<EquipmentDayAssignment, 'id' | 'created_at'>
+        Update: Partial<Omit<EquipmentDayAssignment, 'id' | 'created_at'>>
+      }
+      materials: {
+        Row: Material
+        Insert: Omit<Material, 'id' | 'created_at' | 'updated_at' | 'status'>
+        Update: Partial<Omit<Material, 'id' | 'created_at'>>
+      }
+      material_assignments: {
+        Row: MaterialAssignment
+        Insert: Omit<MaterialAssignment, 'id' | 'created_at'>
+        Update: Partial<Omit<MaterialAssignment, 'id' | 'created_at'>>
+      }
     }
     Enums: {
       user_role: UserRole
@@ -310,6 +386,8 @@ export interface Database {
       availability_status: AvailabilityStatus
       equipment_type: EquipmentType
       equipment_status: EquipmentStatus
+      material_type: MaterialType
+      material_status: MaterialStatus
     }
   }
 }

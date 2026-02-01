@@ -1,4 +1,4 @@
-import { Calendar, ChevronRight, CheckCircle2, Clock } from 'lucide-react'
+import { ChevronRight, CheckCircle2, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { TodayTaskGroup } from '@/types/dashboard'
@@ -17,130 +17,105 @@ interface TodayTasksProps {
 // =============================================================================
 
 export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
-  const today = new Date().toLocaleDateString('nl-NL', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
-
-  const totalTasks = taskGroups.reduce((sum, group) => sum + group.tasks.length, 0)
+  if (taskGroups.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        <CheckCircle2 className="mb-2 h-8 w-8 text-green-500" />
+        <p className="text-sm text-muted-foreground">Geen taken voor vandaag</p>
+      </div>
+    )
+  }
 
   return (
-    <div className="rounded-xl border border-border bg-card">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border px-5 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
-            <Calendar className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+    <div className="divide-y divide-border">
+      {taskGroups.map((group) => (
+        <div key={group.projectId} className="py-3 first:pt-0 last:pb-0">
+          {/* Project Header */}
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-sm font-medium">{group.projectName}</span>
+            <span className="text-xs text-muted-foreground">• {group.clientName}</span>
           </div>
-          <div>
-            <h2 className="font-semibold">Vandaag</h2>
-            <p className="text-sm capitalize text-muted-foreground">{today}</p>
-          </div>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          {totalTasks} {totalTasks === 1 ? 'taak' : 'taken'}
-        </div>
-      </div>
 
-      {/* Task Groups */}
-      <div className="divide-y divide-border">
-        {taskGroups.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <CheckCircle2 className="mb-3 h-10 w-10 text-green-500" />
-            <p className="font-medium text-muted-foreground">Geen taken</p>
-          </div>
-        ) : (
-          taskGroups.map((group) => (
-            <div key={group.projectId} className="p-4">
-              {/* Project Header */}
-              <div className="mb-3 flex items-center gap-2">
-                <span className="text-sm font-medium">{group.projectName}</span>
-                <span className="text-xs text-muted-foreground">• {group.clientName}</span>
-              </div>
+          {/* Tasks */}
+          <div className="space-y-1">
+            {group.tasks.map((task) => (
+              <button
+                key={task.id}
+                onClick={() => onTaskClick?.(task.id, group.projectId)}
+                className={cn(
+                  'group flex w-full items-center gap-3 rounded-lg border border-transparent p-2 text-left transition-all',
+                  'hover:border-border hover:bg-zinc-50 dark:hover:bg-zinc-800/50',
+                  task.status === 'done' && 'opacity-60'
+                )}
+              >
+                {/* Status Icon */}
+                <div
+                  className={cn(
+                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
+                    task.status === 'done'
+                      ? 'bg-green-100 dark:bg-green-900/30'
+                      : task.status === 'in_progress'
+                      ? 'bg-blue-100 dark:bg-blue-900/30'
+                      : 'bg-zinc-100 dark:bg-zinc-800'
+                  )}
+                >
+                  {task.status === 'done' ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <Clock className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                  )}
+                </div>
 
-              {/* Tasks */}
-              <div className="space-y-2">
-                {group.tasks.map((task) => (
-                  <button
-                    key={task.id}
-                    onClick={() => onTaskClick?.(task.id, group.projectId)}
+                {/* Task Info */}
+                <div className="min-w-0 flex-1">
+                  <p
                     className={cn(
-                      'group flex w-full items-center gap-3 rounded-lg border border-transparent p-3 text-left transition-all',
-                      'hover:border-border hover:bg-zinc-50 dark:hover:bg-zinc-800/50',
-                      task.status === 'done' && 'opacity-60'
+                      'truncate text-sm font-medium',
+                      task.status === 'done' && 'line-through'
                     )}
                   >
-                    {/* Status Icon */}
-                    <div
-                      className={cn(
-                        'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
-                        task.status === 'done'
-                          ? 'bg-green-100 dark:bg-green-900/30'
-                          : task.status === 'in_progress'
-                          ? 'bg-blue-100 dark:bg-blue-900/30'
-                          : 'bg-zinc-100 dark:bg-zinc-800'
-                      )}
-                    >
-                      {task.status === 'done' ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
-                      ) : (
-                        <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      )}
-                    </div>
-
-                    {/* Task Info */}
-                    <div className="min-w-0 flex-1">
-                      <p
+                    {task.name}
+                  </p>
+                  {/* Progress Bar */}
+                  <div className="mt-1 flex items-center gap-2">
+                    <div className="h-1 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                      <div
                         className={cn(
-                          'truncate text-sm font-medium',
-                          task.status === 'done' && 'line-through'
+                          'h-full rounded-full transition-all',
+                          task.progress === 100
+                            ? 'bg-green-500'
+                            : 'bg-zinc-600 dark:bg-zinc-400'
                         )}
+                        style={{ width: `${task.progress}%` }}
+                      />
+                    </div>
+                    <span className="text-xs tabular-nums text-muted-foreground">
+                      {task.progress}%
+                    </span>
+                  </div>
+                </div>
+
+                {/* Assignees */}
+                <div className="flex -space-x-1">
+                  {task.assignees.slice(0, 3).map((assignee) => (
+                    <Avatar key={assignee.id} className="h-5 w-5 border-2 border-card">
+                      <AvatarFallback
+                        className="text-[8px] font-medium text-white"
+                        style={{ backgroundColor: assignee.color }}
                       >
-                        {task.name}
-                      </p>
-                      {/* Progress Bar */}
-                      <div className="mt-1.5 flex items-center gap-2">
-                        <div className="h-1 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-                          <div
-                            className={cn(
-                              'h-full rounded-full transition-all',
-                              task.progress === 100
-                                ? 'bg-green-500'
-                                : 'bg-zinc-600 dark:bg-zinc-400'
-                            )}
-                            style={{ width: `${task.progress}%` }}
-                          />
-                        </div>
-                        <span className="text-xs tabular-nums text-muted-foreground">
-                          {task.progress}%
-                        </span>
-                      </div>
-                    </div>
+                        {assignee.initials}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
 
-                    {/* Assignees */}
-                    <div className="flex -space-x-1">
-                      {task.assignees.slice(0, 3).map((assignee) => (
-                        <Avatar key={assignee.id} className="h-6 w-6 border-2 border-card">
-                          <AvatarFallback
-                            className="text-[9px] font-medium text-white"
-                            style={{ backgroundColor: assignee.color }}
-                          >
-                            {assignee.initials}
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                    </div>
-
-                    {/* Arrow */}
-                    <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+                {/* Arrow */}
+                <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

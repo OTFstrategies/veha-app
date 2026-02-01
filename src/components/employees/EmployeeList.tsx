@@ -259,10 +259,7 @@ export function EmployeeList({
 
                 {/* Avatar */}
                 <Avatar className="h-14 w-14">
-                  <AvatarFallback
-                    className="text-lg font-medium text-white"
-                    style={{ backgroundColor: employee.color }}
-                  >
+                  <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-lg font-medium">
                     {getInitials(employee.name)}
                   </AvatarFallback>
                 </Avatar>
@@ -344,10 +341,7 @@ export function EmployeeList({
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9">
-                        <AvatarFallback
-                          className="text-sm font-medium text-white"
-                          style={{ backgroundColor: employee.color }}
-                        >
+                        <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-sm font-medium">
                           {getInitials(employee.name)}
                         </AvatarFallback>
                       </Avatar>

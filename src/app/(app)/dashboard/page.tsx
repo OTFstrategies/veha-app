@@ -13,7 +13,6 @@ export default function DashboardPage() {
     todayTasks,
     activeProjects,
     capacityData,
-    quickActions,
     isLoading,
     error,
     refetchAll,
@@ -31,7 +30,7 @@ export default function DashboardPage() {
         router.push("/projects");
         break;
       case "availableEmployees":
-        router.push("/employees");
+        router.push("/resources");
         break;
       case "attentionNeeded":
         router.push("/projects?attention=true");
@@ -48,25 +47,11 @@ export default function DashboardPage() {
   }
 
   function handleCapacityClick(employeeId: string) {
-    router.push(`/employees/${employeeId}`);
-  }
-
-  function handleQuickAction(actionId: string) {
-    switch (actionId) {
-      case "new-project":
-        router.push("/projects/new");
-        break;
-      case "new-task":
-        router.push("/projects");
-        break;
-      case "week-planning":
-        router.push("/weekplanning");
-        break;
-    }
+    router.push(`/resources/${employeeId}`);
   }
 
   function handleViewWeekPlanning() {
-    router.push("/weekplanning");
+    router.push("/resources?tab=weekplanning");
   }
 
   // Show error state
@@ -89,12 +74,10 @@ export default function DashboardPage() {
       todayTasks={todayTasks}
       activeProjects={activeProjects}
       capacityData={capacityData}
-      quickActions={quickActions}
       onStatClick={handleStatClick}
       onTaskClick={handleTaskClick}
       onProjectClick={handleProjectClick}
       onCapacityClick={handleCapacityClick}
-      onQuickAction={handleQuickAction}
       onViewWeekPlanning={handleViewWeekPlanning}
     />
   );

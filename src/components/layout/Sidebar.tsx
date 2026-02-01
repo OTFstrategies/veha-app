@@ -7,14 +7,16 @@ import {
   LayoutDashboard,
   Users,
   FolderKanban,
-  UserCog,
-  CalendarDays,
-  ChevronLeft,
-  ChevronRight,
+  Boxes,
+  Pin,
+  PinOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { WorkspaceSelector } from "./WorkspaceSelector";
+import { SidebarUserMenu } from "./SidebarUserMenu";
+import { SidebarThemeToggle } from "./SidebarThemeToggle";
+import { useUIStore } from "@/stores/ui-store";
 
 interface NavItem {
   label: string;
@@ -26,32 +28,56 @@ const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Clients", href: "/clients", icon: Users },
   { label: "Projects", href: "/projects", icon: FolderKanban },
-  { label: "Employees", href: "/employees", icon: UserCog },
-  { label: "Weekplanning", href: "/weekplanning", icon: CalendarDays },
+  { label: "Resources", href: "/resources", icon: Boxes },
 ];
 
 interface SidebarProps {
-  collapsed: boolean;
-  onToggle: () => void;
+  userEmail: string | null;
 }
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export function Sidebar({ userEmail }: SidebarProps) {
   const pathname = usePathname();
+  const {
+    sidebarCollapsed,
+    sidebarHovered,
+    sidebarPinned,
+    setSidebarHovered,
+    toggleSidebarPinned,
+  } = useUIStore();
+
+  // Determine if sidebar should be expanded
+  // Expanded when: pinned OR (not collapsed) OR (collapsed but hovered)
+  const isExpanded = sidebarPinned || !sidebarCollapsed || (sidebarCollapsed && sidebarHovered);
+
+  function handleMouseEnter() {
+    if (sidebarCollapsed && !sidebarPinned) {
+      setSidebarHovered(true);
+    }
+  }
+
+  function handleMouseLeave() {
+    if (sidebarCollapsed && !sidebarPinned) {
+      setSidebarHovered(false);
+    }
+  }
 
   return (
     <aside
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={cn(
-        "flex h-full flex-col border-r border-zinc-200 bg-white transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-900",
-        collapsed ? "w-16" : "w-64"
+        "flex h-full flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out dark:border-zinc-800 dark:bg-zinc-900",
+        isExpanded ? "w-64" : "w-16"
       )}
     >
+      {/* Header with logo and pin button */}
       <div
         className={cn(
           "flex h-16 items-center border-b border-zinc-200 px-4 dark:border-zinc-800",
-          collapsed ? "justify-center" : "justify-between"
+          isExpanded ? "justify-between" : "justify-center"
         )}
       >
-        {!collapsed && (
+        {isExpanded && (
           <Link href="/dashboard" className="flex items-center gap-2">
             <span className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
               VEHA
@@ -61,22 +87,25 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={onToggle}
-          className="h-8 w-8 shrink-0"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          onClick={toggleSidebarPinned}
+          className={cn("h-8 w-8 shrink-0", !isExpanded && "hidden")}
+          aria-label={sidebarPinned ? "Unpin sidebar" : "Pin sidebar"}
+          title={sidebarPinned ? "Sidebar losmaken" : "Sidebar vastzetten"}
         >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
+          {sidebarPinned ? (
+            <PinOff className="h-4 w-4" />
           ) : (
-            <ChevronLeft className="h-4 w-4" />
+            <Pin className="h-4 w-4" />
           )}
         </Button>
       </div>
 
+      {/* Workspace selector */}
       <div className="border-b border-zinc-200 py-2 dark:border-zinc-800">
-        <WorkspaceSelector collapsed={collapsed} />
+        <WorkspaceSelector collapsed={!isExpanded} />
       </div>
 
+      {/* Navigation */}
       <nav className="flex-1 space-y-1 p-2">
         {navItems.map((item) => {
           const isActive =
@@ -92,26 +121,31 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                 isActive
                   ? "bg-zinc-100 text-blue-600 dark:bg-zinc-800 dark:text-blue-400"
                   : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
-                collapsed && "justify-center px-2"
+                !isExpanded && "justify-center px-2"
               )}
-              title={collapsed ? item.label : undefined}
+              title={!isExpanded ? item.label : undefined}
             >
               <Icon className="h-5 w-5 shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+              {isExpanded && <span>{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-zinc-200 p-2 dark:border-zinc-800">
-        <div
-          className={cn(
-            "rounded-md bg-zinc-50 p-3 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
-            collapsed && "px-2 py-2 text-center"
-          )}
-        >
-          {collapsed ? "v1" : "VEHA Dashboard v1.0"}
-        </div>
+      {/* Footer section */}
+      <div className="border-t border-zinc-200 p-2 space-y-1 dark:border-zinc-800">
+        {/* Theme toggle */}
+        <SidebarThemeToggle collapsed={!isExpanded} />
+
+        {/* User menu */}
+        <SidebarUserMenu collapsed={!isExpanded} userEmail={userEmail} />
+
+        {/* Version info - only visible when expanded */}
+        {isExpanded && (
+          <div className="rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+            VEHA Dashboard v1.0
+          </div>
+        )}
       </div>
     </aside>
   );

@@ -60,7 +60,61 @@ const defaultAvailabilityStyles: AvailabilityStyles = {
 
 const EMPLOYEE_COLUMN_WIDTH = 180
 const DAY_COLUMN_WIDTH = 160
-const ROW_HEIGHT = 80
+const ROW_HEIGHT = 100
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+/**
+ * Get utilization bar color based on percentage
+ */
+function getUtilizationColor(percentage: number): string {
+  if (percentage > 100) return 'bg-red-500'
+  if (percentage > 80) return 'bg-orange-500'
+  if (percentage > 50) return 'bg-blue-500'
+  return 'bg-green-500'
+}
+
+/**
+ * Calculate utilization for a day entry
+ */
+function calculateCellUtilization(entry: DayEntry): { planned: number; available: number; percentage: number } {
+  const available = entry.availableHours ?? 8
+  const planned = entry.plannedHours ?? entry.tasks.reduce((sum, t) => sum + (t.hours ?? 0), 0)
+  const percentage = available > 0 ? (planned / available) * 100 : 0
+
+  return { planned, available, percentage }
+}
+
+/**
+ * Calculate day statistics across all employees
+ */
+function calculateDayStats(employees: WeekEmployee[], date: string) {
+  let planned = 0
+  let available = 0
+
+  employees.forEach((emp) => {
+    const entry = emp.schedule[date]
+    if (entry) {
+      // If employee has availability (sick, vacation, etc.), they contribute 0 available hours
+      if (entry.availability) {
+        // No available hours for this day
+      } else {
+        planned += entry.plannedHours ?? entry.tasks.reduce((sum, t) => sum + (t.hours ?? 0), 0)
+        available += entry.availableHours ?? 8
+      }
+    } else {
+      available += 8 // Default 8 hours
+    }
+  })
+
+  return {
+    planned,
+    available,
+    overbooked: planned > available,
+  }
+}
 
 // =============================================================================
 // Component
@@ -133,11 +187,32 @@ export function WeekPlanning({
       )
     }
 
+    // Calculate utilization
+    const { planned, available, percentage } = calculateCellUtilization(entry)
+    const utilizationColor = getUtilizationColor(percentage)
+    const showUtilization = entry.tasks.length > 0 && (planned > 0 || entry.plannedHours !== undefined)
+
     const visibleTasks = entry.tasks.slice(0, 2)
     const remainingCount = entry.tasks.length - 2
 
     return (
       <div className="flex h-full flex-col gap-1 p-1">
+        {/* Utilization header - only show if there are tasks with hours */}
+        {showUtilization && (
+          <div className="flex items-center gap-1.5 px-1">
+            <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+              {planned}/{available} uur
+            </span>
+            <div className="flex-1 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+              <div
+                className={cn('h-full rounded-full transition-all', utilizationColor)}
+                style={{ width: `${Math.min(percentage, 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Tasks */}
         {visibleTasks.map((task) => (
           <button
             key={task.id}
@@ -230,6 +305,41 @@ export function WeekPlanning({
             ))}
           </div>
 
+          {/* Capacity Summary Row */}
+          <div className="flex border-b border-border bg-muted/50">
+            <div
+              className="sticky left-0 z-30 shrink-0 border-r border-border bg-muted/50 px-4 py-2"
+              style={{ width: EMPLOYEE_COLUMN_WIDTH }}
+            >
+              <span className="text-xs font-medium text-muted-foreground">
+                Totaal
+              </span>
+            </div>
+
+            {currentWeek.days.map((day) => {
+              const dayStats = calculateDayStats(employees, day.date)
+              return (
+                <div
+                  key={`summary-${day.date}`}
+                  className={cn(
+                    'shrink-0 border-r border-border px-3 py-2 text-center',
+                    day.isToday && 'bg-blue-50/30 dark:bg-blue-900/10'
+                  )}
+                  style={{ width: DAY_COLUMN_WIDTH }}
+                >
+                  <div className="text-xs text-muted-foreground">
+                    {dayStats.planned}/{dayStats.available} uur
+                  </div>
+                  {dayStats.overbooked && (
+                    <div className="text-xs text-red-500 font-medium">
+                      Overbezet!
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
           {/* Employee Rows */}
           {employees.map((employee) => (
             <div
@@ -247,10 +357,7 @@ export function WeekPlanning({
                 style={{ width: EMPLOYEE_COLUMN_WIDTH }}
               >
                 <Avatar className="h-9 w-9 shrink-0">
-                  <AvatarFallback
-                    className="text-sm font-medium text-white"
-                    style={{ backgroundColor: employee.color }}
-                  >
+                  <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-sm font-medium">
                     {getInitials(employee.name)}
                   </AvatarFallback>
                 </Avatar>
