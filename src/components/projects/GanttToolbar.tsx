@@ -255,6 +255,10 @@ export function GanttToolbar({
           </Button>
         </div>
 
+        <span className="text-xs text-muted-foreground">
+          Ctrl + scroll om te zoomen
+        </span>
+
         {/* View Options */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

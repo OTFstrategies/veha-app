@@ -7,7 +7,7 @@ import { DraggableTaskBar } from './DraggableTaskBar'
 import { GhostTaskBar } from './GhostTaskBar'
 import { DependencyArrow } from './DependencyArrow'
 import { GanttLegend } from './GanttLegend'
-import type { TimelineConfig, ViewOptions } from './types'
+import type { TimelineConfig, ViewOptions, GanttZoomLevel } from './types'
 import type { Task, TaskDependency, DependencyType } from '@/types/projects'
 import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
 
@@ -29,6 +29,7 @@ interface GanttPanelProps {
   onTaskSelect: (taskId: string) => void
   onTaskDoubleClick: (taskId: string) => void
   onTaskDatesChange?: (taskId: string, startDate: string, endDate: string) => void
+  onZoomChange?: (level: GanttZoomLevel) => void
   // Drag & drop props
   activeTaskId?: string | null
   dragPreview?: {
@@ -94,6 +95,7 @@ export function GanttPanel({
   onTaskSelect,
   onTaskDoubleClick,
   onTaskDatesChange: _onTaskDatesChange,
+  onZoomChange,
   activeTaskId,
   dragPreview,
   onResizeStart,
@@ -328,6 +330,28 @@ export function GanttPanel({
       onResizeStart(taskId, handle, startX)
     }
   }, [onResizeStart])
+
+  // ---------------------------------------------------------------------------
+  // Mouse Wheel Zoom Handler
+  // ---------------------------------------------------------------------------
+
+  const handleWheel = React.useCallback((e: React.WheelEvent) => {
+    // Alleen zoomen als Ctrl ingedrukt is
+    if (e.ctrlKey && onZoomChange) {
+      e.preventDefault()
+
+      const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'quarter']
+      const currentIndex = zoomOrder.indexOf(timelineConfig.zoomLevel)
+
+      if (e.deltaY < 0 && currentIndex > 0) {
+        // Scroll up = zoom in (meer detail)
+        onZoomChange(zoomOrder[currentIndex - 1])
+      } else if (e.deltaY > 0 && currentIndex < zoomOrder.length - 1) {
+        // Scroll down = zoom out (minder detail)
+        onZoomChange(zoomOrder[currentIndex + 1])
+      }
+    }
+  }, [timelineConfig.zoomLevel, onZoomChange])
 
   // ---------------------------------------------------------------------------
   // Render
@@ -566,6 +590,7 @@ export function GanttPanel({
           className="relative flex-1 overflow-x-auto overflow-y-hidden"
           style={{ scrollBehavior: 'auto' }}
           onScroll={onScroll}
+          onWheel={handleWheel}
         >
           <div
             className="relative"

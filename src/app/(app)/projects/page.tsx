@@ -5,13 +5,17 @@ import { useRouter } from 'next/navigation'
 import {
   Building2,
   Calendar,
+  Columns3,
   FolderKanban,
+  GanttChart,
+  LayoutGrid,
   MoreHorizontal,
   Pencil,
   Plus,
   Search,
   Trash2,
 } from 'lucide-react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -363,10 +367,36 @@ export default function ProjectsPage() {
               Beheer en plan je projecten met Gantt-weergave.
             </p>
           </div>
-          <Button onClick={handleCreate}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nieuw project
-          </Button>
+          <div className="flex items-center gap-4">
+            {/* View Switcher */}
+            <div className="flex items-center gap-1 rounded-lg border border-border p-1 bg-muted/50">
+              <Link
+                href="/projects"
+                className="flex items-center justify-center w-8 h-8 rounded-md bg-background text-foreground shadow-sm"
+                title="Grid weergave"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/projects/kanban"
+                className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
+                title="Kanban weergave"
+              >
+                <Columns3 className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/projects/gantt"
+                className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
+                title="Gantt weergave"
+              >
+                <GanttChart className="h-4 w-4" />
+              </Link>
+            </div>
+            <Button onClick={handleCreate}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nieuw project
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}

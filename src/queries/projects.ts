@@ -274,6 +274,7 @@ export function useUpdateProject() {
       endDate?: string
       status?: ProjectStatus
       progress?: number
+      notes?: string
     }) => {
       const updateData: Record<string, unknown> = {}
 
@@ -285,6 +286,7 @@ export function useUpdateProject() {
       if (data.endDate !== undefined) updateData.end_date = data.endDate
       if (data.status !== undefined) updateData.status = data.status
       if (data.progress !== undefined) updateData.progress = data.progress
+      if (data.notes !== undefined) updateData.notes = data.notes
 
       const { data: project, error } = await supabase
         .from("projects")

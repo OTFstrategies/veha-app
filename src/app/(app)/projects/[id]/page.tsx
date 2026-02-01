@@ -2,8 +2,10 @@
 
 import * as React from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Loader2, StickyNote } from 'lucide-react'
 import { ProjectGanttScheduler } from '@/components/projects/ProjectGanttScheduler'
+import { ProjectNotes } from '@/components/projects/ProjectNotes'
+import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
 import { useProject, useDeleteProject, useUpdateProject } from '@/queries/projects'
 import { useUpdateTask, useDeleteTask, useCreateTask } from '@/queries/tasks'
@@ -67,6 +69,7 @@ export default function ProjectDetailPage() {
 
   // Edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
+  const [showNotes, setShowNotes] = React.useState(false)
   const updateProjectMutation = useUpdateProject()
 
   // Mock employees data - in production, this would come from a useEmployees hook
@@ -240,19 +243,58 @@ export default function ProjectDetailPage() {
   return (
     <>
       <div className="-m-6 flex h-[calc(100vh-64px)] flex-col">
-        <ProjectGanttScheduler
-          project={project}
-          employees={employees}
-          onBack={handleBack}
-          onEditProject={handleEditProject}
-          onDeleteProject={handleDeleteProject}
-          onTaskDatesChange={handleTaskDatesChange}
-          onTaskProgressChange={handleTaskProgressChange}
-          onTaskEdit={handleTaskEdit}
-          onTaskDelete={handleTaskDelete}
-          onTaskAdd={handleTaskAdd}
-          onClientClick={handleClientClick}
-        />
+        {/* Notes Toggle Bar */}
+        <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-1.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 gap-1.5 text-xs"
+            onClick={() => setShowNotes(!showNotes)}
+          >
+            <StickyNote className="h-3.5 w-3.5" />
+            Notities
+            {showNotes ? (
+              <ChevronUp className="h-3 w-3" />
+            ) : (
+              <ChevronDown className="h-3 w-3" />
+            )}
+          </Button>
+          {project.notes && !showNotes && (
+            <span className="text-xs text-muted-foreground truncate max-w-md">
+              {project.notes.substring(0, 80)}{project.notes.length > 80 ? '...' : ''}
+            </span>
+          )}
+        </div>
+
+        {/* Collapsible Notes Section */}
+        {showNotes && (
+          <div className="border-b border-border bg-card px-4 py-3">
+            <ProjectNotes
+              projectId={project.id}
+              initialNotes={project.notes || ""}
+              onSave={async (notes) => {
+                await updateProjectMutation.mutateAsync({ id: project.id, notes })
+                addToast({ type: 'success', title: 'Notities opgeslagen' })
+              }}
+            />
+          </div>
+        )}
+
+        <div className="flex-1 overflow-hidden">
+          <ProjectGanttScheduler
+            project={project}
+            employees={employees}
+            onBack={handleBack}
+            onEditProject={handleEditProject}
+            onDeleteProject={handleDeleteProject}
+            onTaskDatesChange={handleTaskDatesChange}
+            onTaskProgressChange={handleTaskProgressChange}
+            onTaskEdit={handleTaskEdit}
+            onTaskDelete={handleTaskDelete}
+            onTaskAdd={handleTaskAdd}
+            onClientClick={handleClientClick}
+          />
+        </div>
       </div>
 
       <ProjectFormModal

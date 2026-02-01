@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type {
   CurrentWeek,
   WeekEmployee,
@@ -214,16 +215,27 @@ export function WeekPlanning({
 
         {/* Tasks */}
         {visibleTasks.map((task) => (
-          <button
-            key={task.id}
-            onClick={() => onTaskClick?.(task.id, task.projectId)}
-            className="group flex-1 rounded-md border border-border bg-card p-1.5 text-left transition-all hover:border-zinc-300 hover:shadow-sm dark:hover:border-zinc-600"
-          >
-            <p className="truncate text-xs font-medium">{task.name}</p>
-            <p className="truncate text-[10px] text-muted-foreground">
-              {task.clientName}
-            </p>
-          </button>
+          <Tooltip key={task.id}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => onTaskClick?.(task.id, task.projectId)}
+                className="group flex-1 rounded-md border border-border bg-card p-1.5 text-left transition-all hover:border-zinc-300 hover:shadow-sm dark:hover:border-zinc-600"
+              >
+                <p className="truncate text-xs font-medium">{task.name}</p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {task.clientName}
+                </p>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs">
+              <div className="space-y-1">
+                <p className="font-medium">{task.name}</p>
+                <p className="text-xs text-muted-foreground">{task.projectName}</p>
+                <p className="text-xs text-muted-foreground">{task.clientName}</p>
+                {task.hours && <p className="text-xs">{task.hours} uur gepland</p>}
+              </div>
+            </TooltipContent>
+          </Tooltip>
         ))}
         {remainingCount > 0 && (
           <div className="text-center text-[10px] text-muted-foreground">

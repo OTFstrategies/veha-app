@@ -42,6 +42,20 @@ interface ClientFormModalProps {
 }
 
 // =============================================================================
+// Validation Helpers
+// =============================================================================
+
+const isValidEmail = (email: string) => {
+  if (!email) return true // optional field
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+const isValidPostcode = (postcode: string) => {
+  if (!postcode) return true // optional field
+  return /^[1-9][0-9]{3}\s?[A-Za-z]{2}$/.test(postcode)
+}
+
+// =============================================================================
 // Component
 // =============================================================================
 
@@ -66,9 +80,16 @@ export function ClientFormModal({
     is_active: true,
   })
 
+  // Validation errors state
+  const [errors, setErrors] = React.useState<{
+    email?: string
+    postal_code?: string
+  }>({})
+
   // Reset form when modal opens/closes or client changes
   React.useEffect(() => {
     if (open) {
+      setErrors({}) // Clear errors when modal opens
       if (client) {
         setFormData({
           name: client.name,
@@ -107,9 +128,25 @@ export function ClientFormModal({
     setFormData((prev) => ({ ...prev, is_active: checked }))
   }
 
-  // Handle submit
+  // Handle submit with validation
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const newErrors: typeof errors = {}
+
+    if (formData.email && !isValidEmail(formData.email)) {
+      newErrors.email = "Ongeldig e-mailadres"
+    }
+    if (formData.postal_code && !isValidPostcode(formData.postal_code)) {
+      newErrors.postal_code = "Ongeldige postcode (bijv. 1234 AB)"
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setErrors({})
     onSubmit(formData)
   }
 
@@ -167,7 +204,11 @@ export function ClientFormModal({
                 onChange={handleChange}
                 placeholder="1234 AB"
                 disabled={isSubmitting}
+                className={errors.postal_code ? "border-red-500" : ""}
               />
+              {errors.postal_code && (
+                <p className="text-xs text-red-500">{errors.postal_code}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="city">Plaats</Label>
@@ -206,7 +247,11 @@ export function ClientFormModal({
                 onChange={handleChange}
                 placeholder="info@bedrijf.nl"
                 disabled={isSubmitting}
+                className={errors.email ? "border-red-500" : ""}
               />
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email}</p>
+              )}
             </div>
           </div>
 
