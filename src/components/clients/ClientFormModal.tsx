@@ -153,7 +153,6 @@ export function ClientFormModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
-        <DialogClose />
         <DialogHeader>
           <DialogTitle>{isEditing ? "Klant bewerken" : "Nieuwe klant"}</DialogTitle>
           <DialogDescription>
@@ -205,9 +204,11 @@ export function ClientFormModal({
                 placeholder="1234 AB"
                 disabled={isSubmitting}
                 className={errors.postal_code ? "border-red-500" : ""}
+                aria-invalid={!!errors.postal_code}
+                aria-describedby={errors.postal_code ? "postal_code-error" : undefined}
               />
               {errors.postal_code && (
-                <p className="text-xs text-red-500">{errors.postal_code}</p>
+                <p id="postal_code-error" className="text-xs text-red-500" role="alert">{errors.postal_code}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -248,9 +249,11 @@ export function ClientFormModal({
                 placeholder="info@bedrijf.nl"
                 disabled={isSubmitting}
                 className={errors.email ? "border-red-500" : ""}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "email-error" : undefined}
               />
               {errors.email && (
-                <p className="text-xs text-red-500">{errors.email}</p>
+                <p id="email-error" className="text-xs text-red-500" role="alert">{errors.email}</p>
               )}
             </div>
           </div>

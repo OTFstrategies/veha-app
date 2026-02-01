@@ -37,8 +37,9 @@ export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProp
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-12" role="status" aria-label="Materialen laden">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900 dark:border-zinc-100" />
+        <span className="sr-only">Laden...</span>
       </div>
     )
   }
@@ -69,10 +70,12 @@ export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProp
       ) : (
         <div className="border rounded-lg divide-y">
           {materials.map((material) => (
-            <div
+            <button
               key={material.id}
               onClick={() => onViewMaterial?.(material.id)}
-              className="p-4 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors"
+              className="p-4 w-full flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors text-left"
+              type="button"
+              aria-label={`Bekijk ${material.name}`}
             >
               <div className="space-y-1">
                 <p className="font-medium">{material.name}</p>
@@ -91,7 +94,7 @@ export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProp
               <Badge className={statusColors[material.status] || "bg-zinc-100 text-zinc-800"}>
                 {statusLabels[material.status] || material.status}
               </Badge>
-            </div>
+            </button>
           ))}
         </div>
       )}

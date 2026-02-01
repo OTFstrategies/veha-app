@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
 import {
   useDashboardStats,
   useTodayTasks,
@@ -42,6 +43,13 @@ export interface UseDashboardResult {
   isActiveProjectsLoading: boolean;
   isCapacityLoading: boolean;
 
+  // Fetching states (for showing refresh indicators)
+  isFetching: boolean;
+  isStatsFetching: boolean;
+  isTodayTasksFetching: boolean;
+  isActiveProjectsFetching: boolean;
+  isCapacityFetching: boolean;
+
   // Error states
   error: Error | null;
   statsError: Error | null;
@@ -49,8 +57,12 @@ export interface UseDashboardResult {
   activeProjectsError: Error | null;
   capacityError: Error | null;
 
+  // Computed values
+  hasData: boolean;
+  hasErrors: boolean;
+
   // Refetch functions
-  refetchAll: () => void;
+  refetchAll: () => Promise<void>;
   refetchStats: () => void;
   refetchTodayTasks: () => void;
   refetchActiveProjects: () => void;
@@ -64,26 +76,107 @@ export function useDashboard(): UseDashboardResult {
   const capacityQuery = useCapacity();
 
   // Combined loading state
-  const isLoading =
-    statsQuery.isLoading ||
-    todayTasksQuery.isLoading ||
-    activeProjectsQuery.isLoading ||
-    capacityQuery.isLoading;
+  const isLoading = useMemo(
+    () =>
+      statsQuery.isLoading ||
+      todayTasksQuery.isLoading ||
+      activeProjectsQuery.isLoading ||
+      capacityQuery.isLoading,
+    [
+      statsQuery.isLoading,
+      todayTasksQuery.isLoading,
+      activeProjectsQuery.isLoading,
+      capacityQuery.isLoading,
+    ]
+  );
+
+  // Combined fetching state (includes background refetches)
+  const isFetching = useMemo(
+    () =>
+      statsQuery.isFetching ||
+      todayTasksQuery.isFetching ||
+      activeProjectsQuery.isFetching ||
+      capacityQuery.isFetching,
+    [
+      statsQuery.isFetching,
+      todayTasksQuery.isFetching,
+      activeProjectsQuery.isFetching,
+      capacityQuery.isFetching,
+    ]
+  );
 
   // Combined error (return first error found)
-  const error =
-    statsQuery.error ||
-    todayTasksQuery.error ||
-    activeProjectsQuery.error ||
-    capacityQuery.error;
+  const error = useMemo(
+    () =>
+      statsQuery.error ||
+      todayTasksQuery.error ||
+      activeProjectsQuery.error ||
+      capacityQuery.error,
+    [
+      statsQuery.error,
+      todayTasksQuery.error,
+      activeProjectsQuery.error,
+      capacityQuery.error,
+    ]
+  );
 
-  // Refetch all data
-  const refetchAll = () => {
-    statsQuery.refetch();
-    todayTasksQuery.refetch();
-    activeProjectsQuery.refetch();
-    capacityQuery.refetch();
-  };
+  // Check if we have any data
+  const hasData = useMemo(
+    () =>
+      !!statsQuery.data ||
+      !!todayTasksQuery.data ||
+      !!activeProjectsQuery.data ||
+      !!capacityQuery.data,
+    [
+      statsQuery.data,
+      todayTasksQuery.data,
+      activeProjectsQuery.data,
+      capacityQuery.data,
+    ]
+  );
+
+  // Check if we have any errors
+  const hasErrors = useMemo(
+    () =>
+      !!statsQuery.error ||
+      !!todayTasksQuery.error ||
+      !!activeProjectsQuery.error ||
+      !!capacityQuery.error,
+    [
+      statsQuery.error,
+      todayTasksQuery.error,
+      activeProjectsQuery.error,
+      capacityQuery.error,
+    ]
+  );
+
+  // Refetch all data with Promise.all for parallel execution
+  const refetchAll = useCallback(async () => {
+    await Promise.all([
+      statsQuery.refetch(),
+      todayTasksQuery.refetch(),
+      activeProjectsQuery.refetch(),
+      capacityQuery.refetch(),
+    ]);
+  }, [statsQuery, todayTasksQuery, activeProjectsQuery, capacityQuery]);
+
+  // Individual refetch callbacks
+  const refetchStats = useCallback(
+    () => void statsQuery.refetch(),
+    [statsQuery]
+  );
+  const refetchTodayTasks = useCallback(
+    () => void todayTasksQuery.refetch(),
+    [todayTasksQuery]
+  );
+  const refetchActiveProjects = useCallback(
+    () => void activeProjectsQuery.refetch(),
+    [activeProjectsQuery]
+  );
+  const refetchCapacity = useCallback(
+    () => void capacityQuery.refetch(),
+    [capacityQuery]
+  );
 
   return {
     // Data with fallbacks
@@ -99,6 +192,13 @@ export function useDashboard(): UseDashboardResult {
     isActiveProjectsLoading: activeProjectsQuery.isLoading,
     isCapacityLoading: capacityQuery.isLoading,
 
+    // Fetching states
+    isFetching,
+    isStatsFetching: statsQuery.isFetching,
+    isTodayTasksFetching: todayTasksQuery.isFetching,
+    isActiveProjectsFetching: activeProjectsQuery.isFetching,
+    isCapacityFetching: capacityQuery.isFetching,
+
     // Error states
     error: error as Error | null,
     statsError: statsQuery.error as Error | null,
@@ -106,11 +206,15 @@ export function useDashboard(): UseDashboardResult {
     activeProjectsError: activeProjectsQuery.error as Error | null,
     capacityError: capacityQuery.error as Error | null,
 
+    // Computed values
+    hasData,
+    hasErrors,
+
     // Refetch functions
     refetchAll,
-    refetchStats: () => statsQuery.refetch(),
-    refetchTodayTasks: () => todayTasksQuery.refetch(),
-    refetchActiveProjects: () => activeProjectsQuery.refetch(),
-    refetchCapacity: () => capacityQuery.refetch(),
+    refetchStats,
+    refetchTodayTasks,
+    refetchActiveProjects,
+    refetchCapacity,
   };
 }

@@ -136,7 +136,8 @@ export default function ClientsPage() {
 
   const handleClientSelect = (clientId: string) => {
     // Could navigate to client detail page or show a detail panel
-    console.log("Selected client:", clientId)
+    // For now, this is handled by the tree's edit functionality
+    void clientId
   }
 
   const handleClientModalClose = () => {

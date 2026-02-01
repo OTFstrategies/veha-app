@@ -118,6 +118,7 @@ function ProjectCard({ project, onView, onEdit, onDelete, onClientClick }: Proje
               variant="ghost"
               size="icon"
               className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Project opties"
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -221,9 +222,9 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
 function LoadingState() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, i) => (
+      {Array.from({ length: 6 }).map((_, index) => (
         <div
-          key={i}
+          key={`skeleton-${index}`}
           className="flex flex-col rounded-lg border border-border bg-card p-4 animate-pulse"
         >
           <div className="h-5 w-3/4 rounded bg-zinc-200 dark:bg-zinc-700" />

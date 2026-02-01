@@ -44,6 +44,7 @@ export function CapacityWidget({
         <button
           key={employee.id}
           onClick={() => onEmployeeClick?.(employee.id)}
+          aria-label={`${employee.name}, ${employee.role}, ${employee.plannedHours} van ${employee.availableHours} uur gepland${employee.status === 'overbooked' ? ', overboekt' : ''}`}
           className={cn(
             'flex w-full items-center gap-3 py-3 text-left transition-colors first:pt-0 last:pb-0',
             'hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-lg px-2 -mx-2',
@@ -76,7 +77,14 @@ export function CapacityWidget({
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <div
+              className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
+              role="progressbar"
+              aria-valuenow={employee.utilizationPercent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Bezettingsgraad: ${employee.utilizationPercent}%`}
+            >
               <div
                 className={cn(
                   'h-full rounded-full transition-all',

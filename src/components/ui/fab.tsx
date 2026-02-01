@@ -39,9 +39,10 @@ export function FAB({ actions, onAction }: FABProps) {
       <DropdownMenuTrigger asChild>
         <Button
           size="icon"
+          aria-label="Snelle acties openen"
           className={cn(
             "h-12 w-12 rounded-full shadow-lg transition-transform duration-200",
-            "bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200",
+            "bg-zinc-800 hover:bg-zinc-900 dark:bg-zinc-100 dark:hover:bg-zinc-200",
             "text-white dark:text-zinc-900"
           )}
         >

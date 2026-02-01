@@ -59,8 +59,11 @@ const defaultAvailabilityStyles: AvailabilityStyles = {
 // Constants
 // =============================================================================
 
+/** Width of the employee column in pixels */
 const EMPLOYEE_COLUMN_WIDTH = 180
+/** Width of each day column in pixels */
 const DAY_COLUMN_WIDTH = 160
+/** Height of each employee row in pixels */
 const ROW_HEIGHT = 100
 
 // =============================================================================
@@ -260,14 +263,14 @@ export function WeekPlanning({
 
           {/* Navigation */}
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="icon" onClick={onPreviousWeek}>
+            <Button variant="outline" size="icon" onClick={onPreviousWeek} aria-label="Vorige week">
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Button variant="outline" onClick={onToday}>
               <Calendar className="mr-2 h-4 w-4" />
               Vandaag
             </Button>
-            <Button variant="outline" size="icon" onClick={onNextWeek}>
+            <Button variant="outline" size="icon" onClick={onNextWeek} aria-label="Volgende week">
               <ChevronRight className="h-4 w-4" />
             </Button>
             <div className="ml-2 text-sm font-medium">

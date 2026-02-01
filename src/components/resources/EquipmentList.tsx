@@ -43,8 +43,9 @@ export function EquipmentList({ onAddEquipment, onViewEquipment }: EquipmentList
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-12" role="status" aria-label="Middelen laden">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900 dark:border-zinc-100" />
+        <span className="sr-only">Laden...</span>
       </div>
     )
   }
@@ -77,10 +78,12 @@ export function EquipmentList({ onAddEquipment, onViewEquipment }: EquipmentList
           {equipment.map((item) => {
             const TypeIcon = typeIcons[item.equipment_type] || Wrench
             return (
-              <div
+              <button
                 key={item.id}
                 onClick={() => onViewEquipment?.(item.id)}
-                className="p-4 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors"
+                className="p-4 w-full flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors text-left"
+                type="button"
+                aria-label={`Bekijk ${item.name}`}
               >
                 <div className="flex items-center gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
@@ -108,7 +111,7 @@ export function EquipmentList({ onAddEquipment, onViewEquipment }: EquipmentList
                 <Badge className={statusColors[item.status] || "bg-zinc-100 text-zinc-800"}>
                   {statusLabels[item.status] || item.status}
                 </Badge>
-              </div>
+              </button>
             )
           })}
         </div>

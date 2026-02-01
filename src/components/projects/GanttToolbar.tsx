@@ -217,6 +217,7 @@ export function GanttToolbar({
             className="h-8 w-8 rounded-r-none"
             onClick={handleZoomIn}
             disabled={!canZoomIn}
+            aria-label="Zoom in"
           >
             <Plus className="h-3.5 w-3.5" />
           </Button>
@@ -250,6 +251,7 @@ export function GanttToolbar({
             className="h-8 w-8 rounded-l-none"
             onClick={handleZoomOut}
             disabled={!canZoomOut}
+            aria-label="Zoom uit"
           >
             <Minus className="h-3.5 w-3.5" />
           </Button>

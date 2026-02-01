@@ -219,10 +219,12 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 
 function DialogTitle({
   className,
+  id,
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
+      id={id}
       className={cn("text-lg font-semibold leading-none tracking-tight", className)}
       {...props}
     />

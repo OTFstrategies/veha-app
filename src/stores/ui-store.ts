@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, devtools } from "zustand/middleware";
 
 interface DashboardSections {
   todayTasks: boolean;
@@ -24,52 +24,83 @@ interface UIState {
   // Dashboard sections
   dashboardSections: DashboardSections;
   toggleDashboardSection: (section: keyof DashboardSections) => void;
+
+  // Reset function
+  resetToDefaults: () => void;
 }
 
+const defaultState = {
+  sidebarCollapsed: true,
+  sidebarHovered: false,
+  sidebarPinned: false,
+  theme: "system" as const,
+  dashboardSections: {
+    todayTasks: true,
+    capacity: true,
+    activeProjects: true,
+  },
+};
+
 export const useUIStore = create<UIState>()(
-  persist(
-    (set) => ({
-      // Sidebar - collapsed by default
-      sidebarCollapsed: true,
-      sidebarHovered: false,
-      sidebarPinned: false,
-      toggleSidebar: () =>
-        set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
-      setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
-      setSidebarHovered: (hovered) => set({ sidebarHovered: hovered }),
-      toggleSidebarPinned: () =>
-        set((state) => ({
-          sidebarPinned: !state.sidebarPinned,
-          // When pinning, expand the sidebar
-          sidebarCollapsed: state.sidebarPinned ? state.sidebarCollapsed : false,
-        })),
+  devtools(
+    persist(
+      (set) => ({
+        // Sidebar - collapsed by default
+        ...defaultState,
 
-      // Theme
-      theme: "system",
-      setTheme: (theme) => set({ theme }),
+        toggleSidebar: () =>
+          set(
+            (state) => ({ sidebarCollapsed: !state.sidebarCollapsed }),
+            false,
+            "toggleSidebar"
+          ),
+        setSidebarCollapsed: (collapsed) =>
+          set({ sidebarCollapsed: collapsed }, false, "setSidebarCollapsed"),
+        setSidebarHovered: (hovered) =>
+          set({ sidebarHovered: hovered }, false, "setSidebarHovered"),
+        toggleSidebarPinned: () =>
+          set(
+            (state) => ({
+              sidebarPinned: !state.sidebarPinned,
+              // When pinning, expand the sidebar
+              sidebarCollapsed: state.sidebarPinned
+                ? state.sidebarCollapsed
+                : false,
+            }),
+            false,
+            "toggleSidebarPinned"
+          ),
 
-      // Dashboard sections - all visible by default
-      dashboardSections: {
-        todayTasks: true,
-        capacity: true,
-        activeProjects: true,
-      },
-      toggleDashboardSection: (section) =>
-        set((state) => ({
-          dashboardSections: {
-            ...state.dashboardSections,
-            [section]: !state.dashboardSections[section],
-          },
-        })),
-    }),
-    {
-      name: "veha-ui-storage",
-      partialize: (state) => ({
-        sidebarCollapsed: state.sidebarCollapsed,
-        sidebarPinned: state.sidebarPinned,
-        dashboardSections: state.dashboardSections,
-        theme: state.theme,
+        // Theme
+        setTheme: (theme) => set({ theme }, false, "setTheme"),
+
+        // Dashboard sections
+        toggleDashboardSection: (section) =>
+          set(
+            (state) => ({
+              dashboardSections: {
+                ...state.dashboardSections,
+                [section]: !state.dashboardSections[section],
+              },
+            }),
+            false,
+            "toggleDashboardSection"
+          ),
+
+        // Reset function
+        resetToDefaults: () =>
+          set(defaultState, false, "resetToDefaults"),
       }),
-    }
+      {
+        name: "veha-ui-storage",
+        partialize: (state) => ({
+          sidebarCollapsed: state.sidebarCollapsed,
+          sidebarPinned: state.sidebarPinned,
+          dashboardSections: state.dashboardSections,
+          theme: state.theme,
+        }),
+      }
+    ),
+    { name: "UIStore" }
   )
 );

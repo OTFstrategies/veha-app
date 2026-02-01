@@ -250,6 +250,8 @@ export default function ProjectDetailPage() {
             size="sm"
             className="h-7 gap-1.5 text-xs"
             onClick={() => setShowNotes(!showNotes)}
+            aria-expanded={showNotes}
+            aria-controls="project-notes-section"
           >
             <StickyNote className="h-3.5 w-3.5" />
             Notities
@@ -268,7 +270,7 @@ export default function ProjectDetailPage() {
 
         {/* Collapsible Notes Section */}
         {showNotes && (
-          <div className="border-b border-border bg-card px-4 py-3">
+          <div id="project-notes-section" className="border-b border-border bg-card px-4 py-3">
             <ProjectNotes
               projectId={project.id}
               initialNotes={project.notes || ""}

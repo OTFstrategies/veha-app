@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -37,9 +37,9 @@ function getQueryClient() {
 
 export function AppShell({ children }: AppShellProps) {
   const queryClient = getQueryClient();
-  const [userEmail, setUserEmail] = React.useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function getUser() {
       const supabase = createClient();
       const {

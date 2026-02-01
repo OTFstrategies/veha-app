@@ -38,10 +38,13 @@ export function Modal({ open, onClose, children, className }: ModalProps) {
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal */}
       <div
+        role="dialog"
+        aria-modal="true"
         className={cn(
           "relative z-50 w-full max-w-lg rounded-lg border bg-card p-6 shadow-lg",
           "animate-in fade-in-0 zoom-in-95",
@@ -65,7 +68,7 @@ export function ModalHeader({ children, onClose, className }: ModalHeaderProps) 
     <div className={cn("mb-4 flex items-center justify-between", className)}>
       <h2 className="text-lg font-semibold">{children}</h2>
       {onClose && (
-        <Button variant="ghost" size="icon" onClick={onClose}>
+        <Button variant="ghost" size="icon" onClick={onClose} aria-label="Sluiten">
           <X className="h-4 w-4" />
         </Button>
       )}

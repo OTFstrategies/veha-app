@@ -162,7 +162,7 @@ interface DropdownMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const DropdownMenuItem = React.forwardRef<HTMLDivElement, DropdownMenuItemProps>(
-  ({ className, inset, disabled, onClick, ...props }, ref) => {
+  ({ className, inset, disabled, onClick, onKeyDown, ...props }, ref) => {
     const { setOpen } = useDropdownMenu()
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -172,6 +172,15 @@ const DropdownMenuItem = React.forwardRef<HTMLDivElement, DropdownMenuItemProps>
       }
       onClick?.(e)
       setOpen(false)
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (disabled) return
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        handleClick(e as unknown as React.MouseEvent<HTMLDivElement>)
+      }
+      onKeyDown?.(e)
     }
 
     return (
@@ -188,6 +197,7 @@ const DropdownMenuItem = React.forwardRef<HTMLDivElement, DropdownMenuItemProps>
           className
         )}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
         {...props}
       />
     )
@@ -201,6 +211,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
+    role="separator"
     className={cn("-mx-1 my-1 h-px bg-muted", className)}
     {...props}
   />

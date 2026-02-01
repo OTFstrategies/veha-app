@@ -24,35 +24,33 @@ function ResourcesPageContent() {
   const activeTab = searchParams.get("tab") || "medewerkers"
 
   // State for selected items (for future modal/detail views)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null)
 
   const handleTabChange = (value: string) => {
     router.push(`/resources?tab=${value}`)
   }
 
-  // Material handlers
+  // Material handlers - TODO: Implement modal functionality
   const handleAddMaterial = () => {
     // TODO: Open add material modal
-    console.log("Add material clicked")
   }
 
   const handleViewMaterial = (materialId: string) => {
     setSelectedMaterialId(materialId)
     // TODO: Open material detail modal
-    console.log("View material:", materialId)
   }
 
-  // Equipment handlers
+  // Equipment handlers - TODO: Implement modal functionality
   const handleAddEquipment = () => {
     // TODO: Open add equipment modal
-    console.log("Add equipment clicked")
   }
 
   const handleViewEquipment = (equipmentId: string) => {
     setSelectedEquipmentId(equipmentId)
     // TODO: Open equipment detail modal
-    console.log("View equipment:", equipmentId)
   }
 
   return (

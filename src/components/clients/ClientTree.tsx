@@ -151,22 +151,23 @@ export function ClientTree({
         {/* Filters */}
         <div className="flex items-center gap-3">
           <div className="relative max-w-sm flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
             <Input
               placeholder="Zoeken op naam, stad, contact..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
+              aria-label="Zoeken in klanten"
             />
           </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-[140px] justify-between">
+              <Button variant="outline" className="w-[140px] justify-between" aria-label="Filter op status">
                 {statusFilter === 'all' && 'Alle'}
                 {statusFilter === 'active' && 'Actief'}
                 {statusFilter === 'inactive' && 'Inactief'}
-                <ChevronDown className="ml-2 h-4 w-4" />
+                <ChevronDown className="ml-2 h-4 w-4" aria-hidden="true" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -189,11 +190,12 @@ export function ClientTree({
                 size="icon"
                 className="ml-auto h-9 w-9"
                 onClick={expandedClients.size > 0 ? collapseAll : expandAll}
+                aria-label={expandedClients.size > 0 ? 'Alles inklappen' : 'Alles uitklappen'}
               >
                 {expandedClients.size > 0 ? (
-                  <ChevronsDownUp className="h-4 w-4" />
+                  <ChevronsDownUp className="h-4 w-4" aria-hidden="true" />
                 ) : (
-                  <ChevronsUpDown className="h-4 w-4" />
+                  <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
                 )}
               </Button>
             </TooltipTrigger>

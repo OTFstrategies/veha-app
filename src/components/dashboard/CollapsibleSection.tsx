@@ -39,7 +39,11 @@ export function CollapsibleSection({
   return (
     <Collapsible open={isOpen} onOpenChange={() => toggleDashboardSection(sectionKey)}>
       <div className={cn("rounded-xl border border-border bg-card", className)}>
-        <CollapsibleTrigger className="flex w-full items-center justify-between p-4 hover:bg-muted/50 rounded-t-xl">
+        <CollapsibleTrigger
+          className="flex w-full items-center justify-between p-4 hover:bg-muted/50 rounded-t-xl"
+          aria-expanded={isOpen}
+          aria-controls={`section-content-${sectionKey}`}
+        >
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-semibold">{title}</h2>
             {badge}
@@ -49,10 +53,16 @@ export function CollapsibleSection({
           </div>
           <div className="flex items-center gap-2">
             {headerAction}
-            <ChevronDown className="chevron-icon h-5 w-5 text-muted-foreground" />
+            <ChevronDown
+              className={cn(
+                "h-5 w-5 text-muted-foreground transition-transform duration-200",
+                isOpen && "rotate-180"
+              )}
+              aria-hidden="true"
+            />
           </div>
         </CollapsibleTrigger>
-        <CollapsibleContent>
+        <CollapsibleContent id={`section-content-${sectionKey}`}>
           <div className="p-4 pt-0">{children}</div>
         </CollapsibleContent>
       </div>

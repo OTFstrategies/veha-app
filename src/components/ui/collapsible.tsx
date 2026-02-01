@@ -108,17 +108,24 @@ interface CollapsibleContentProps extends React.HTMLAttributes<HTMLDivElement> {
 const CollapsibleContent = React.forwardRef<
   HTMLDivElement,
   CollapsibleContentProps
->(({ className, children, ...props }, ref) => {
+>(({ className, children, forceMount, ...props }, ref) => {
   const { open } = useCollapsible()
+
+  if (!open && !forceMount) return null
 
   return (
     <div
       ref={ref}
-      className={cn("collapsible-content", className)}
+      className={cn(
+        "overflow-hidden transition-all duration-200",
+        open ? "animate-in fade-in-0" : "animate-out fade-out-0",
+        className
+      )}
       data-state={open ? "open" : "closed"}
+      hidden={!open && !forceMount}
       {...props}
     >
-      <div>{children}</div>
+      {children}
     </div>
   )
 })

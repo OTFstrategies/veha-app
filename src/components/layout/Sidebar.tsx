@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -89,7 +87,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
           size="icon"
           onClick={toggleSidebarPinned}
           className="h-8 w-8 shrink-0"
-          aria-label={sidebarPinned ? "Unpin sidebar" : "Pin sidebar"}
+          aria-label={sidebarPinned ? "Sidebar losmaken" : "Sidebar vastzetten"}
           title={sidebarPinned ? "Sidebar losmaken" : "Sidebar vastzetten"}
         >
           {sidebarPinned ? (
@@ -142,9 +140,9 @@ export function Sidebar({ userEmail }: SidebarProps) {
 
         {/* Version info - only visible when expanded */}
         {isExpanded && (
-          <div className="rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+          <p className="rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400" aria-label="Applicatie versie">
             VEHA Dashboard v1.0
-          </div>
+          </p>
         )}
       </div>
     </aside>

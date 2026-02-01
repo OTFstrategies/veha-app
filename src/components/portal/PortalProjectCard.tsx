@@ -19,6 +19,7 @@ interface PortalProjectCardProps {
 // Helper Functions
 // =============================================================================
 
+/** Format date in Dutch locale with abbreviated month and year */
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("nl-NL", {
     day: "numeric",
@@ -27,6 +28,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
+/** Format date in Dutch locale with abbreviated month (no year) */
 function formatShortDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("nl-NL", {
     day: "numeric",

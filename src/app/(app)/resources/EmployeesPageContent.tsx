@@ -93,8 +93,7 @@ export default function EmployeesPageContent() {
       })
       addToast({ type: "success", title: "Medewerker succesvol aangemaakt" })
       setIsCreateModalOpen(false)
-    } catch (err) {
-      console.error("Failed to create employee:", err)
+    } catch {
       addToast({ type: "error", title: "Fout bij opslaan van medewerker" })
     }
   }
@@ -117,8 +116,7 @@ export default function EmployeesPageContent() {
       })
       addToast({ type: "success", title: "Medewerker succesvol bijgewerkt" })
       setEditingEmployeeId(null)
-    } catch (err) {
-      console.error("Failed to update employee:", err)
+    } catch {
       addToast({ type: "error", title: "Fout bij opslaan van medewerker" })
     }
   }

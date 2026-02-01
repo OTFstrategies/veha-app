@@ -44,13 +44,14 @@ export function StatsCards({ stats, onStatClick }: StatsCardsProps) {
         <button
           key={card.key}
           onClick={() => onStatClick?.(card.key)}
+          aria-label={`${card.label}: ${card.value}`}
           className={cn(
             'rounded-xl border border-border bg-card p-4 text-center transition-all',
             'hover:border-zinc-300 hover:shadow-sm dark:hover:border-zinc-600',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}
         >
-          <p className="text-4xl font-bold tracking-tight">{card.value}</p>
+          <p className="text-4xl font-bold tracking-tight" aria-hidden="true">{card.value}</p>
           <p className="mt-1 text-sm text-muted-foreground">{card.label}</p>
         </button>
       ))}

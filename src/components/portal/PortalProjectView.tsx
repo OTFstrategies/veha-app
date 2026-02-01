@@ -36,6 +36,7 @@ interface PortalProjectViewProps {
 // Helper Functions
 // =============================================================================
 
+/** Format date in Dutch locale with full month name */
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("nl-NL", {
     day: "numeric",
@@ -44,6 +45,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
+/** Format date in Dutch locale with abbreviated month */
 function formatShortDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("nl-NL", {
     day: "numeric",
@@ -147,7 +149,7 @@ function TaskItem({ task }: TaskItemProps) {
             )}
           </div>
           <Badge
-            variant={isDone ? "success" : isInProgress ? "secondary" : "outline"}
+            variant={isDone ? "success" : (isInProgress ? "secondary" : "outline")}
             className="shrink-0 text-xs w-fit"
           >
             {getTaskStatusLabel(task.status)}

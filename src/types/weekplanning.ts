@@ -4,6 +4,7 @@
 
 /**
  * Availability status types
+ * Note: 'beschikbaar' is excluded here as it represents the default state (no entry needed)
  */
 export type AvailabilityStatus = 'ziek' | 'vakantie' | 'vrij' | 'training'
 

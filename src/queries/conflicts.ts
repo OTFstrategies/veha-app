@@ -1,10 +1,6 @@
 import * as React from 'react'
 import { useQuery } from '@tanstack/react-query'
-import {
-  detectEmployeeConflicts,
-  getAllEmployeeConflicts,
-  type ConflictInfo,
-} from '@/lib/scheduling'
+import type { ConflictInfo } from '@/lib/scheduling'
 import { useProject } from './projects'
 import { useEmployees } from './employees'
 import { useCurrentWorkspace } from '@/hooks/use-workspace'

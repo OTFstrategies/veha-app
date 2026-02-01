@@ -304,12 +304,16 @@ export function EmployeeFormModal({
                 id="isActive"
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
-                className="h-4 w-4 rounded border-zinc-300"
+                className="h-4 w-4 rounded border-zinc-300 focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2"
                 disabled={isLoading}
+                aria-describedby="isActive-description"
               />
               <Label htmlFor="isActive" className="cursor-pointer">
                 Actief
               </Label>
+              <span id="isActive-description" className="sr-only">
+                Schakel in om de medewerker actief te maken
+              </span>
             </div>
           )}
 

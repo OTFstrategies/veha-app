@@ -1,10 +1,15 @@
 import { cn } from "@/lib/utils"
 
-interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Accessibility label for screen readers */
+  label?: string
+}
 
-export function Skeleton({ className, ...props }: SkeletonProps) {
+export function Skeleton({ className, label = "Laden...", ...props }: SkeletonProps) {
   return (
     <div
+      role="status"
+      aria-label={label}
       className={cn(
         "animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-800",
         className

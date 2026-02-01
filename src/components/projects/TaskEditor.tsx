@@ -341,7 +341,7 @@ export function TaskEditor({
             {task.isMilestone && <Diamond className="h-4 w-4 fill-current" />}
             <span className="font-mono text-sm text-muted-foreground">{task.wbs}</span>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose} aria-label="Sluiten">
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -453,6 +453,7 @@ export function TaskEditor({
                   step={5}
                   value={task.progress}
                   onChange={(e) => updateField('progress', parseInt(e.target.value))}
+                  aria-label="Voortgang percentage"
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 dark:bg-zinc-700 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-zinc-800 dark:[&::-webkit-slider-thumb]:bg-zinc-200"
                 />
               </div>
@@ -509,6 +510,9 @@ export function TaskEditor({
                 </Label>
                 <button
                   onClick={() => updateField('isMilestone', !task.isMilestone)}
+                  role="switch"
+                  aria-checked={task.isMilestone}
+                  aria-label="Milestone toggle"
                   className={cn(
                     'h-6 w-11 rounded-full transition-colors',
                     task.isMilestone
@@ -598,6 +602,7 @@ export function TaskEditor({
                         size="icon"
                         className="h-7 w-7"
                         onClick={() => handleRemoveAssignment(assignment.id)}
+                        aria-label={`Verwijder ${assignment.employeeName}`}
                       >
                         <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                       </Button>

@@ -58,6 +58,10 @@ const STATUS_COLORS: Record<string, string> = {
   geannuleerd: 'border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300',
 }
 
+const getStatusColor = (status: string): string => {
+  return STATUS_COLORS[status] || STATUS_COLORS.gepland
+}
+
 // =============================================================================
 // Props
 // =============================================================================
@@ -110,16 +114,19 @@ export function ClientTreeNode({
       >
         {/* Expand/Collapse Button */}
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation()
             onToggle()
           }}
           className="shrink-0 rounded p-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? 'Inklappen' : 'Uitklappen'}
         >
           {isExpanded ? (
-            <ChevronDown className="h-4 w-4 text-zinc-500" />
+            <ChevronDown className="h-4 w-4 text-zinc-500" aria-hidden="true" />
           ) : (
-            <ChevronRight className="h-4 w-4 text-zinc-500" />
+            <ChevronRight className="h-4 w-4 text-zinc-500" aria-hidden="true" />
           )}
         </button>
 
@@ -177,8 +184,9 @@ export function ClientTreeNode({
               size="icon"
               className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100"
               onClick={(e) => e.stopPropagation()}
+              aria-label="Klant acties"
             >
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -284,22 +292,31 @@ function TreeGroup({ type, count, isExpanded, onToggle, onAdd, children }: TreeG
         )}
         style={{ paddingLeft: INDENT_PX + 16 }}
         onClick={onToggle}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onToggle()
+          }
+        }}
       >
-        <button className="shrink-0 p-0.5">
+        <span className="shrink-0 p-0.5" aria-hidden="true">
           {isExpanded ? (
             <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
           ) : (
             <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
           )}
-        </button>
+        </span>
 
-        <Icon className="h-4 w-4 shrink-0 text-zinc-400" />
+        <Icon className="h-4 w-4 shrink-0 text-zinc-400" aria-hidden="true" />
 
         <span className="text-sm text-zinc-600 dark:text-zinc-400">{config.label}</span>
 
         <span className="text-xs text-zinc-400 dark:text-zinc-500">({count})</span>
 
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation()
             onAdd()
@@ -308,8 +325,9 @@ function TreeGroup({ type, count, isExpanded, onToggle, onAdd, children }: TreeG
             'ml-auto rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700',
             'opacity-0 group-hover:opacity-100'
           )}
+          aria-label={`${config.label} toevoegen`}
         >
-          <Plus className="h-3.5 w-3.5 text-zinc-500" />
+          <Plus className="h-3.5 w-3.5 text-zinc-500" aria-hidden="true" />
         </button>
       </div>
 
@@ -395,13 +413,20 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
         {project.name}
       </span>
 
-      <Badge variant="outline" className={cn('text-xs', STATUS_COLORS[project.status])}>
+      <Badge variant="outline" className={cn('text-xs', getStatusColor(project.status))}>
         {project.status}
       </Badge>
 
       {/* Progress Bar */}
       <div className="ml-auto flex items-center gap-2">
-        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+        <div
+          className="h-1.5 w-20 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
+          role="progressbar"
+          aria-valuenow={project.progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Voortgang: ${project.progress}%`}
+        >
           <div
             className={cn(
               'h-full rounded-full',
@@ -414,7 +439,7 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
             style={{ width: `${project.progress}%` }}
           />
         </div>
-        <span className="w-8 text-right text-xs text-zinc-500">{project.progress}%</span>
+        <span className="w-8 text-right text-xs text-zinc-500" aria-hidden="true">{project.progress}%</span>
       </div>
 
       <ArrowRight className="h-4 w-4 text-zinc-400 opacity-0 group-hover:opacity-100" />

@@ -125,6 +125,7 @@ export function useTasks(projectId: string) {
       return (data as DbTaskWithRelations[]).map(transformTask)
     },
     enabled: Boolean(projectId),
+    staleTime: 2 * 60 * 1000, // 2 minutes - task data may change during planning
   })
 }
 

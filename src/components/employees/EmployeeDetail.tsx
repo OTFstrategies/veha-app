@@ -111,6 +111,7 @@ export function EmployeeDetail({
         <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
           <button
             onClick={onBack}
+            aria-label="Terug naar medewerkers"
             className="flex items-center gap-1 hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -154,7 +155,7 @@ export function EmployeeDetail({
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" aria-label="Meer acties">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -315,7 +316,7 @@ export function EmployeeDetail({
                         </div>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Afwezigheid acties">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>

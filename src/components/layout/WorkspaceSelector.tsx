@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Building2, Check, ChevronsUpDown, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,7 +24,7 @@ export function WorkspaceSelector({ collapsed = false }: WorkspaceSelectorProps)
 
   if (isLoading) {
     return (
-      <div className={cn("px-2", collapsed && "px-1")}>
+      <div className={cn("px-2", collapsed && "px-1")} role="status" aria-label="Workspace laden...">
         <Skeleton className={cn("h-10 w-full", collapsed && "h-10 w-10")} />
       </div>
     );
@@ -78,12 +77,9 @@ export function WorkspaceSelector({ collapsed = false }: WorkspaceSelectorProps)
           ))}
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="text-zinc-500"
+            className="text-zinc-500 cursor-not-allowed opacity-50"
             disabled
-            onClick={() => {
-              // Workspace creation is not yet implemented
-              console.log('Create workspace - not implemented')
-            }}
+            aria-label="Nieuwe workspace aanmaken (binnenkort beschikbaar)"
           >
             <Plus className="h-4 w-4" />
             <span>Nieuwe workspace</span>

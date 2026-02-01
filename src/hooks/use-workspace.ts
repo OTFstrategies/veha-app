@@ -1,23 +1,32 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useWorkspaceStore } from "@/stores/workspace-store";
-import type { Workspace, WorkspaceMember, UserRole } from "@/types/database";
+import type { Workspace, UserRole } from "@/types/database";
 
 interface WorkspaceWithRole extends Workspace {
   role: UserRole;
 }
 
+// Query key constants for consistency
+export const WORKSPACE_QUERY_KEYS = {
+  all: ["workspaces"] as const,
+  members: (workspaceId: string | null) =>
+    ["workspace-members", workspaceId] as const,
+};
+
 export function useWorkspaces() {
   const supabase = createClient();
 
   return useQuery({
-    queryKey: ["workspaces"],
+    queryKey: WORKSPACE_QUERY_KEYS.all,
     queryFn: async (): Promise<WorkspaceWithRole[]> => {
       const { data: memberships, error } = await supabase
         .from("workspace_members")
-        .select(`
+        .select(
+          `
           role,
           workspace:workspaces (
             id,
@@ -26,7 +35,8 @@ export function useWorkspaces() {
             created_at,
             updated_at
           )
-        `);
+        `
+        );
 
       if (error) throw error;
 
@@ -35,41 +45,67 @@ export function useWorkspaces() {
         role: m.role as UserRole,
       }));
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes (formerly cacheTime)
   });
 }
 
 export function useCurrentWorkspace() {
   const { currentWorkspaceId, setCurrentWorkspace } = useWorkspaceStore();
   const { data: workspaces, isLoading } = useWorkspaces();
+  const hasAutoSelected = useRef(false);
 
   const currentWorkspace = workspaces?.find(
     (w) => w.id === currentWorkspaceId
   );
 
   // Auto-select first workspace if none selected or current is invalid
-  const shouldAutoSelect = !isLoading && workspaces && workspaces.length > 0 && 
-    (!currentWorkspaceId || !currentWorkspace);
-  
-  if (shouldAutoSelect) {
-    setCurrentWorkspace(workspaces[0].id);
-  }
+  // Use useEffect to prevent render-time side effects
+  useEffect(() => {
+    const shouldAutoSelect =
+      !isLoading &&
+      workspaces &&
+      workspaces.length > 0 &&
+      (!currentWorkspaceId || !currentWorkspace) &&
+      !hasAutoSelected.current;
+
+    if (shouldAutoSelect) {
+      hasAutoSelected.current = true;
+      setCurrentWorkspace(workspaces[0].id);
+    }
+  }, [isLoading, workspaces, currentWorkspaceId, currentWorkspace, setCurrentWorkspace]);
+
+  // Reset auto-select flag when workspace is cleared
+  useEffect(() => {
+    if (!currentWorkspaceId) {
+      hasAutoSelected.current = false;
+    }
+  }, [currentWorkspaceId]);
 
   // Return the actual workspace ID (either current or first available)
-  const effectiveWorkspaceId = currentWorkspaceId && currentWorkspace 
-    ? currentWorkspaceId 
-    : (workspaces?.[0]?.id ?? null);
+  const effectiveWorkspaceId =
+    currentWorkspaceId && currentWorkspace
+      ? currentWorkspaceId
+      : (workspaces?.[0]?.id ?? null);
 
   return {
-    workspace: currentWorkspace ?? workspaces?.[0],
+    workspace: currentWorkspace ?? workspaces?.[0] ?? null,
     workspaceId: effectiveWorkspaceId,
+    workspaces: workspaces ?? [],
     isLoading,
     setWorkspace: setCurrentWorkspace,
+    hasWorkspaces: (workspaces?.length ?? 0) > 0,
   };
 }
 
 export function useWorkspaceRole() {
   const { workspace } = useCurrentWorkspace();
   return workspace?.role ?? null;
+}
+
+export function useIsWorkspaceAdmin() {
+  const role = useWorkspaceRole();
+  return role === "admin";
 }
 
 export function useCreateWorkspace() {
@@ -108,7 +144,7 @@ export function useCreateWorkspace() {
       return workspace;
     },
     onSuccess: (workspace) => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries({ queryKey: WORKSPACE_QUERY_KEYS.all });
       setCurrentWorkspace(workspace.id);
     },
   });
@@ -136,7 +172,25 @@ export function useInviteToWorkspace() {
         .eq("email", email)
         .single();
 
-      if (profileError) throw new Error("User not found");
+      if (profileError) {
+        throw new Error(
+          profileError.code === "PGRST116"
+            ? "User not found with this email address"
+            : "Error finding user"
+        );
+      }
+
+      // Check if user is already a member
+      const { data: existingMember } = await supabase
+        .from("workspace_members")
+        .select("id")
+        .eq("workspace_id", workspaceId)
+        .eq("profile_id", profile.id)
+        .single();
+
+      if (existingMember) {
+        throw new Error("User is already a member of this workspace");
+      }
 
       // Add as workspace member
       const { error } = await supabase.from("workspace_members").insert({
@@ -149,7 +203,7 @@ export function useInviteToWorkspace() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["workspace-members", workspaceId],
+        queryKey: WORKSPACE_QUERY_KEYS.members(workspaceId),
       });
     },
   });
@@ -160,13 +214,14 @@ export function useWorkspaceMembers() {
   const { workspaceId } = useCurrentWorkspace();
 
   return useQuery({
-    queryKey: ["workspace-members", workspaceId],
+    queryKey: WORKSPACE_QUERY_KEYS.members(workspaceId),
     queryFn: async () => {
       if (!workspaceId) return [];
 
       const { data, error } = await supabase
         .from("workspace_members")
-        .select(`
+        .select(
+          `
           id,
           role,
           created_at,
@@ -176,12 +231,38 @@ export function useWorkspaceMembers() {
             full_name,
             avatar_url
           )
-        `)
+        `
+        )
         .eq("workspace_id", workspaceId);
 
       if (error) throw error;
       return data;
     },
     enabled: !!workspaceId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+}
+
+export function useRemoveWorkspaceMember() {
+  const supabase = createClient();
+  const queryClient = useQueryClient();
+  const { workspaceId } = useCurrentWorkspace();
+
+  return useMutation({
+    mutationFn: async (memberId: string) => {
+      if (!workspaceId) throw new Error("No workspace selected");
+
+      const { error } = await supabase
+        .from("workspace_members")
+        .delete()
+        .eq("id", memberId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: WORKSPACE_QUERY_KEYS.members(workspaceId),
+      });
+    },
   });
 }

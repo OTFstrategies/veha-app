@@ -16,7 +16,7 @@ export function GanttLegend({ showCriticalPath }: GanttLegendProps) {
   if (!showCriticalPath) return null
 
   return (
-    <div className="flex items-center gap-6 px-4 py-2 bg-zinc-50 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-700">
+    <div className="flex items-center gap-6 px-4 py-2 bg-zinc-50 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-700" role="region" aria-label="Gantt chart legenda">
       <span className="text-xs text-zinc-500 dark:text-zinc-400">Legenda:</span>
 
       <div className="flex items-center gap-2">

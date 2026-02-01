@@ -627,11 +627,11 @@ export function GanttPanel({
             )}
 
             {/* Row Lines */}
-            {flatTasks.map((_, i) => (
+            {flatTasks.map((task, index) => (
               <div
-                key={i}
+                key={`rowline-${task.id}`}
                 className="absolute left-0 right-0 border-b border-border"
-                style={{ top: (i + 1) * ROW_HEIGHT - 1 }}
+                style={{ top: (index + 1) * ROW_HEIGHT - 1 }}
               />
             ))}
 

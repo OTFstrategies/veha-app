@@ -531,6 +531,7 @@ export function useProjectNotes(projectId: string) {
       });
     },
     enabled: !!projectId && !!workspaceId,
+    staleTime: 2 * 60 * 1000, // 2 minutes - notes change infrequently
   });
 }
 
@@ -547,7 +548,7 @@ export function useAddProjectNote() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        throw new Error("Niet ingelogd");
+        throw new Error("Je moet ingelogd zijn om een notitie te plaatsen");
       }
 
       const { error } = await supabase
@@ -558,7 +559,7 @@ export function useAddProjectNote() {
           content,
         });
 
-      if (error) throw error;
+      if (error) throw new Error(`Notitie toevoegen mislukt: ${error.message}`);
     },
     onSuccess: (_, { projectId }) => {
       queryClient.invalidateQueries({ queryKey: portalKeys.notes(projectId) });
@@ -581,7 +582,7 @@ export function useDeleteProjectNote() {
         .delete()
         .eq("id", noteId);
 
-      if (error) throw error;
+      if (error) throw new Error(`Notitie verwijderen mislukt: ${error.message}`);
 
       return { projectId };
     },

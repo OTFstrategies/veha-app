@@ -42,7 +42,9 @@ function Popover({ open: controlledOpen, onOpenChange, children }: PopoverProps)
 
   return (
     <PopoverContext.Provider value={{ open, onOpenChange: setOpen, triggerRef }}>
-      {children}
+      <div className="relative inline-block">
+        {children}
+      </div>
     </PopoverContext.Provider>
   )
 }

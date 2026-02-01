@@ -125,6 +125,7 @@ export function ProjectHeader({
             size="icon"
             className="h-8 w-8 shrink-0"
             onClick={onBack}
+            aria-label="Terug naar projecten"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -164,7 +165,7 @@ export function ProjectHeader({
           {/* Actions Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Project opties">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

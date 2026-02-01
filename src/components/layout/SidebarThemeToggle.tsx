@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect } from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,9 @@ const themeConfig = {
 function applyTheme(theme: "light" | "dark" | "system") {
   const root = document.documentElement;
 
+  // Persist theme preference to localStorage
+  localStorage.setItem("veha-theme", theme);
+
   if (theme === "system") {
     const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     root.classList.toggle("dark", systemPrefersDark);
@@ -45,12 +48,12 @@ export function SidebarThemeToggle({ collapsed }: SidebarThemeToggleProps) {
   const Icon = config.icon;
 
   // Apply theme on mount and when theme changes
-  React.useEffect(() => {
+  useEffect(() => {
     applyTheme(theme);
   }, [theme]);
 
   // Listen for system theme changes when in system mode
-  React.useEffect(() => {
+  useEffect(() => {
     if (theme !== "system") return;
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");

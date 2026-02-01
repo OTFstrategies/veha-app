@@ -31,7 +31,7 @@ export function useMaterials(workspaceId: string | null) {
         .eq("is_active", true)
         .order("name")
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to fetch materials: ${error.message}`)
       return data as Material[]
     },
     enabled: !!workspaceId,
@@ -51,7 +51,7 @@ export function useMaterial(id: string | null) {
         .eq("id", id)
         .single()
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to fetch material: ${error.message}`)
       return data as Material
     },
     enabled: !!id,
@@ -75,7 +75,7 @@ export function useCreateMaterial() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to create material: ${error.message}`)
       return data as Material
     },
     onSuccess: (_, variables) => {
@@ -97,7 +97,7 @@ export function useUpdateMaterial() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to update material: ${error.message}`)
       return data as Material
     },
     onSuccess: (data) => {
@@ -119,7 +119,7 @@ export function useDeleteMaterial() {
         .update({ is_active: false })
         .eq("id", id)
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to delete material: ${error.message}`)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: materialKeys.all })

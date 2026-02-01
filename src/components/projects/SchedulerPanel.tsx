@@ -357,11 +357,11 @@ export function SchedulerPanel({
             )}
 
             {/* Row Lines */}
-            {resources.map((_, i) => (
+            {resources.map((resource, index) => (
               <div
-                key={i}
+                key={`rowline-${resource.employee.id}`}
                 className="absolute left-0 right-0 border-b border-border"
-                style={{ top: (i + 1) * ROW_HEIGHT - 1 }}
+                style={{ top: (index + 1) * ROW_HEIGHT - 1 }}
               />
             ))}
 

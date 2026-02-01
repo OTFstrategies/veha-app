@@ -42,6 +42,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
               <button
                 key={task.id}
                 onClick={() => onTaskClick?.(task.id, group.projectId)}
+                aria-label={`Taak: ${task.name}, ${task.progress}% voltooid${task.status === 'done' ? ', afgerond' : ''}`}
                 className={cn(
                   'group flex w-full items-center gap-3 rounded-lg border border-transparent p-2 text-left transition-all',
                   'hover:border-border hover:bg-zinc-50 dark:hover:bg-zinc-800/50',
@@ -78,7 +79,14 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                   </p>
                   {/* Progress Bar */}
                   <div className="mt-1 flex items-center gap-2">
-                    <div className="h-1 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                    <div
+                      className="h-1 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
+                      role="progressbar"
+                      aria-valuenow={task.progress}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`Taak voortgang: ${task.progress}%`}
+                    >
                       <div
                         className={cn(
                           'h-full rounded-full transition-all',
@@ -89,7 +97,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                         style={{ width: `${task.progress}%` }}
                       />
                     </div>
-                    <span className="text-xs tabular-nums text-muted-foreground">
+                    <span className="text-xs tabular-nums text-muted-foreground" aria-hidden="true">
                       {task.progress}%
                     </span>
                   </div>

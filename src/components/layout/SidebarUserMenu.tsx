@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useRouter } from "next/navigation";
 import { ChevronUp, LogOut, Settings, User } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -81,19 +80,27 @@ export function SidebarUserMenu({ collapsed, userEmail }: SidebarUserMenuProps) 
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="w-56 mb-2"
-        style={{ bottom: "100%", top: "auto" }}
+        className="w-56 mb-2 bottom-full top-auto"
       >
-        <DropdownMenuItem onClick={() => router.push('/settings')}>
+        <DropdownMenuItem
+          onClick={() => router.push('/settings/profile')}
+          aria-label="Ga naar profiel instellingen"
+        >
           <User className="mr-2 h-4 w-4" />
           Profiel
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/settings')}>
+        <DropdownMenuItem
+          onClick={() => router.push('/settings')}
+          aria-label="Ga naar algemene instellingen"
+        >
           <Settings className="mr-2 h-4 w-4" />
           Instellingen
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          aria-label="Uitloggen uit de applicatie"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Uitloggen
         </DropdownMenuItem>

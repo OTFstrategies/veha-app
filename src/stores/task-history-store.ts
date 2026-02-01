@@ -1,87 +1,113 @@
-import { create } from 'zustand'
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 /**
  * Snapshot of a task's dates at a point in time
  */
 export interface TaskSnapshot {
-  id: string
-  startDate: string
-  endDate: string
+  id: string;
+  startDate: string;
+  endDate: string;
 }
 
 /**
  * A history entry representing a set of task changes that can be undone
  */
 export interface HistoryEntry {
-  timestamp: number
-  description: string
-  snapshots: TaskSnapshot[]
+  timestamp: number;
+  description: string;
+  snapshots: TaskSnapshot[];
 }
 
 /**
  * Store for managing task date history with undo/redo functionality
  */
 interface TaskHistoryStore {
-  history: HistoryEntry[]
-  currentIndex: number
+  history: HistoryEntry[];
+  currentIndex: number;
 
   // Actions
-  pushState: (description: string, snapshots: TaskSnapshot[]) => void
-  undo: () => HistoryEntry | null
-  redo: () => HistoryEntry | null
-  canUndo: () => boolean
-  canRedo: () => boolean
-  clear: () => void
+  pushState: (description: string, snapshots: TaskSnapshot[]) => void;
+  undo: () => HistoryEntry | null;
+  redo: () => HistoryEntry | null;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+  clear: () => void;
+  getHistoryLength: () => number;
 }
 
-const MAX_HISTORY_ENTRIES = 20
+const MAX_HISTORY_ENTRIES = 20;
 
-export const useTaskHistoryStore = create<TaskHistoryStore>()((set, get) => ({
-  history: [],
-  currentIndex: -1,
+export const useTaskHistoryStore = create<TaskHistoryStore>()(
+  devtools(
+    (set, get) => ({
+      history: [],
+      currentIndex: -1,
 
-  pushState: (description, snapshots) => {
-    const { history, currentIndex } = get()
+      pushState: (description, snapshots) => {
+        const { history, currentIndex } = get();
 
-    // Remove any future states if we're not at the end
-    const newHistory = history.slice(0, currentIndex + 1)
+        // Prevent duplicate entries for the same state
+        const lastEntry = history[currentIndex];
+        if (
+          lastEntry &&
+          JSON.stringify(lastEntry.snapshots) === JSON.stringify(snapshots)
+        ) {
+          return;
+        }
 
-    newHistory.push({
-      timestamp: Date.now(),
-      description,
-      snapshots,
-    })
+        // Remove any future states if we're not at the end
+        const newHistory = history.slice(0, currentIndex + 1);
 
-    // Keep max entries
-    if (newHistory.length > MAX_HISTORY_ENTRIES) {
-      newHistory.shift()
-    }
+        newHistory.push({
+          timestamp: Date.now(),
+          description,
+          snapshots,
+        });
 
-    set({
-      history: newHistory,
-      currentIndex: newHistory.length - 1,
-    })
-  },
+        // Keep max entries
+        if (newHistory.length > MAX_HISTORY_ENTRIES) {
+          newHistory.shift();
+        }
 
-  undo: () => {
-    const { history, currentIndex } = get()
-    if (currentIndex < 0) return null
+        set(
+          {
+            history: newHistory,
+            currentIndex: newHistory.length - 1,
+          },
+          false,
+          "pushState"
+        );
+      },
 
-    const entry = history[currentIndex]
-    set({ currentIndex: currentIndex - 1 })
-    return entry
-  },
+      undo: () => {
+        const { history, currentIndex } = get();
+        if (currentIndex < 0) return null;
 
-  redo: () => {
-    const { history, currentIndex } = get()
-    if (currentIndex >= history.length - 1) return null
+        const entry = history[currentIndex];
+        set({ currentIndex: currentIndex - 1 }, false, "undo");
+        return entry;
+      },
 
-    set({ currentIndex: currentIndex + 1 })
-    return history[currentIndex + 1]
-  },
+      redo: () => {
+        const { history, currentIndex } = get();
+        if (currentIndex >= history.length - 1) return null;
 
-  canUndo: () => get().currentIndex >= 0,
-  canRedo: () => get().currentIndex < get().history.length - 1,
+        const newIndex = currentIndex + 1;
+        set({ currentIndex: newIndex }, false, "redo");
+        return history[newIndex];
+      },
 
-  clear: () => set({ history: [], currentIndex: -1 }),
-}))
+      canUndo: () => get().currentIndex >= 0,
+      canRedo: () => {
+        const { currentIndex, history } = get();
+        return currentIndex < history.length - 1;
+      },
+
+      clear: () => set({ history: [], currentIndex: -1 }, false, "clear"),
+
+      getHistoryLength: () => get().history.length,
+    }),
+    { name: "TaskHistoryStore" }
+  )
+);

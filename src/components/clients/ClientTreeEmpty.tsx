@@ -16,7 +16,7 @@ interface ClientTreeEmptyProps {
 
 export function ClientTreeEmpty({ hasFilters, onAddClient }: ClientTreeEmptyProps) {
   return (
-    <div className="flex flex-col items-center justify-center px-4 py-16">
+    <div className="flex flex-col items-center justify-center px-4 py-16" role="status" aria-live="polite">
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
         {hasFilters ? (
           <Search className="h-8 w-8 text-zinc-400" />

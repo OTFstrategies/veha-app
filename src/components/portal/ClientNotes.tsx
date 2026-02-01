@@ -102,7 +102,7 @@ export function ClientNotes({ projectId, userRole, currentUserId }: ClientNotesP
       await addNote.mutateAsync({ projectId, content: newNote.trim() });
       setNewNote("");
       addToast({ type: "success", title: "Notitie toegevoegd" });
-    } catch (error) {
+    } catch {
       addToast({ type: "error", title: "Fout bij toevoegen notitie" });
     }
   }
@@ -113,7 +113,7 @@ export function ClientNotes({ projectId, userRole, currentUserId }: ClientNotesP
     try {
       await deleteNote.mutateAsync({ noteId, projectId });
       addToast({ type: "success", title: "Notitie verwijderd" });
-    } catch (error) {
+    } catch {
       addToast({ type: "error", title: "Fout bij verwijderen notitie" });
     }
   }

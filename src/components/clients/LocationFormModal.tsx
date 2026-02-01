@@ -39,6 +39,15 @@ interface LocationFormModalProps {
 }
 
 // =============================================================================
+// Validation Helpers
+// =============================================================================
+
+const isValidPostcode = (postcode: string) => {
+  if (!postcode) return true // optional field
+  return /^[1-9][0-9]{3}\s?[A-Za-z]{2}$/.test(postcode)
+}
+
+// =============================================================================
 // Component
 // =============================================================================
 
@@ -61,9 +70,15 @@ export function LocationFormModal({
     is_primary: false,
   })
 
+  // Validation errors state
+  const [errors, setErrors] = React.useState<{
+    postal_code?: string
+  }>({})
+
   // Reset form when modal opens/closes or location changes
   React.useEffect(() => {
     if (open) {
+      setErrors({}) // Clear errors when modal opens
       if (location) {
         setFormData({
           name: location.name,
@@ -94,16 +109,28 @@ export function LocationFormModal({
     setFormData((prev) => ({ ...prev, is_primary: checked }))
   }
 
-  // Handle submit
+  // Handle submit with validation
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const newErrors: typeof errors = {}
+
+    if (formData.postal_code && !isValidPostcode(formData.postal_code)) {
+      newErrors.postal_code = "Ongeldige postcode (bijv. 1234 AB)"
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setErrors({})
     onSubmit(formData)
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[450px]">
-        <DialogClose />
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Locatie bewerken" : "Nieuwe locatie"}
@@ -158,7 +185,13 @@ export function LocationFormModal({
                 onChange={handleChange}
                 placeholder="1234 AB"
                 disabled={isSubmitting}
+                className={errors.postal_code ? "border-red-500" : ""}
+                aria-invalid={!!errors.postal_code}
+                aria-describedby={errors.postal_code ? "location-postal_code-error" : undefined}
               />
+              {errors.postal_code && (
+                <p id="location-postal_code-error" className="text-xs text-red-500" role="alert">{errors.postal_code}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="location-city">Plaats</Label>

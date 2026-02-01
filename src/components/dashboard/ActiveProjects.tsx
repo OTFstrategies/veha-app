@@ -39,6 +39,7 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
         <button
           key={project.id}
           onClick={() => onProjectClick?.(project.id)}
+          aria-label={`Project: ${project.name}, ${project.clientName}, ${project.progress}% voltooid${project.isDelayed ? ', achterstand' : ''}`}
           className={cn(
             'group relative overflow-hidden rounded-lg border bg-card p-4 text-left transition-all',
             project.isDelayed
@@ -65,9 +66,16 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
           <div className="mt-3">
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Voortgang</span>
-              <span className="text-xs font-medium tabular-nums">{project.progress}%</span>
+              <span className="text-xs font-medium tabular-nums" aria-hidden="true">{project.progress}%</span>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <div
+              className="h-1.5 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
+              role="progressbar"
+              aria-valuenow={project.progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Project voortgang: ${project.progress}%`}
+            >
               <div
                 className={cn(
                   'h-full rounded-full transition-all',

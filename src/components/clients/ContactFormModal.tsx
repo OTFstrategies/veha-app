@@ -142,7 +142,6 @@ export function ContactFormModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[450px]">
-        <DialogClose />
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Contactpersoon bewerken" : "Nieuwe contactpersoon"}
@@ -199,9 +198,11 @@ export function ContactFormModal({
                 placeholder="+31 6 12345678"
                 disabled={isSubmitting}
                 className={errors.phone ? "border-red-500" : ""}
+                aria-invalid={!!errors.phone}
+                aria-describedby={errors.phone ? "contact-phone-error" : undefined}
               />
               {errors.phone && (
-                <p className="text-xs text-red-500">{errors.phone}</p>
+                <p id="contact-phone-error" className="text-xs text-red-500" role="alert">{errors.phone}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -215,9 +216,11 @@ export function ContactFormModal({
                 placeholder="jan@bedrijf.nl"
                 disabled={isSubmitting}
                 className={errors.email ? "border-red-500" : ""}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "contact-email-error" : undefined}
               />
               {errors.email && (
-                <p className="text-xs text-red-500">{errors.email}</p>
+                <p id="contact-email-error" className="text-xs text-red-500" role="alert">{errors.email}</p>
               )}
             </div>
           </div>

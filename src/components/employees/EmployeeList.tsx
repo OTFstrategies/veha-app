@@ -170,6 +170,8 @@ export function EmployeeList({
           <div className="flex rounded-lg border border-border">
             <button
               onClick={() => setViewMode('grid')}
+              aria-label="Grid weergave"
+              aria-pressed={viewMode === 'grid'}
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-l-lg transition-colors',
                 viewMode === 'grid'
@@ -181,6 +183,8 @@ export function EmployeeList({
             </button>
             <button
               onClick={() => setViewMode('list')}
+              aria-label="Lijst weergave"
+              aria-pressed={viewMode === 'list'}
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-r-lg transition-colors',
                 viewMode === 'list'
@@ -234,7 +238,8 @@ export function EmployeeList({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100"
+                      aria-label={`Acties voor ${employee.name}`}
+                      className="absolute right-2 top-2 h-8 w-8 opacity-0 group-hover:opacity-100 focus:opacity-100"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <MoreHorizontal className="h-4 w-4" />
@@ -307,9 +312,9 @@ export function EmployeeList({
           </div>
         ) : (
           // List View
-          <table className="w-full">
+          <table className="w-full" role="table">
             <thead className="sticky top-0 z-10 border-b border-border bg-zinc-50 dark:bg-zinc-900">
-              <tr>
+              <tr role="row">
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Medewerker
                 </th>
@@ -416,7 +421,8 @@ export function EmployeeList({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100"
+                          aria-label={`Acties voor ${employee.name}`}
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 focus:opacity-100"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <MoreHorizontal className="h-4 w-4" />

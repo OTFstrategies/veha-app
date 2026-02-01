@@ -92,6 +92,10 @@ interface NormalizedAssignment {
 // Helper functions
 // =============================================================================
 
+/**
+ * Extract the first element from Supabase query result
+ * Supabase can return either a single object or an array depending on the relation
+ */
 function extractFirst<T>(data: T | T[] | null | undefined): T | null {
   if (!data) return null;
   if (Array.isArray(data)) return data[0] ?? null;
@@ -285,8 +289,8 @@ export function useResourceWeekPlanning(
     weekDates.push(format(addDays(weekMonday, i), "yyyy-MM-dd"));
   }
 
-  const startDate = weekDates[0];
-  const endDate = weekDates[weekDates.length - 1];
+  const startDate = weekDates[0] as string;
+  const endDate = weekDates[weekDates.length - 1] as string;
 
   return useQuery({
     queryKey: ["resources-weekplanning", workspaceId, startDate, resourceType],

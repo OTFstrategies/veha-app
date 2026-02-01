@@ -56,7 +56,7 @@ export function useEquipment(workspaceId: string | null) {
         .eq("is_active", true)
         .order("name")
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to fetch equipment: ${error.message}`)
       return data as Equipment[]
     },
     enabled: !!workspaceId,
@@ -76,7 +76,7 @@ export function useEquipmentItem(id: string | null) {
         .eq("id", id)
         .single()
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to fetch equipment item: ${error.message}`)
       return data as Equipment
     },
     enabled: !!id,
@@ -109,7 +109,7 @@ export function useCreateEquipment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to create equipment: ${error.message}`)
       return data as Equipment
     },
     onSuccess: (_, variables) => {
@@ -131,7 +131,7 @@ export function useUpdateEquipment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to update equipment: ${error.message}`)
       return data as Equipment
     },
     onSuccess: (data) => {
@@ -153,7 +153,7 @@ export function useDeleteEquipment() {
         .update({ is_active: false })
         .eq("id", id)
 
-      if (error) throw error
+      if (error) throw new Error(`Failed to delete equipment: ${error.message}`)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: equipmentKeys.all })

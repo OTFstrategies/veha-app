@@ -7,6 +7,7 @@ const INTERNAL_ROUTES = [
   "/clients",
   "/employees",
   "/projects",
+  "/resources",
   "/week-planning",
   "/weekplanning",
 ];

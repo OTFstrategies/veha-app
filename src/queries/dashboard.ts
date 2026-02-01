@@ -227,6 +227,7 @@ export function useDashboardStats() {
       };
     },
     enabled: !!workspaceId,
+    staleTime: 60 * 1000, // 1 minute - stats are time-sensitive
   });
 }
 
@@ -318,6 +319,7 @@ export function useTodayTasks() {
       return taskGroups;
     },
     enabled: !!workspaceId,
+    staleTime: 60 * 1000, // 1 minute - task data changes frequently
   });
 }
 
@@ -415,6 +417,7 @@ export function useActiveProjects() {
       });
     },
     enabled: !!workspaceId,
+    staleTime: 2 * 60 * 1000, // 2 minutes - project data is relatively stable
   });
 }
 
@@ -525,5 +528,6 @@ export function useCapacity() {
       });
     },
     enabled: !!workspaceId,
+    staleTime: 2 * 60 * 1000, // 2 minutes - capacity data changes during planning
   });
 }

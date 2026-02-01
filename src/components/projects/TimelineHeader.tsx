@@ -112,12 +112,13 @@ export function TimelineHeader({
   return (
     <div className="flex flex-col" style={{ width: days.length * columnWidth }}>
       {/* Top Row - Month/Year */}
-      <div className="flex h-5 border-b border-border">
+      <div className="flex h-5 border-b border-border" role="row" aria-label="Maand/jaar header">
         {topRow.map(({ label, span, key }) => (
           <div
             key={key}
             className="flex items-center justify-center border-r border-border text-xs font-medium text-muted-foreground"
             style={{ width: span * columnWidth }}
+            role="columnheader"
           >
             <span className="truncate px-1 capitalize">{label}</span>
           </div>

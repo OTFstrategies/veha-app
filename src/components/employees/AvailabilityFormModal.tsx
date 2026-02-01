@@ -189,9 +189,11 @@ export function AvailabilityFormModal({
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Optionele notities..."
               rows={3}
-              className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
               disabled={isLoading}
+              maxLength={500}
             />
+            <p className="text-xs text-muted-foreground">{notes.length}/500 tekens</p>
           </div>
 
           <DialogFooter className="pt-4">

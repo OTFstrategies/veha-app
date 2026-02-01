@@ -42,11 +42,12 @@ export function WeekPlanningSection() {
   )
 
   // Handle availability click - could open edit modal
+  // Note: date parameter is reserved for future availability modal functionality
   const handleAvailabilityClick = useCallback(
-    (employeeId: string, date: string) => {
+    (employeeId: string, _date: string) => {
       // For now, navigate to employee page
       // In the future, this could open an availability edit modal
-      router.push(`/employees/${employeeId}?tab=availability&date=${date}`)
+      router.push(`/employees/${employeeId}?tab=availability`)
     },
     [router]
   )
@@ -131,15 +132,15 @@ export function WeekPlanningSection() {
       {resourceTypeSwitcher}
 
       <WeekPlanning
-      currentWeek={currentWeek}
-      employees={employees}
-      onPreviousWeek={goToPreviousWeek}
-      onNextWeek={goToNextWeek}
-      onToday={goToToday}
-      onTaskClick={handleTaskClick}
-      onEmployeeClick={handleEmployeeClick}
-      onAvailabilityClick={handleAvailabilityClick}
-    />
+        currentWeek={currentWeek}
+        employees={employees}
+        onPreviousWeek={goToPreviousWeek}
+        onNextWeek={goToNextWeek}
+        onToday={goToToday}
+        onTaskClick={handleTaskClick}
+        onEmployeeClick={handleEmployeeClick}
+        onAvailabilityClick={handleAvailabilityClick}
+      />
     </>
   )
 }

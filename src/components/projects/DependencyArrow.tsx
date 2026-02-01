@@ -105,6 +105,8 @@ export function DependencyArrow({
     <svg
       className="pointer-events-none absolute left-0 top-0 h-full w-full overflow-visible"
       style={{ zIndex: isHighlighted ? 10 : 1 }}
+      role="img"
+      aria-label="Taak afhankelijkheid"
     >
       <g
         className={cn('transition-colors duration-150')}
