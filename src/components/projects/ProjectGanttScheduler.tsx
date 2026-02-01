@@ -541,6 +541,7 @@ export function ProjectGanttScheduler({
               onTaskSelect={handleTaskSelect}
               onTaskDoubleClick={handleTaskDoubleClick}
               onTaskDatesChange={onTaskDatesChange}
+              onZoomChange={setZoomLevel}
               activeTaskId={activeTaskId}
               dragPreview={dragPreview}
               onResizeStart={handleResizeStart}

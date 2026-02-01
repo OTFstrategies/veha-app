@@ -245,7 +245,7 @@ export default function ProjectDetailPage() {
 
   return (
     <>
-      <div className="-m-6 flex h-[calc(100vh-64px)] flex-col">
+      <div className="absolute inset-0 flex flex-col">
         {/* Notes & Checklist Toggle Bar */}
         <div className="flex items-center gap-2 border-b border-border bg-muted/30 px-4 py-1.5">
           <Button

@@ -56,7 +56,7 @@ export function AppShell({ children }: AppShellProps) {
         <Sidebar userEmail={userEmail} />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Header />
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="relative flex-1 overflow-auto p-6">{children}</main>
         </div>
       </div>
       <ReactQueryDevtools initialIsOpen={false} />
