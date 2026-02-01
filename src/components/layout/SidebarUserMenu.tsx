@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronUp, LogOut, Settings, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,7 +64,7 @@ export function SidebarUserMenu({ collapsed, userEmail }: SidebarUserMenuProps) 
           title={collapsed ? displayName : undefined}
         >
           <Avatar className="h-8 w-8 shrink-0">
-            <AvatarImage src="" alt={displayName} />
+            {/* AvatarImage verwijderd - geen user avatar URL beschikbaar */}
             <AvatarFallback className="bg-zinc-200 text-zinc-700 text-xs dark:bg-zinc-700 dark:text-zinc-200">
               {initials}
             </AvatarFallback>
@@ -84,11 +84,11 @@ export function SidebarUserMenu({ collapsed, userEmail }: SidebarUserMenuProps) 
         className="w-56 mb-2"
         style={{ bottom: "100%", top: "auto" }}
       >
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/settings')}>
           <User className="mr-2 h-4 w-4" />
           Profiel
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
           Instellingen
         </DropdownMenuItem>

@@ -88,7 +88,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
           variant="ghost"
           size="icon"
           onClick={toggleSidebarPinned}
-          className={cn("h-8 w-8 shrink-0", !isExpanded && "hidden")}
+          className="h-8 w-8 shrink-0"
           aria-label={sidebarPinned ? "Unpin sidebar" : "Pin sidebar"}
           title={sidebarPinned ? "Sidebar losmaken" : "Sidebar vastzetten"}
         >

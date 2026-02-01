@@ -21,24 +21,8 @@ import type { Employee, SelectOption, Skill } from "@/types/employees";
 // Color Palette
 // =============================================================================
 
-const colorPalette = [
-  "#ef4444", // red
-  "#f97316", // orange
-  "#f59e0b", // amber
-  "#eab308", // yellow
-  "#84cc16", // lime
-  "#22c55e", // green
-  "#10b981", // emerald
-  "#14b8a6", // teal
-  "#06b6d4", // cyan
-  "#0ea5e9", // sky
-  "#3b82f6", // blue
-  "#6366f1", // indigo
-  "#8b5cf6", // violet
-  "#a855f7", // purple
-  "#d946ef", // fuchsia
-  "#ec4899", // pink
-];
+// Default color for employees (color picker removed per design decision)
+const DEFAULT_EMPLOYEE_COLOR = "#3b82f6"; // blue
 
 // =============================================================================
 // Props
@@ -79,7 +63,7 @@ export function EmployeeFormModal({
   const [hourlyRate, setHourlyRate] = React.useState(0);
   const [weeklyCapacity, setWeeklyCapacity] = React.useState(40);
   const [skills, setSkills] = React.useState<Skill[]>([]);
-  const [color, setColor] = React.useState(colorPalette[0]);
+  const [color, setColor] = React.useState(DEFAULT_EMPLOYEE_COLOR);
   const [isActive, setIsActive] = React.useState(true);
 
   // Validation state
@@ -106,7 +90,7 @@ export function EmployeeFormModal({
         setHourlyRate(0);
         setWeeklyCapacity(40);
         setSkills([]);
-        setColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+        setColor(DEFAULT_EMPLOYEE_COLOR);
         setIsActive(true);
       }
       setErrors({});
@@ -308,29 +292,6 @@ export function EmployeeFormModal({
                 >
                   {skill.label}
                 </Badge>
-              ))}
-            </div>
-          </div>
-
-          {/* Color */}
-          <div className="space-y-2">
-            <Label>Kleur</Label>
-            <div className="flex flex-wrap gap-2">
-              {colorPalette.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  className={cn(
-                    "h-8 w-8 rounded-full transition-all",
-                    color === c
-                      ? "ring-2 ring-offset-2 ring-zinc-900 dark:ring-zinc-50"
-                      : "hover:scale-110"
-                  )}
-                  style={{ backgroundColor: c }}
-                  onClick={() => setColor(c)}
-                  disabled={isLoading}
-                  aria-label={`Selecteer kleur ${c}`}
-                />
               ))}
             </div>
           </div>

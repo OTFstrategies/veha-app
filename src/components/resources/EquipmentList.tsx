@@ -32,7 +32,12 @@ const typeLabels: Record<string, string> = {
   gereedschap: "Gereedschap",
 }
 
-export function EquipmentList() {
+interface EquipmentListProps {
+  onAddEquipment?: () => void
+  onViewEquipment?: (equipmentId: string) => void
+}
+
+export function EquipmentList({ onAddEquipment, onViewEquipment }: EquipmentListProps) {
   const { currentWorkspaceId } = useWorkspaceStore()
   const { data: equipment, isLoading } = useEquipment(currentWorkspaceId)
 
@@ -51,7 +56,7 @@ export function EquipmentList() {
           <h2 className="text-lg font-semibold">Middelen</h2>
           <p className="text-sm text-muted-foreground">Beheer voertuigen, machines en gereedschap</p>
         </div>
-        <Button size="sm" className="gap-2">
+        <Button size="sm" className="gap-2" onClick={onAddEquipment}>
           <Plus className="h-4 w-4" />
           Middel toevoegen
         </Button>
@@ -62,7 +67,7 @@ export function EquipmentList() {
           <Wrench className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground font-medium">Nog geen middelen</p>
           <p className="text-sm text-muted-foreground mt-1">Voeg je eerste middel toe om te beginnen</p>
-          <Button size="sm" className="gap-2 mt-4">
+          <Button size="sm" className="gap-2 mt-4" onClick={onAddEquipment}>
             <Plus className="h-4 w-4" />
             Middel toevoegen
           </Button>
@@ -74,6 +79,7 @@ export function EquipmentList() {
             return (
               <div
                 key={item.id}
+                onClick={() => onViewEquipment?.(item.id)}
                 className="p-4 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-4">

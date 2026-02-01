@@ -295,10 +295,50 @@ export function useResourceWeekPlanning(
         return [];
       }
 
-      // Equipment (middelen) - return empty for now
-      // Will be implemented when equipment assignments are ready
+      // Equipment (middelen)
       if (resourceType === "middelen") {
-        return [];
+        // Fetch equipment with basic info
+        const { data: equipmentData, error: equipmentError } = await supabase
+          .from("equipment")
+          .select("id, name, equipment_type, status, daily_capacity_hours")
+          .eq("workspace_id", workspaceId)
+          .eq("is_active", true)
+          .order("name");
+
+        if (equipmentError) {
+          throw equipmentError;
+        }
+
+        // Map equipment type to display name
+        const equipmentTypeLabels: Record<string, string> = {
+          voertuig: "Voertuig",
+          machine: "Machine",
+          gereedschap: "Gereedschap",
+        };
+
+        // Transform equipment to WeekEmployee format (reusing the same structure)
+        const equipment: WeekEmployee[] = (equipmentData ?? []).map((item) => {
+          // Build empty schedule for the week
+          const schedule: EmployeeSchedule = {};
+          for (const dateStr of weekDates) {
+            schedule[dateStr] = {
+              availability: null,
+              tasks: [],
+              plannedHours: 0,
+              availableHours: item.daily_capacity_hours || 8,
+            };
+          }
+
+          return {
+            id: item.id,
+            name: item.name,
+            role: equipmentTypeLabels[item.equipment_type] || item.equipment_type,
+            color: "#6b7280", // Default gray color for equipment
+            schedule,
+          };
+        });
+
+        return equipment;
       }
 
       // Employees (medewerkers) - use existing logic

@@ -52,10 +52,7 @@ export function CapacityWidget({
         >
           {/* Avatar */}
           <Avatar className="h-7 w-7 shrink-0">
-            <AvatarFallback
-              className="text-[10px] font-medium text-white"
-              style={{ backgroundColor: employee.color }}
-            >
+            <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-[10px] font-medium">
               {getInitials(employee.name)}
             </AvatarFallback>
           </Avatar>

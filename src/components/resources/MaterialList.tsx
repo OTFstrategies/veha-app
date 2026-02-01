@@ -26,7 +26,12 @@ const typeLabels: Record<string, string> = {
   onderdelen: "Onderdelen",
 }
 
-export function MaterialList() {
+interface MaterialListProps {
+  onAddMaterial?: () => void
+  onViewMaterial?: (materialId: string) => void
+}
+
+export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProps) {
   const { currentWorkspaceId } = useWorkspaceStore()
   const { data: materials, isLoading } = useMaterials(currentWorkspaceId)
 
@@ -45,7 +50,7 @@ export function MaterialList() {
           <h2 className="text-lg font-semibold">Materialen</h2>
           <p className="text-sm text-muted-foreground">Beheer je materiaalvoorraad</p>
         </div>
-        <Button size="sm" className="gap-2">
+        <Button size="sm" className="gap-2" onClick={onAddMaterial}>
           <Plus className="h-4 w-4" />
           Materiaal toevoegen
         </Button>
@@ -56,7 +61,7 @@ export function MaterialList() {
           <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground font-medium">Nog geen materialen</p>
           <p className="text-sm text-muted-foreground mt-1">Voeg je eerste materiaal toe om te beginnen</p>
-          <Button size="sm" className="gap-2 mt-4">
+          <Button size="sm" className="gap-2 mt-4" onClick={onAddMaterial}>
             <Plus className="h-4 w-4" />
             Materiaal toevoegen
           </Button>
@@ -66,6 +71,7 @@ export function MaterialList() {
           {materials.map((material) => (
             <div
               key={material.id}
+              onClick={() => onViewMaterial?.(material.id)}
               className="p-4 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors"
             >
               <div className="space-y-1">

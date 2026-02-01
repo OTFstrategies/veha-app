@@ -96,10 +96,7 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
             <div className="flex -space-x-1.5">
               {project.assignees.slice(0, 3).map((assignee) => (
                 <Avatar key={assignee.id} className="h-6 w-6 border-2 border-card">
-                  <AvatarFallback
-                    className="text-[9px] font-medium text-white"
-                    style={{ backgroundColor: assignee.color }}
-                  >
+                  <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-[9px] font-medium">
                     {assignee.initials}
                   </AvatarFallback>
                 </Avatar>

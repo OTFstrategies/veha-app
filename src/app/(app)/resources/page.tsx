@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Package, Wrench, Calendar } from "lucide-react"
@@ -23,8 +23,36 @@ function ResourcesPageContent() {
   const searchParams = useSearchParams()
   const activeTab = searchParams.get("tab") || "medewerkers"
 
+  // State for selected items (for future modal/detail views)
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null)
+  const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null)
+
   const handleTabChange = (value: string) => {
     router.push(`/resources?tab=${value}`)
+  }
+
+  // Material handlers
+  const handleAddMaterial = () => {
+    // TODO: Open add material modal
+    console.log("Add material clicked")
+  }
+
+  const handleViewMaterial = (materialId: string) => {
+    setSelectedMaterialId(materialId)
+    // TODO: Open material detail modal
+    console.log("View material:", materialId)
+  }
+
+  // Equipment handlers
+  const handleAddEquipment = () => {
+    // TODO: Open add equipment modal
+    console.log("Add equipment clicked")
+  }
+
+  const handleViewEquipment = (equipmentId: string) => {
+    setSelectedEquipmentId(equipmentId)
+    // TODO: Open equipment detail modal
+    console.log("View equipment:", equipmentId)
   }
 
   return (
@@ -47,11 +75,17 @@ function ResourcesPageContent() {
           </TabsContent>
 
           <TabsContent value="materialen" className="h-full mt-0 p-6">
-            <MaterialList />
+            <MaterialList
+              onAddMaterial={handleAddMaterial}
+              onViewMaterial={handleViewMaterial}
+            />
           </TabsContent>
 
           <TabsContent value="middelen" className="h-full mt-0 p-6">
-            <EquipmentList />
+            <EquipmentList
+              onAddEquipment={handleAddEquipment}
+              onViewEquipment={handleViewEquipment}
+            />
           </TabsContent>
 
           <TabsContent value="weekplanning" className="h-full mt-0">

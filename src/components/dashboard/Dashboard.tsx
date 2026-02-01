@@ -84,8 +84,8 @@ export function Dashboard({
         router.push('/projects/new')
         break
       case 'new-task':
-        // TODO: Implement task creation
-        console.log('Create new task')
+        // Tasks worden aangemaakt binnen projecten
+        router.push('/projects')
         break
       case 'week-planning':
         router.push('/resources?tab=weekplanning')

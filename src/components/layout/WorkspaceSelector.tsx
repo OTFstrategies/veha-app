@@ -77,7 +77,14 @@ export function WorkspaceSelector({ collapsed = false }: WorkspaceSelectorProps)
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-zinc-500">
+          <DropdownMenuItem
+            className="text-zinc-500"
+            disabled
+            onClick={() => {
+              // Workspace creation is not yet implemented
+              console.log('Create workspace - not implemented')
+            }}
+          >
             <Plus className="h-4 w-4" />
             <span>Nieuwe workspace</span>
           </DropdownMenuItem>

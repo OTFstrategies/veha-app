@@ -99,10 +99,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                 <div className="flex -space-x-1">
                   {task.assignees.slice(0, 3).map((assignee) => (
                     <Avatar key={assignee.id} className="h-5 w-5 border-2 border-card">
-                      <AvatarFallback
-                        className="text-[8px] font-medium text-white"
-                        style={{ backgroundColor: assignee.color }}
-                      >
+                      <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-[8px] font-medium">
                         {assignee.initials}
                       </AvatarFallback>
                     </Avatar>

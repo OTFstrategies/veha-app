@@ -123,10 +123,7 @@ export function EmployeeDetail({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarFallback
-                className="text-xl font-medium text-white"
-                style={{ backgroundColor: employee.color }}
-              >
+              <AvatarFallback className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 text-xl font-medium">
                 {getInitials(employee.name)}
               </AvatarFallback>
             </Avatar>

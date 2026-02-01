@@ -191,8 +191,8 @@ export function GanttToolbar({
             variant="ghost"
             size="icon"
             className="h-8 w-8 rounded-l-none border-l border-border"
-            disabled={!canRedo()}
-            title="Opnieuw (Ctrl+Y)"
+            disabled={true}
+            title="Redo niet beschikbaar"
           >
             <Redo2 className="h-3.5 w-3.5" />
           </Button>
