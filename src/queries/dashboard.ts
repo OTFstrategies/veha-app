@@ -135,32 +135,22 @@ export function useDashboardStats() {
 
       if (projectsError) throw projectsError;
 
-      // Fetch tasks for today
-      const { data: tasks, error: tasksError } = await supabase
-        .from("tasks")
-        .select("id, status, project_id")
-        .lte("start_date", today)
-        .gte("end_date", today);
+      // Fetch tasks for today (filtered by workspace projects)
+      const projectIds = projects?.map((p) => p.id) ?? [];
+
+      // Skip query if no active projects
+      const { data: todayTasks, error: tasksError } = projectIds.length > 0
+        ? await supabase
+            .from("tasks")
+            .select("id, status, project_id")
+            .in("project_id", projectIds)
+            .lte("start_date", today)
+            .gte("end_date", today)
+        : { data: [], error: null };
 
       if (tasksError) throw tasksError;
 
-      // Filter tasks to only those belonging to workspace projects
-      const projectIds = projects?.map((p) => p.id) ?? [];
-
-      // Fetch all tasks for active projects to filter properly
-      const { data: allProjectTasks, error: allTasksError } = await supabase
-        .from("tasks")
-        .select("id, status, project_id, start_date, end_date")
-        .in("project_id", projectIds.length > 0 ? projectIds : ["00000000-0000-0000-0000-000000000000"]);
-
-      if (allTasksError) throw allTasksError;
-
-      const todayTasksFiltered = (allProjectTasks ?? []).filter(task => {
-        const startDate = parseISO(task.start_date);
-        const endDate = parseISO(task.end_date);
-        const todayDate = new Date();
-        return isWithinInterval(todayDate, { start: startDate, end: endDate });
-      });
+      const todayTasksFiltered = todayTasks ?? [];
 
       // Fetch employees
       const { data: employees, error: employeesError } = await supabase
