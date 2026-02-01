@@ -70,10 +70,8 @@ export async function updateSession(request: NextRequest) {
   );
 
   if (!user && !isPublicRoute && pathname !== "/") {
-    // No user, redirect to login page
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    // No user, redirect to VEHA Hub for login
+    return NextResponse.redirect(new URL("https://veha-hub.vercel.app"));
   }
 
   // If user is authenticated, check role-based access
