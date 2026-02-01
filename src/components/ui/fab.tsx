@@ -20,6 +20,7 @@ interface FABAction {
   label: string
   icon: React.ComponentType<{ className?: string }>
   description?: string
+  shortcut?: string
 }
 
 interface FABProps {
@@ -62,16 +63,24 @@ export function FAB({ actions, onAction }: FABProps) {
               onAction(action.id)
               setOpen(false)
             }}
+            className="flex items-center justify-between"
           >
-            <action.icon className="mr-2 h-4 w-4" />
-            <div className="flex flex-col">
-              <span>{action.label}</span>
-              {action.description && (
-                <span className="text-xs text-muted-foreground">
-                  {action.description}
-                </span>
-              )}
+            <div className="flex items-center">
+              <action.icon className="mr-2 h-4 w-4" />
+              <div className="flex flex-col">
+                <span>{action.label}</span>
+                {action.description && (
+                  <span className="text-xs text-muted-foreground">
+                    {action.description}
+                  </span>
+                )}
+              </div>
             </div>
+            {action.shortcut && (
+              <kbd className="ml-auto pl-4 text-xs text-muted-foreground font-mono">
+                {action.shortcut}
+              </kbd>
+            )}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

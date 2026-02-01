@@ -39,20 +39,20 @@ export function StatsCards({ stats, onStatClick }: StatsCardsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {cards.map((card) => (
         <button
           key={card.key}
           onClick={() => onStatClick?.(card.key)}
           aria-label={`${card.label}: ${card.value}`}
           className={cn(
-            'rounded-xl border border-border bg-card p-4 text-center transition-all',
-            'hover:border-zinc-300 hover:shadow-sm dark:hover:border-zinc-600',
+            'rounded-lg bg-zinc-50 p-3 text-center transition-all dark:bg-zinc-800/50',
+            'hover:bg-zinc-100 dark:hover:bg-zinc-800',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}
         >
-          <p className="text-4xl font-bold tracking-tight" aria-hidden="true">{card.value}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{card.label}</p>
+          <p className="text-3xl font-semibold tracking-tight" aria-hidden="true">{card.value}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{card.label}</p>
         </button>
       ))}
     </div>

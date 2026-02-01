@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ClientTreeNode } from './ClientTreeNode'
 import { ClientTreeEmpty } from './ClientTreeEmpty'
 import type { Client } from '@/types/clients'
@@ -142,9 +141,13 @@ export function ClientTree({
               Beheer je klanten en hun projecten
             </p>
           </div>
-          <Button onClick={onAddClient}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nieuwe Klant
+          <Button
+            onClick={onAddClient}
+            size="sm"
+            className="h-9 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          >
+            <Plus className="h-4 w-4" />
+            Klant
           </Button>
         </div>
 
@@ -183,26 +186,25 @@ export function ClientTree({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="ml-auto h-9 w-9"
-                onClick={expandedClients.size > 0 ? collapseAll : expandAll}
-                aria-label={expandedClients.size > 0 ? 'Alles inklappen' : 'Alles uitklappen'}
-              >
-                {expandedClients.size > 0 ? (
-                  <ChevronsDownUp className="h-4 w-4" aria-hidden="true" />
-                ) : (
-                  <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {expandedClients.size > 0 ? 'Alles inklappen' : 'Alles uitklappen'}
-            </TooltipContent>
-          </Tooltip>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto h-9 gap-1.5"
+            onClick={expandedClients.size > 0 ? collapseAll : expandAll}
+            aria-label={expandedClients.size > 0 ? 'Alles inklappen' : 'Alles uitklappen'}
+          >
+            {expandedClients.size > 0 ? (
+              <>
+                <ChevronsDownUp className="h-4 w-4" aria-hidden="true" />
+                <span className="text-xs">Inklappen</span>
+              </>
+            ) : (
+              <>
+                <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
+                <span className="text-xs">Uitklappen</span>
+              </>
+            )}
+          </Button>
         </div>
       </div>
 

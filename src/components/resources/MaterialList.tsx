@@ -51,9 +51,13 @@ export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProp
           <h2 className="text-lg font-semibold">Materialen</h2>
           <p className="text-sm text-muted-foreground">Beheer je materiaalvoorraad</p>
         </div>
-        <Button size="sm" className="gap-2" onClick={onAddMaterial}>
+        <Button
+          size="sm"
+          className="h-9 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          onClick={onAddMaterial}
+        >
           <Plus className="h-4 w-4" />
-          Materiaal toevoegen
+          Materiaal
         </Button>
       </div>
 
@@ -62,9 +66,13 @@ export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProp
           <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground font-medium">Nog geen materialen</p>
           <p className="text-sm text-muted-foreground mt-1">Voeg je eerste materiaal toe om te beginnen</p>
-          <Button size="sm" className="gap-2 mt-4" onClick={onAddMaterial}>
+          <Button
+            size="sm"
+            className="h-9 gap-1.5 mt-4 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            onClick={onAddMaterial}
+          >
             <Plus className="h-4 w-4" />
-            Materiaal toevoegen
+            Materiaal
           </Button>
         </div>
       ) : (

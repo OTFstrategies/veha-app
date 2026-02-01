@@ -26,7 +26,7 @@ export function Header() {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <header className="flex h-14 items-center border-b border-zinc-200 bg-white px-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <header className="flex h-16 items-center border-b border-zinc-200 bg-white px-8 dark:border-zinc-800 dark:bg-zinc-900">
       <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
         {pageTitle}
       </h1>

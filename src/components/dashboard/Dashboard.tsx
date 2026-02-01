@@ -10,6 +10,7 @@ import { CollapsibleSection } from './CollapsibleSection'
 import { FAB } from '@/components/ui/fab'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useHotkeys } from '@/hooks/use-hotkeys'
 import type {
   DashboardStats,
   TodayTaskGroup,
@@ -43,18 +44,21 @@ const fabActions = [
     label: 'Nieuw Project',
     icon: FolderPlus,
     description: 'Start een nieuw project',
+    shortcut: 'Ctrl+P',
   },
   {
     id: 'new-task',
     label: 'Nieuwe Taak',
     icon: ListPlus,
     description: 'Voeg een taak toe',
+    shortcut: 'Ctrl+T',
   },
   {
     id: 'week-planning',
     label: 'Weekplanning',
     icon: Calendar,
     description: 'Bekijk de planning',
+    shortcut: 'Ctrl+W',
   },
 ]
 
@@ -93,6 +97,13 @@ export function Dashboard({
     }
   }
 
+  // Keyboard shortcuts: Ctrl+P = New Project, Ctrl+T = New Task, Ctrl+W = Week Planning
+  useHotkeys([
+    { key: 'p', ctrlKey: true, callback: () => router.push('/projects/new') },
+    { key: 't', ctrlKey: true, callback: () => router.push('/projects') },
+    { key: 'w', ctrlKey: true, callback: () => router.push('/resources?tab=weekplanning') },
+  ])
+
   const today = new Date().toLocaleDateString('nl-NL', {
     weekday: 'long',
     day: 'numeric',
@@ -106,7 +117,7 @@ export function Dashboard({
         <FAB actions={fabActions} onAction={handleFABAction} />
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-8 py-10">
         {/* Stats Cards */}
         <section className="mb-10">
           <StatsCards stats={stats} onStatClick={onStatClick} />

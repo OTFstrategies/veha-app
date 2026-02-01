@@ -2,9 +2,11 @@
 
 import * as React from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ChevronDown, ChevronUp, Loader2, StickyNote } from 'lucide-react'
+import { ChevronDown, ChevronUp, Loader2, StickyNote, CheckSquare } from 'lucide-react'
 import { ProjectGanttScheduler } from '@/components/projects/ProjectGanttScheduler'
 import { ProjectNotes } from '@/components/projects/ProjectNotes'
+import { QuickTasks } from '@/components/projects/QuickTasks'
+import type { QuickTask } from '@/types/projects'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
 import { useProject, useDeleteProject, useUpdateProject } from '@/queries/projects'
@@ -70,6 +72,7 @@ export default function ProjectDetailPage() {
   // Edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
   const [showNotes, setShowNotes] = React.useState(false)
+  const [showChecklist, setShowChecklist] = React.useState(false)
   const updateProjectMutation = useUpdateProject()
 
   // Mock employees data - in production, this would come from a useEmployees hook
@@ -243,8 +246,8 @@ export default function ProjectDetailPage() {
   return (
     <>
       <div className="-m-6 flex h-[calc(100vh-64px)] flex-col">
-        {/* Notes Toggle Bar */}
-        <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-1.5">
+        {/* Notes & Checklist Toggle Bar */}
+        <div className="flex items-center gap-2 border-b border-border bg-muted/30 px-4 py-1.5">
           <Button
             variant="ghost"
             size="sm"
@@ -261,24 +264,57 @@ export default function ProjectDetailPage() {
               <ChevronDown className="h-3 w-3" />
             )}
           </Button>
-          {project.notes && !showNotes && (
-            <span className="text-xs text-muted-foreground truncate max-w-md">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 gap-1.5 text-xs"
+            onClick={() => setShowChecklist(!showChecklist)}
+            aria-expanded={showChecklist}
+            aria-controls="project-checklist-section"
+          >
+            <CheckSquare className="h-3.5 w-3.5" />
+            Checklist
+            {showChecklist ? (
+              <ChevronUp className="h-3 w-3" />
+            ) : (
+              <ChevronDown className="h-3 w-3" />
+            )}
+          </Button>
+          {project.notes && !showNotes && !showChecklist && (
+            <span className="ml-auto text-xs text-muted-foreground truncate max-w-md">
               {project.notes.substring(0, 80)}{project.notes.length > 80 ? '...' : ''}
             </span>
           )}
         </div>
 
-        {/* Collapsible Notes Section */}
-        {showNotes && (
-          <div id="project-notes-section" className="border-b border-border bg-card px-4 py-3">
-            <ProjectNotes
-              projectId={project.id}
-              initialNotes={project.notes || ""}
-              onSave={async (notes) => {
-                await updateProjectMutation.mutateAsync({ id: project.id, notes })
-                addToast({ type: 'success', title: 'Notities opgeslagen' })
-              }}
-            />
+        {/* Collapsible Notes & Checklist Section */}
+        {(showNotes || showChecklist) && (
+          <div className="border-b border-border bg-card px-4 py-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {showNotes && (
+                <div id="project-notes-section">
+                  <ProjectNotes
+                    projectId={project.id}
+                    initialNotes={project.notes || ""}
+                    onSave={async (notes) => {
+                      await updateProjectMutation.mutateAsync({ id: project.id, notes })
+                      addToast({ type: 'success', title: 'Notities opgeslagen' })
+                    }}
+                  />
+                </div>
+              )}
+              {showChecklist && (
+                <div id="project-checklist-section">
+                  <QuickTasks
+                    projectId={project.id}
+                    tasks={(project.quickTasks as QuickTask[]) || []}
+                    onTasksChange={async (tasks) => {
+                      await updateProjectMutation.mutateAsync({ id: project.id, quickTasks: tasks })
+                    }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         )}
 

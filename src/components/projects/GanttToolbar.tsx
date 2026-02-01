@@ -144,37 +144,12 @@ export function GanttToolbar({
           className="h-8 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           <Plus className="h-3.5 w-3.5" />
-          Taak toevoegen
+          Taak
         </Button>
       </div>
 
-      {/* Right: Dependencies, Critical Path, Undo, Zoom & View Controls */}
+      {/* Right: Consolidated controls */}
       <div className="flex items-center gap-2">
-        {/* Dependencies Toggle */}
-        <Button
-          variant={viewOptions.showDependencies ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => handleViewOptionToggle('showDependencies')}
-          className="h-8 gap-1.5"
-          title="Toon/verberg afhankelijkheden"
-        >
-          <GitBranch className="h-3.5 w-3.5" />
-          Afhankelijkheden
-        </Button>
-
-        {/* Critical Path Toggle */}
-        <div className="flex items-center gap-2 border-r border-border pr-2">
-          <Button
-            variant={showCriticalPath ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onShowCriticalPathChange(!showCriticalPath)}
-            className="h-8 gap-1.5"
-          >
-            <Route className="h-3.5 w-3.5" />
-            Kritiek Pad
-          </Button>
-        </div>
-
         {/* Undo/Redo buttons */}
         <div className="flex items-center rounded-md border border-border">
           <Button
@@ -222,28 +197,9 @@ export function GanttToolbar({
             <Plus className="h-3.5 w-3.5" />
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 gap-1 rounded-none border-x border-border px-3 font-mono text-xs"
-              >
-                {ZOOM_LABELS[zoomLevel]}
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center">
-              {ZOOM_ORDER.map((level) => (
-                <DropdownMenuCheckboxItem
-                  key={level}
-                  checked={zoomLevel === level}
-                  onCheckedChange={() => onZoomChange(level)}
-                >
-                  {ZOOM_LABELS[level]}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <span className="h-8 flex items-center px-2 border-x border-border font-mono text-xs min-w-[70px] justify-center">
+            {ZOOM_LABELS[zoomLevel]}
+          </span>
 
           <Button
             variant="ghost"
@@ -257,28 +213,33 @@ export function GanttToolbar({
           </Button>
         </div>
 
-        <span className="text-xs text-muted-foreground">
-          Ctrl + scroll om te zoomen
-        </span>
-
-        {/* View Options */}
+        {/* View Options - Consolidated dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="h-8 gap-1.5">
               <Eye className="h-3.5 w-3.5" />
-              Weergave
+              Opties
               <ChevronDown className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuLabel>Toon/verberg</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuLabel>Analyse</DropdownMenuLabel>
             <DropdownMenuCheckboxItem
               checked={viewOptions.showDependencies}
               onCheckedChange={() => handleViewOptionToggle('showDependencies')}
             >
+              <GitBranch className="mr-2 h-3.5 w-3.5" />
               Afhankelijkheden
             </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showCriticalPath}
+              onCheckedChange={() => onShowCriticalPathChange(!showCriticalPath)}
+            >
+              <Route className="mr-2 h-3.5 w-3.5" />
+              Kritiek Pad
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Weergave</DropdownMenuLabel>
             <DropdownMenuCheckboxItem
               checked={viewOptions.showProgress}
               onCheckedChange={() => handleViewOptionToggle('showProgress')}

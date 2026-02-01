@@ -140,6 +140,7 @@ export interface Project {
   actual_hours: number
   progress: number
   notes: string | null
+  quick_tasks: Json | null
   created_at: string
   updated_at: string
 }

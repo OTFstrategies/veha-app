@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { useCurrentWorkspace } from '@/hooks/use-workspace'
-import type { Project, Task, TaskDependency, TaskAssignment, WorkType, ProjectStatus } from '@/types/projects'
+import type { Project, Task, TaskDependency, TaskAssignment, WorkType, ProjectStatus, QuickTask } from '@/types/projects'
 import type { Project as DbProject, Task as DbTask } from '@/types/database'
 
 // =============================================================================
@@ -85,6 +85,12 @@ function transformTask(dbTask: DbTaskWithRelations): Task {
 }
 
 function transformProject(dbProject: DbProjectWithRelations, tasks: Task[] = []): Project {
+  // Parse quick_tasks from JSONB column if it exists
+  let quickTasks: QuickTask[] = []
+  if (dbProject.quick_tasks && Array.isArray(dbProject.quick_tasks)) {
+    quickTasks = dbProject.quick_tasks as unknown as QuickTask[]
+  }
+
   return {
     id: dbProject.id,
     name: dbProject.name,
@@ -101,6 +107,7 @@ function transformProject(dbProject: DbProjectWithRelations, tasks: Task[] = [])
     actualHours: dbProject.actual_hours,
     progress: dbProject.progress,
     notes: dbProject.notes ?? '',
+    quickTasks,
     tasks,
   }
 }
@@ -275,6 +282,7 @@ export function useUpdateProject() {
       status?: ProjectStatus
       progress?: number
       notes?: string
+      quickTasks?: QuickTask[]
     }) => {
       const updateData: Record<string, unknown> = {}
 
@@ -287,6 +295,7 @@ export function useUpdateProject() {
       if (data.status !== undefined) updateData.status = data.status
       if (data.progress !== undefined) updateData.progress = data.progress
       if (data.notes !== undefined) updateData.notes = data.notes
+      if (data.quickTasks !== undefined) updateData.quick_tasks = data.quickTasks
 
       const { data: project, error } = await supabase
         .from("projects")

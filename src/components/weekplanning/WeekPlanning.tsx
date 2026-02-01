@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Calendar, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -249,8 +249,29 @@ export function WeekPlanning({
     )
   }
 
+  // Calculate if there are any overbookings this week
+  const overbookedDays = currentWeek.days.filter(day => {
+    const stats = calculateDayStats(employees, day.date)
+    return stats.overbooked
+  })
+
   return (
     <div className="flex h-full flex-col bg-background">
+      {/* Overbooking Alert Banner */}
+      {overbookedDays.length > 0 && (
+        <div className="shrink-0 flex items-center gap-3 bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800 px-6 py-3">
+          <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+          <div className="flex-1">
+            <span className="text-sm font-medium text-red-800 dark:text-red-200">
+              Overboeking gedetecteerd
+            </span>
+            <span className="ml-2 text-sm text-red-600 dark:text-red-400">
+              {overbookedDays.length} {overbookedDays.length === 1 ? 'dag' : 'dagen'} deze week
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="shrink-0 border-b border-border px-6 py-5">
         <div className="flex items-center justify-between">
@@ -346,7 +367,8 @@ export function WeekPlanning({
                     {dayStats.planned}/{dayStats.available} uur
                   </div>
                   {dayStats.overbooked && (
-                    <div className="text-xs text-red-500 font-medium">
+                    <div className="flex items-center gap-1 text-xs text-red-500 font-medium">
+                      <AlertTriangle className="h-3 w-3" />
                       Overbezet!
                     </div>
                   )}

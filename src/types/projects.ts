@@ -81,6 +81,16 @@ export interface Task {
 }
 
 /**
+ * Quick task for project checklists
+ */
+export interface QuickTask {
+  id: string
+  text: string
+  completed: boolean
+  order: number
+}
+
+/**
  * A project containing tasks executed for a client
  */
 export interface Project {
@@ -99,6 +109,7 @@ export interface Project {
   actualHours: number
   progress: number
   notes: string
+  quickTasks?: QuickTask[]
   tasks: Task[]
 }
 
