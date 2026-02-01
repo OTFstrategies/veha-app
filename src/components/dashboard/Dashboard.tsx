@@ -53,9 +53,6 @@ export function Dashboard({
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Dashboard</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Welkom terug! Hier is je overzicht voor vandaag.
-            </p>
           </div>
           {quickActions.length > 0 && (
             <QuickActions actions={quickActions} onAction={onQuickAction} />

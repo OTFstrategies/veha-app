@@ -109,7 +109,7 @@ export function SharedTimeline({
               return (
                 <div
                   key={i}
-                  className="absolute top-0 bottom-0 bg-stone-100/50 dark:bg-stone-800/30"
+                  className="absolute top-0 bottom-0 bg-zinc-100/50 dark:bg-zinc-800/30"
                   style={{
                     left: i * timelineConfig.columnWidth,
                     width: timelineConfig.columnWidth,

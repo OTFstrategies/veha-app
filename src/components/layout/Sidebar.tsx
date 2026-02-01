@@ -41,19 +41,19 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "flex h-full flex-col border-r border-stone-200 bg-white transition-all duration-300 dark:border-stone-800 dark:bg-stone-900",
+        "flex h-full flex-col border-r border-zinc-200 bg-white transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-900",
         collapsed ? "w-16" : "w-64"
       )}
     >
       <div
         className={cn(
-          "flex h-16 items-center border-b border-stone-200 px-4 dark:border-stone-800",
+          "flex h-16 items-center border-b border-zinc-200 px-4 dark:border-zinc-800",
           collapsed ? "justify-center" : "justify-between"
         )}
       >
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-stone-900 dark:text-stone-50">
+            <span className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
               VEHA
             </span>
           </Link>
@@ -73,7 +73,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </Button>
       </div>
 
-      <div className="border-b border-stone-200 py-2 dark:border-stone-800">
+      <div className="border-b border-zinc-200 py-2 dark:border-zinc-800">
         <WorkspaceSelector collapsed={collapsed} />
       </div>
 
@@ -90,8 +90,8 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-stone-50"
-                  : "text-stone-600 hover:bg-stone-50 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-50",
+                  ? "bg-zinc-100 text-blue-600 dark:bg-zinc-800 dark:text-blue-400"
+                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
                 collapsed && "justify-center px-2"
               )}
               title={collapsed ? item.label : undefined}
@@ -103,10 +103,10 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         })}
       </nav>
 
-      <div className="border-t border-stone-200 p-2 dark:border-stone-800">
+      <div className="border-t border-zinc-200 p-2 dark:border-zinc-800">
         <div
           className={cn(
-            "rounded-md bg-stone-50 p-3 text-xs text-stone-500 dark:bg-stone-800 dark:text-stone-400",
+            "rounded-md bg-zinc-50 p-3 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
             collapsed && "px-2 py-2 text-center"
           )}
         >

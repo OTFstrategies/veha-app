@@ -47,13 +47,13 @@ export function WorkspaceSelector({ collapsed = false }: WorkspaceSelectorProps)
             )}
             title={collapsed ? currentWorkspace?.name : undefined}
           >
-            <Building2 className="h-4 w-4 shrink-0 text-stone-500 dark:text-stone-400" />
+            <Building2 className="h-4 w-4 shrink-0 text-zinc-500 dark:text-zinc-400" />
             {!collapsed && (
               <>
                 <span className="flex-1 truncate text-left">
                   {currentWorkspace?.name ?? "Selecteer workspace"}
                 </span>
-                <ChevronsUpDown className="h-4 w-4 shrink-0 text-stone-400 dark:text-stone-500" />
+                <ChevronsUpDown className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-500" />
               </>
             )}
           </Button>
@@ -68,16 +68,16 @@ export function WorkspaceSelector({ collapsed = false }: WorkspaceSelectorProps)
               className="flex items-center justify-between"
             >
               <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-stone-500 dark:text-stone-400" />
+                <Building2 className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
                 <span className="truncate">{ws.name}</span>
               </div>
               {ws.id === currentWorkspace?.id && (
-                <Check className="h-4 w-4 text-stone-600 dark:text-stone-300" />
+                <Check className="h-4 w-4 text-zinc-600 dark:text-zinc-300" />
               )}
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="text-stone-500">
+          <DropdownMenuItem className="text-zinc-500">
             <Plus className="h-4 w-4" />
             <span>Nieuwe workspace</span>
           </DropdownMenuItem>

@@ -51,7 +51,7 @@ interface ProjectHeaderProps {
 const STATUS_CONFIG: Record<ProjectStatus, { label: string; className: string }> = {
   gepland: {
     label: 'Gepland',
-    className: 'bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300',
+    className: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
   },
   actief: {
     label: 'Actief',
@@ -212,9 +212,9 @@ export function ProjectHeader({
 
         {/* Progress Bar */}
         <div className="flex items-center gap-2">
-          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
             <div
-              className="h-full rounded-full bg-stone-800 transition-all dark:bg-stone-200"
+              className="h-full rounded-full bg-zinc-800 transition-all dark:bg-zinc-200"
               style={{ width: `${project.progress}%` }}
             />
           </div>

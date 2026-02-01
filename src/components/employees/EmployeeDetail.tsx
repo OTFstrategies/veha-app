@@ -90,9 +90,9 @@ export function EmployeeDetail({
       ziek: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400',
       vakantie: 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400',
       vrij: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400',
-      training: 'bg-violet-100 text-violet-700 dark:bg-violet-900/20 dark:text-violet-400',
+      training: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300',
     }
-    return colors[status] || 'bg-stone-100 text-stone-700'
+    return colors[status] || 'bg-zinc-100 text-zinc-700'
   }
 
   const formatDate = (dateStr: string) => {
@@ -138,7 +138,7 @@ export function EmployeeDetail({
                   className={cn(
                     employee.isActive
                       ? 'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400'
-                      : 'border-stone-200 bg-stone-50 text-stone-500 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400'
+                      : 'border-zinc-200 bg-zinc-50 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
                   )}
                 >
                   {employee.isActive ? 'Actief' : 'Inactief'}
@@ -246,7 +246,7 @@ export function EmployeeDetail({
                         onClick={() =>
                           onTaskClick?.(assignment.taskId, assignment.projectId)
                         }
-                        className="flex w-full items-center gap-4 px-6 py-4 text-left transition-colors hover:bg-stone-50 dark:hover:bg-stone-800/50"
+                        className="flex w-full items-center gap-4 px-6 py-4 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="font-medium">{assignment.taskName}</div>

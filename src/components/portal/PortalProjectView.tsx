@@ -114,7 +114,7 @@ function TaskItem({ task }: TaskItemProps) {
         isDone
           ? "border-green-200 bg-green-50 dark:border-green-800/50 dark:bg-green-900/20"
           : isInProgress
-          ? "border-stone-300 bg-stone-50 dark:border-stone-600 dark:bg-stone-800"
+          ? "border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800"
           : "border-border bg-card"
       )}
     >
@@ -123,9 +123,9 @@ function TaskItem({ task }: TaskItemProps) {
         {isDone ? (
           <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
         ) : isInProgress ? (
-          <Loader2 className="h-5 w-5 animate-spin text-stone-600 dark:text-stone-400" />
+          <Loader2 className="h-5 w-5 animate-spin text-zinc-600 dark:text-zinc-400" />
         ) : (
-          <Circle className="h-5 w-5 text-stone-400 dark:text-stone-500" />
+          <Circle className="h-5 w-5 text-zinc-400 dark:text-zinc-500" />
         )}
       </div>
 
@@ -137,7 +137,7 @@ function TaskItem({ task }: TaskItemProps) {
               className={cn(
                 "font-medium text-sm sm:text-base",
                 isDone && "text-green-700 dark:text-green-300",
-                isInProgress && "text-stone-900 dark:text-stone-100"
+                isInProgress && "text-zinc-900 dark:text-zinc-100"
               )}
             >
               {task.name}
@@ -158,15 +158,15 @@ function TaskItem({ task }: TaskItemProps) {
         <div className="mt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-muted-foreground">
           {/* Progress */}
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-12 sm:w-16 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+            <div className="h-1.5 w-12 sm:w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
               <div
                 className={cn(
                   "h-full rounded-full transition-all",
                   isDone
                     ? "bg-green-500"
                     : isInProgress
-                    ? "bg-stone-600 dark:bg-stone-300"
-                    : "bg-stone-400"
+                    ? "bg-zinc-600 dark:bg-zinc-300"
+                    : "bg-zinc-400"
                 )}
                 style={{ width: `${task.progress}%` }}
               />
@@ -214,7 +214,7 @@ export function PortalProjectView({ project, userRole, userId }: PortalProjectVi
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">{project.name}</h1>
             {isViewer && (
-              <div className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 text-xs text-stone-600 dark:bg-stone-800 dark:text-stone-400">
+              <div className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                 <Eye className="h-3 w-3" />
                 Alleen lezen
               </div>
@@ -242,15 +242,15 @@ export function PortalProjectView({ project, userRole, userId }: PortalProjectVi
           <div className="flex items-end justify-between gap-2">
             <span className="text-xl font-bold tabular-nums sm:text-2xl">{project.progress}%</span>
             <div className="mb-1 flex-1">
-              <div className="h-2 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+              <div className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                 <div
                   className={cn(
                     "h-full rounded-full transition-all",
                     isComplete
                       ? "bg-green-500"
                       : isActive
-                      ? "bg-stone-700 dark:bg-stone-300"
-                      : "bg-stone-400"
+                      ? "bg-zinc-700 dark:bg-zinc-300"
+                      : "bg-zinc-400"
                   )}
                   style={{ width: `${project.progress}%` }}
                 />
@@ -303,7 +303,7 @@ export function PortalProjectView({ project, userRole, userId }: PortalProjectVi
                 ))}
               </div>
             ) : (
-              <div className="rounded-lg border border-dashed bg-stone-50 p-6 text-center dark:bg-stone-900 sm:p-8">
+              <div className="rounded-lg border border-dashed bg-zinc-50 p-6 text-center dark:bg-zinc-900 sm:p-8">
                 <p className="text-sm text-muted-foreground">
                   Er zijn nog geen taken gedefinieerd voor dit project.
                 </p>
@@ -312,7 +312,7 @@ export function PortalProjectView({ project, userRole, userId }: PortalProjectVi
           </div>
 
           {/* Client Notes Section */}
-          <div className="border-t border-stone-200 pt-8 dark:border-stone-700">
+          <div className="border-t border-zinc-200 pt-8 dark:border-zinc-700">
             <ClientNotes
               projectId={project.id}
               userRole={userRole}
@@ -398,23 +398,23 @@ export function PortalProjectViewSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
       {/* Back Button */}
-      <div className="h-9 w-40 rounded-md bg-stone-200 dark:bg-stone-800" />
+      <div className="h-9 w-40 rounded-md bg-zinc-200 dark:bg-zinc-800" />
 
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-48 rounded-md bg-stone-200 sm:w-64 dark:bg-stone-800" />
-          <div className="h-4 w-24 rounded-md bg-stone-200 sm:w-32 dark:bg-stone-800" />
+          <div className="h-8 w-48 rounded-md bg-zinc-200 sm:w-64 dark:bg-zinc-800" />
+          <div className="h-4 w-24 rounded-md bg-zinc-200 sm:w-32 dark:bg-zinc-800" />
         </div>
-        <div className="h-6 w-20 rounded-full bg-stone-200 dark:bg-stone-800" />
+        <div className="h-6 w-20 rounded-full bg-zinc-200 dark:bg-zinc-800" />
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-20 rounded-lg border bg-card p-3 sm:h-24 sm:p-4">
-            <div className="mb-2 h-4 w-16 rounded bg-stone-200 sm:w-20 dark:bg-stone-800" />
-            <div className="h-6 w-12 rounded bg-stone-200 sm:w-16 dark:bg-stone-800" />
+            <div className="mb-2 h-4 w-16 rounded bg-zinc-200 sm:w-20 dark:bg-zinc-800" />
+            <div className="h-6 w-12 rounded bg-zinc-200 sm:w-16 dark:bg-zinc-800" />
           </div>
         ))}
       </div>
@@ -422,7 +422,7 @@ export function PortalProjectViewSkeleton() {
       {/* Content */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-2">
-          <div className="mb-4 h-6 w-32 rounded bg-stone-200 dark:bg-stone-800" />
+          <div className="mb-4 h-6 w-32 rounded bg-zinc-200 dark:bg-zinc-800" />
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-20 rounded-lg border bg-card" />
           ))}

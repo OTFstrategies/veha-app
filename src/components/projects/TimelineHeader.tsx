@@ -131,7 +131,7 @@ export function TimelineHeader({
             key={key}
             className={cn(
               'flex items-center justify-center border-r border-border text-xs',
-              isWeekend && 'bg-stone-100/50 dark:bg-stone-800/30',
+              isWeekend && 'bg-zinc-100/50 dark:bg-zinc-800/30',
               isToday && 'bg-blue-100 font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
             )}
             style={{ width: columnWidth }}

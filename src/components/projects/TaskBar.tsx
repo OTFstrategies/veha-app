@@ -66,7 +66,7 @@ export function TaskBar({
       >
         <Diamond
           className={cn(
-            'h-4 w-4 cursor-pointer fill-stone-800 text-stone-800 transition-all dark:fill-stone-200 dark:text-stone-200',
+            'h-4 w-4 cursor-pointer fill-zinc-800 text-zinc-800 transition-all dark:fill-zinc-200 dark:text-zinc-200',
             isSelected && 'fill-blue-600 text-blue-600 dark:fill-blue-400 dark:text-blue-400',
             isHighlighted && 'animate-pulse fill-orange-500 text-orange-500 dark:fill-orange-400 dark:text-orange-400',
             isDependencyHighlighted && !isHighlighted && 'fill-blue-500 text-blue-500 dark:fill-blue-400 dark:text-blue-400',
@@ -84,7 +84,7 @@ export function TaskBar({
           </span>
         )}
         {/* Tooltip on hover */}
-        <div className="pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-stone-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-stone-200 dark:text-stone-900">
+        <div className="pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-zinc-200 dark:text-zinc-900">
           {task.name}
         </div>
       </div>
@@ -106,7 +106,7 @@ export function TaskBar({
             ? 'bg-blue-500 dark:bg-blue-600'
             : isCritical
             ? 'bg-red-500 dark:bg-red-600'
-            : 'bg-stone-400 dark:bg-stone-500',
+            : 'bg-zinc-400 dark:bg-zinc-500',
           isSelected
             ? 'ring-2 ring-blue-500 ring-offset-1'
             : isDependencyHighlighted
@@ -137,7 +137,7 @@ export function TaskBar({
         {/* Float indicator for non-critical tasks */}
         {!isCritical && totalFloat > 0 && criticalPathInfo && !isDependencyHighlighted && (
           <span
-            className="absolute -top-5 left-0 whitespace-nowrap text-[10px] text-stone-500 dark:text-stone-400"
+            className="absolute -top-5 left-0 whitespace-nowrap text-[10px] text-zinc-500 dark:text-zinc-400"
             title={`${totalFloat} dagen speling`}
           >
             +{totalFloat}d
@@ -153,7 +153,7 @@ export function TaskBar({
               ? 'bg-blue-500 dark:bg-blue-600'
               : isCritical
               ? 'bg-red-500 dark:bg-red-600'
-              : 'bg-stone-400 dark:bg-stone-500'
+              : 'bg-zinc-400 dark:bg-zinc-500'
           )}
           style={{ height: 6 }}
         />
@@ -167,13 +167,13 @@ export function TaskBar({
               ? 'bg-blue-500 dark:bg-blue-600'
               : isCritical
               ? 'bg-red-500 dark:bg-red-600'
-              : 'bg-stone-400 dark:bg-stone-500'
+              : 'bg-zinc-400 dark:bg-zinc-500'
           )}
           style={{ height: 6 }}
         />
 
         {/* Tooltip */}
-        <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-stone-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-stone-200 dark:text-stone-900">
+        <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-zinc-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-zinc-200 dark:text-zinc-900">
           {task.name} ({task.progress}%)
         </div>
       </div>
@@ -199,7 +199,7 @@ export function TaskBar({
       return 'bg-green-500 dark:bg-green-600'
     }
     // todo and in_progress use VEHA beige
-    return 'bg-[#CBC4B5] dark:bg-stone-500'
+    return 'bg-[#CBC4B5] dark:bg-zinc-500'
   }
 
   const getProgressBarClasses = () => {
@@ -216,7 +216,7 @@ export function TaskBar({
       return 'bg-green-600 dark:bg-green-500'
     }
     // todo and in_progress use VEHA zwart (dark) / light for dark mode
-    return 'bg-stone-800 dark:bg-stone-200'
+    return 'bg-zinc-800 dark:bg-zinc-200'
   }
 
   return (
@@ -254,7 +254,7 @@ export function TaskBar({
       {/* Float indicator for non-critical tasks */}
       {!isCritical && totalFloat > 0 && criticalPathInfo && !isDependencyHighlighted && (
         <span
-          className="absolute -top-5 left-0 whitespace-nowrap text-[10px] text-stone-500 dark:text-stone-400"
+          className="absolute -top-5 left-0 whitespace-nowrap text-[10px] text-zinc-500 dark:text-zinc-400"
           title={`${totalFloat} dagen speling`}
         >
           +{totalFloat}d
@@ -283,8 +283,8 @@ export function TaskBar({
             isDependencyHighlighted || isCritical
               ? 'text-white dark:text-white'
               : task.progress > 50
-              ? 'text-white dark:text-stone-900'
-              : 'text-stone-800 dark:text-stone-100'
+              ? 'text-white dark:text-zinc-900'
+              : 'text-zinc-800 dark:text-zinc-100'
           )}
           style={{ maxWidth: width - 16 }}
         >
@@ -297,17 +297,17 @@ export function TaskBar({
       <div className="absolute bottom-0 right-0 top-0 w-1 cursor-ew-resize opacity-0 transition-opacity group-hover:opacity-100" />
 
       {/* Tooltip */}
-      <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-stone-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-stone-200 dark:text-stone-900">
+      <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-zinc-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-zinc-200 dark:text-zinc-900">
         <div className="font-medium">{task.name}</div>
-        <div className="text-stone-300 dark:text-stone-600">
+        <div className="text-zinc-300 dark:text-zinc-600">
           {new Date(task.startDate).toLocaleDateString('nl-NL')} -{' '}
           {new Date(task.endDate).toLocaleDateString('nl-NL')}
         </div>
-        <div className="text-stone-300 dark:text-stone-600">
+        <div className="text-zinc-300 dark:text-zinc-600">
           {task.progress}% voltooid
         </div>
         {criticalPathInfo && (
-          <div className={cn('text-stone-300 dark:text-stone-600', isCritical && 'text-red-300 dark:text-red-400')}>
+          <div className={cn('text-zinc-300 dark:text-zinc-600', isCritical && 'text-red-300 dark:text-red-400')}>
             {isCritical ? 'Kritiek pad' : `Speling: ${totalFloat} dagen`}
           </div>
         )}

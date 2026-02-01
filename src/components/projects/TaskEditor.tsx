@@ -58,14 +58,14 @@ interface TaskEditorProps {
 // =============================================================================
 
 const STATUS_OPTIONS: Array<{ value: TaskStatus; label: string; color: string }> = [
-  { value: 'todo', label: 'Todo', color: 'bg-stone-200 text-stone-700' },
+  { value: 'todo', label: 'Todo', color: 'bg-zinc-200 text-zinc-700' },
   { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-700' },
   { value: 'done', label: 'Done', color: 'bg-green-100 text-green-700' },
 ]
 
 const PRIORITY_OPTIONS: Array<{ value: TaskPriority; label: string; color: string }> = [
-  { value: 'low', label: 'Laag', color: 'bg-stone-100 text-stone-600' },
-  { value: 'normal', label: 'Normaal', color: 'bg-stone-200 text-stone-700' },
+  { value: 'low', label: 'Laag', color: 'bg-zinc-100 text-zinc-600' },
+  { value: 'normal', label: 'Normaal', color: 'bg-zinc-200 text-zinc-700' },
   { value: 'high', label: 'Hoog', color: 'bg-amber-100 text-amber-700' },
   { value: 'urgent', label: 'Urgent', color: 'bg-red-100 text-red-700' },
 ]
@@ -453,7 +453,7 @@ export function TaskEditor({
                   step={5}
                   value={task.progress}
                   onChange={(e) => updateField('progress', parseInt(e.target.value))}
-                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-200 dark:bg-stone-700 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-stone-800 dark:[&::-webkit-slider-thumb]:bg-stone-200"
+                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 dark:bg-zinc-700 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-zinc-800 dark:[&::-webkit-slider-thumb]:bg-zinc-200"
                 />
               </div>
 
@@ -470,8 +470,8 @@ export function TaskEditor({
                       className={cn(
                         'rounded-full px-3 py-1 text-xs font-medium transition-all',
                         task.status === option.value
-                          ? option.color + ' ring-2 ring-offset-1 ring-stone-400'
-                          : 'bg-stone-100 text-stone-500 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400'
+                          ? option.color + ' ring-2 ring-offset-1 ring-zinc-400'
+                          : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400'
                       )}
                     >
                       {option.label}
@@ -491,8 +491,8 @@ export function TaskEditor({
                       className={cn(
                         'rounded-full px-3 py-1 text-xs font-medium transition-all',
                         task.priority === option.value
-                          ? option.color + ' ring-2 ring-offset-1 ring-stone-400'
-                          : 'bg-stone-100 text-stone-500 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400'
+                          ? option.color + ' ring-2 ring-offset-1 ring-zinc-400'
+                          : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400'
                       )}
                     >
                       {option.label}
@@ -512,13 +512,13 @@ export function TaskEditor({
                   className={cn(
                     'h-6 w-11 rounded-full transition-colors',
                     task.isMilestone
-                      ? 'bg-stone-800 dark:bg-stone-200'
-                      : 'bg-stone-200 dark:bg-stone-700'
+                      ? 'bg-zinc-800 dark:bg-zinc-200'
+                      : 'bg-zinc-200 dark:bg-zinc-700'
                   )}
                 >
                   <div
                     className={cn(
-                      'h-5 w-5 rounded-full bg-white shadow transition-transform dark:bg-stone-800',
+                      'h-5 w-5 rounded-full bg-white shadow transition-transform dark:bg-zinc-800',
                       task.isMilestone ? 'translate-x-5' : 'translate-x-0.5'
                     )}
                   />
@@ -624,11 +624,11 @@ export function TaskEditor({
                     {task.dependencies.map((dep) => (
                       <div
                         key={dep.id}
-                        className="flex items-center justify-between rounded-lg bg-stone-50 p-3 dark:bg-stone-800"
+                        className="flex items-center justify-between rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800"
                       >
                         <div>
                           <span className="font-medium">{dep.predecessorName}</span>
-                          <span className="ml-2 text-stone-500 dark:text-stone-400">
+                          <span className="ml-2 text-zinc-500 dark:text-zinc-400">
                             ({getDependencyLabel(dep.type)})
                             {dep.lag !== 0 && ` +${dep.lag}d`}
                           </span>
@@ -657,11 +657,11 @@ export function TaskEditor({
                 <div className="grid grid-cols-3 gap-3">
                   {/* Predecessor select */}
                   <div className="col-span-2">
-                    <label className="mb-1 block text-xs text-stone-500 dark:text-stone-400">
+                    <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">
                       Voorganger
                     </label>
                     <select
-                      className="w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm dark:border-stone-700 dark:bg-stone-900"
+                      className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
                       value={pendingDependency?.predecessorId ?? ''}
                       onChange={(e) =>
                         setPendingDependency((prev) => ({
@@ -682,11 +682,11 @@ export function TaskEditor({
 
                   {/* Type select */}
                   <div>
-                    <label className="mb-1 block text-xs text-stone-500 dark:text-stone-400">
+                    <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">
                       Type
                     </label>
                     <select
-                      className="w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm dark:border-stone-700 dark:bg-stone-900"
+                      className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
                       value={pendingDependency?.type ?? 'FS'}
                       onChange={(e) =>
                         setPendingDependency((prev) => ({
@@ -707,7 +707,7 @@ export function TaskEditor({
 
                 {/* Lag days */}
                 <div>
-                  <label className="mb-1 block text-xs text-stone-500 dark:text-stone-400">
+                  <label className="mb-1 block text-xs text-zinc-500 dark:text-zinc-400">
                     Lag (dagen)
                   </label>
                   <div className="flex items-center gap-2">
@@ -723,7 +723,7 @@ export function TaskEditor({
                         }))
                       }
                     />
-                    <span className="text-xs text-stone-500">
+                    <span className="text-xs text-zinc-500">
                       Positief = vertraging, negatief = overlap
                     </span>
                   </div>
@@ -759,7 +759,7 @@ export function TaskEditor({
             </Button>
             <Button
               size="sm"
-              className="bg-stone-800 text-stone-50 hover:bg-stone-700 dark:bg-stone-200 dark:text-stone-900"
+              className="bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900"
               onClick={() => onSave?.(task)}
             >
               Opslaan
@@ -779,20 +779,20 @@ export function TaskEditor({
           </DialogHeader>
 
           <div className="py-4">
-            <p className="text-stone-600 dark:text-stone-400 mb-4">
+            <p className="text-zinc-600 dark:text-zinc-400 mb-4">
               Deze medewerker is al ingepland voor een andere taak in deze periode.
             </p>
 
             {conflictWarning && (
               <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-stone-500 dark:text-stone-400">Conflicterende taak:</span>
-                  <span className="font-medium text-stone-900 dark:text-stone-100">
+                  <span className="text-zinc-500 dark:text-zinc-400">Conflicterende taak:</span>
+                  <span className="font-medium text-zinc-900 dark:text-zinc-100">
                     {conflictWarning.taskName}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-stone-500 dark:text-stone-400">Overlap:</span>
+                  <span className="text-zinc-500 dark:text-zinc-400">Overlap:</span>
                   <span className="font-medium text-orange-600 dark:text-orange-400">
                     {conflictWarning.overlapDays} {conflictWarning.overlapDays === 1 ? 'dag' : 'dagen'}
                   </span>

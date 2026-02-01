@@ -50,10 +50,10 @@ const GROUP_CONFIG = {
 } as const
 
 const STATUS_COLORS: Record<string, string> = {
-  gepland: 'border-stone-200 bg-stone-100 text-stone-700 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300',
+  gepland: 'border-zinc-200 bg-zinc-100 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
   actief: 'border-lime-200 bg-lime-100 text-lime-700 dark:border-lime-800 dark:bg-lime-900/30 dark:text-lime-300',
   'on-hold': 'border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-  afgerond: 'border-stone-200 bg-stone-100 text-stone-500 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400',
+  afgerond: 'border-zinc-200 bg-zinc-100 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400',
   geannuleerd: 'border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300',
 }
 
@@ -103,7 +103,7 @@ export function ClientTreeNode({
       <div
         className={cn(
           'group flex cursor-pointer items-center gap-2 px-4 py-2',
-          'hover:bg-stone-50 dark:hover:bg-stone-800/50'
+          'hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
         )}
         onClick={onSelect}
       >
@@ -113,12 +113,12 @@ export function ClientTreeNode({
             e.stopPropagation()
             onToggle()
           }}
-          className="shrink-0 rounded p-0.5 hover:bg-stone-200 dark:hover:bg-stone-700"
+          className="shrink-0 rounded p-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"
         >
           {isExpanded ? (
-            <ChevronDown className="h-4 w-4 text-stone-500" />
+            <ChevronDown className="h-4 w-4 text-zinc-500" />
           ) : (
-            <ChevronRight className="h-4 w-4 text-stone-500" />
+            <ChevronRight className="h-4 w-4 text-zinc-500" />
           )}
         </button>
 
@@ -128,13 +128,13 @@ export function ClientTreeNode({
             'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
             client.is_active
               ? 'bg-lime-100 dark:bg-lime-900/30'
-              : 'bg-stone-100 dark:bg-stone-800'
+              : 'bg-zinc-100 dark:bg-zinc-800'
           )}
         >
           <Building2
             className={cn(
               'h-4 w-4',
-              client.is_active ? 'text-lime-600 dark:text-lime-400' : 'text-stone-400'
+              client.is_active ? 'text-lime-600 dark:text-lime-400' : 'text-zinc-400'
             )}
           />
         </div>
@@ -156,13 +156,13 @@ export function ClientTreeNode({
             'shrink-0',
             client.is_active
               ? 'border-lime-200 bg-lime-50 text-lime-700 dark:border-lime-800 dark:bg-lime-900/20 dark:text-lime-400'
-              : 'border-stone-200 bg-stone-50 text-stone-500 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400'
+              : 'border-zinc-200 bg-zinc-50 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
           )}
         >
           <span
             className={cn(
               'mr-1.5 h-1.5 w-1.5 rounded-full',
-              client.is_active ? 'bg-lime-500' : 'bg-stone-400'
+              client.is_active ? 'bg-lime-500' : 'bg-zinc-400'
             )}
           />
           {client.is_active ? 'Actief' : 'Inactief'}
@@ -279,24 +279,24 @@ function TreeGroup({ type, count, isExpanded, onToggle, onAdd, children }: TreeG
       <div
         className={cn(
           'group flex cursor-pointer items-center gap-2 px-4 py-1.5',
-          'hover:bg-stone-50 dark:hover:bg-stone-800/50'
+          'hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
         )}
         style={{ paddingLeft: INDENT_PX + 16 }}
         onClick={onToggle}
       >
         <button className="shrink-0 p-0.5">
           {isExpanded ? (
-            <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
           ) : (
-            <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
+            <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
           )}
         </button>
 
-        <Icon className="h-4 w-4 shrink-0 text-stone-400" />
+        <Icon className="h-4 w-4 shrink-0 text-zinc-400" />
 
-        <span className="text-sm text-stone-600 dark:text-stone-400">{config.label}</span>
+        <span className="text-sm text-zinc-600 dark:text-zinc-400">{config.label}</span>
 
-        <span className="text-xs text-stone-400 dark:text-stone-500">({count})</span>
+        <span className="text-xs text-zinc-400 dark:text-zinc-500">({count})</span>
 
         <button
           onClick={(e) => {
@@ -304,11 +304,11 @@ function TreeGroup({ type, count, isExpanded, onToggle, onAdd, children }: TreeG
             onAdd()
           }}
           className={cn(
-            'ml-auto rounded p-1 hover:bg-stone-200 dark:hover:bg-stone-700',
+            'ml-auto rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700',
             'opacity-0 group-hover:opacity-100'
           )}
         >
-          <Plus className="h-3.5 w-3.5 text-stone-500" />
+          <Plus className="h-3.5 w-3.5 text-zinc-500" />
         </button>
       </div>
 
@@ -325,21 +325,21 @@ function TreeGroup({ type, count, isExpanded, onToggle, onAdd, children }: TreeG
 function ContactItem({ contact }: { contact: ClientContact }) {
   return (
     <div
-      className="group flex items-center gap-3 px-4 py-1.5 hover:bg-stone-50 dark:hover:bg-stone-800/50"
+      className="group flex items-center gap-3 px-4 py-1.5 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
       style={{ paddingLeft: INDENT_PX * 2 + 16 }}
     >
-      <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         {contact.name}
       </span>
-      {contact.role && <span className="text-xs text-stone-500">{contact.role}</span>}
+      {contact.role && <span className="text-xs text-zinc-500">{contact.role}</span>}
       {contact.phone && (
-        <span className="flex items-center gap-1 text-xs text-stone-400">
+        <span className="flex items-center gap-1 text-xs text-zinc-400">
           <Phone className="h-3 w-3" />
           {contact.phone}
         </span>
       )}
       {contact.email && (
-        <span className="flex items-center gap-1 text-xs text-stone-400">
+        <span className="flex items-center gap-1 text-xs text-zinc-400">
           <Mail className="h-3 w-3" />
           {contact.email}
         </span>
@@ -356,13 +356,13 @@ function LocationItem({ location }: { location: ClientLocation }) {
 
   return (
     <div
-      className="group flex items-center gap-3 px-4 py-1.5 hover:bg-stone-50 dark:hover:bg-stone-800/50"
+      className="group flex items-center gap-3 px-4 py-1.5 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
       style={{ paddingLeft: INDENT_PX * 2 + 16 }}
     >
-      <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         {location.name}
       </span>
-      {fullAddress && <span className="text-xs text-stone-500">{fullAddress}</span>}
+      {fullAddress && <span className="text-xs text-zinc-500">{fullAddress}</span>}
       {location.is_primary && (
         <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
       )}
@@ -375,12 +375,12 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
     <div
       className={cn(
         'group flex cursor-pointer items-center gap-3 px-4 py-1.5',
-        'hover:bg-stone-50 dark:hover:bg-stone-800/50'
+        'hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
       )}
       style={{ paddingLeft: INDENT_PX * 2 + 16 }}
       onClick={onClick}
     >
-      <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         {project.name}
       </span>
 
@@ -390,7 +390,7 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
 
       {/* Progress Bar */}
       <div className="ml-auto flex items-center gap-2">
-        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
           <div
             className={cn(
               'h-full rounded-full',
@@ -398,15 +398,15 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
                 ? 'bg-lime-500'
                 : project.progress > 0
                 ? 'bg-lime-400'
-                : 'bg-stone-300 dark:bg-stone-600'
+                : 'bg-zinc-300 dark:bg-zinc-600'
             )}
             style={{ width: `${project.progress}%` }}
           />
         </div>
-        <span className="w-8 text-right text-xs text-stone-500">{project.progress}%</span>
+        <span className="w-8 text-right text-xs text-zinc-500">{project.progress}%</span>
       </div>
 
-      <ArrowRight className="h-4 w-4 text-stone-400 opacity-0 group-hover:opacity-100" />
+      <ArrowRight className="h-4 w-4 text-zinc-400 opacity-0 group-hover:opacity-100" />
     </div>
   )
 }
@@ -414,7 +414,7 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
 function TreeEmptyItem({ text }: { text: string }) {
   return (
     <div
-      className="px-4 py-1.5 text-xs italic text-stone-400 dark:text-stone-500"
+      className="px-4 py-1.5 text-xs italic text-zinc-400 dark:text-zinc-500"
       style={{ paddingLeft: INDENT_PX * 2 + 16 }}
     >
       {text}

@@ -51,7 +51,7 @@ export function GhostTaskBar({
 
   return (
     <div
-      className="pointer-events-none absolute rounded border-2 border-dashed border-stone-300 opacity-50 dark:border-stone-600"
+      className="pointer-events-none absolute rounded border-2 border-dashed border-zinc-300 opacity-50 dark:border-zinc-600"
       style={{
         left,
         top: barTop,

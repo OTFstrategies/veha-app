@@ -83,14 +83,14 @@ export function PortalProjectCard({ project }: PortalProjectCardProps) {
       className={cn(
         "group block rounded-xl border bg-card p-4 transition-all hover:shadow-md sm:p-5",
         isActive
-          ? "border-stone-300 dark:border-stone-600"
-          : "border-border hover:border-stone-300 dark:hover:border-stone-600"
+          ? "border-zinc-300 dark:border-zinc-600"
+          : "border-border hover:border-zinc-300 dark:hover:border-zinc-600"
       )}
     >
       {/* Header */}
       <div className="mb-3 flex items-start justify-between gap-2 sm:mb-4 sm:gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-base font-semibold group-hover:text-stone-700 sm:text-lg dark:group-hover:text-stone-200">
+          <h3 className="truncate text-base font-semibold group-hover:text-zinc-700 sm:text-lg dark:group-hover:text-zinc-200">
             {project.name}
           </h3>
           <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
@@ -115,15 +115,15 @@ export function PortalProjectCard({ project }: PortalProjectCardProps) {
           <span className="text-xs text-muted-foreground">Voortgang</span>
           <span className="text-xs font-medium tabular-nums">{project.progress}%</span>
         </div>
-        <div className="h-1.5 overflow-hidden rounded-full bg-stone-200 sm:h-2 dark:bg-stone-700">
+        <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200 sm:h-2 dark:bg-zinc-700">
           <div
             className={cn(
               "h-full rounded-full transition-all",
               isComplete
                 ? "bg-green-500"
                 : isActive
-                ? "bg-stone-700 dark:bg-stone-300"
-                : "bg-stone-400 dark:bg-stone-500"
+                ? "bg-zinc-700 dark:bg-zinc-300"
+                : "bg-zinc-400 dark:bg-zinc-500"
             )}
             style={{ width: `${project.progress}%` }}
           />
@@ -182,9 +182,9 @@ export function PortalProjectCard({ project }: PortalProjectCardProps) {
 
 export function PortalProjectsEmpty() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-50 px-4 py-12 text-center sm:px-6 sm:py-16 dark:border-stone-700 dark:bg-stone-900">
-      <div className="mb-4 rounded-full bg-stone-200 p-3 sm:p-4 dark:bg-stone-800">
-        <Clock className="h-6 w-6 text-stone-500 sm:h-8 sm:w-8 dark:text-stone-400" />
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 py-12 text-center sm:px-6 sm:py-16 dark:border-zinc-700 dark:bg-zinc-900">
+      <div className="mb-4 rounded-full bg-zinc-200 p-3 sm:p-4 dark:bg-zinc-800">
+        <Clock className="h-6 w-6 text-zinc-500 sm:h-8 sm:w-8 dark:text-zinc-400" />
       </div>
       <h3 className="mb-2 text-base font-medium sm:text-lg">Geen projecten gevonden</h3>
       <p className="max-w-sm text-xs text-muted-foreground sm:text-sm">

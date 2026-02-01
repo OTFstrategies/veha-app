@@ -10,15 +10,15 @@ import { cn } from "@/lib/utils"
 const buttonVariants = {
   variant: {
     default:
-      "bg-stone-800 text-white shadow hover:bg-stone-900 dark:bg-stone-50 dark:text-stone-900 dark:hover:bg-stone-200",
+      "bg-zinc-800 text-white shadow hover:bg-zinc-900 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200",
     destructive:
       "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
     outline:
       "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
     secondary:
-      "bg-stone-100 text-stone-800 shadow-sm hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-100 dark:hover:bg-stone-700",
+      "bg-zinc-100 text-zinc-800 shadow-sm hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700",
     ghost: "hover:bg-accent hover:text-accent-foreground",
-    link: "text-stone-600 underline-offset-4 hover:underline dark:text-stone-400",
+    link: "text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-400",
   },
   size: {
     default: "h-9 px-4 py-2",

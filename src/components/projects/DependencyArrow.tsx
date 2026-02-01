@@ -92,11 +92,11 @@ export function DependencyArrow({
 
   const strokeClass = isHighlighted
     ? 'stroke-blue-500 dark:stroke-blue-400'
-    : 'stroke-stone-400 dark:stroke-stone-500'
+    : 'stroke-zinc-400 dark:stroke-zinc-500'
 
   const fillClass = isHighlighted
     ? 'fill-blue-500 dark:fill-blue-400'
-    : 'fill-stone-400 dark:fill-stone-500'
+    : 'fill-zinc-400 dark:fill-zinc-500'
 
   // Arrow head pointing right
   const arrowHeadPoints = `${toX - 6},${toY - 3} ${toX},${toY} ${toX - 6},${toY + 3}`
@@ -154,5 +154,5 @@ export function DependencyTypeLabel({ type }: DependencyTypeLabelProps) {
     SF: 'Start naar Einde',
   }
 
-  return <span className="text-xs text-stone-500 dark:text-stone-400">{labels[type]}</span>
+  return <span className="text-xs text-zinc-500 dark:text-zinc-400">{labels[type]}</span>
 }

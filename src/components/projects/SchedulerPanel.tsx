@@ -177,9 +177,9 @@ export function SchedulerPanel({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="flex h-full flex-col bg-stone-50/50 dark:bg-stone-900/50">
+    <div className="flex h-full flex-col bg-zinc-50/50 dark:bg-zinc-900/50">
       {/* Header Row */}
-      <div className="flex shrink-0 border-b border-border bg-stone-100 dark:bg-stone-800">
+      <div className="flex shrink-0 border-b border-border bg-zinc-100 dark:bg-zinc-800">
         {/* Grid Header */}
         <div
           className="shrink-0 border-r border-border"
@@ -234,7 +234,7 @@ export function SchedulerPanel({
               <div
                 key={resource.employee.id}
                 className={cn(
-                  'flex items-center border-b border-border transition-colors hover:bg-stone-100 dark:hover:bg-stone-800',
+                  'flex items-center border-b border-border transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800',
                   overbooked && 'bg-red-50 dark:bg-red-900/10',
                   hasConflicts && !overbooked && 'bg-orange-50/50 dark:bg-orange-900/10'
                 )}
@@ -322,7 +322,7 @@ export function SchedulerPanel({
                 return (
                   <div
                     key={i}
-                    className="absolute top-0 bottom-0 bg-stone-200/30 dark:bg-stone-700/20"
+                    className="absolute top-0 bottom-0 bg-zinc-200/30 dark:bg-zinc-700/20"
                     style={{
                       left: i * timelineConfig.columnWidth,
                       width: timelineConfig.columnWidth,
@@ -412,9 +412,9 @@ export function SchedulerPanel({
                       )}
 
                       {/* Tooltip */}
-                      <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-stone-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-stone-200 dark:text-stone-900">
+                      <div className="pointer-events-none absolute bottom-full left-0 mb-1 whitespace-nowrap rounded bg-zinc-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 dark:bg-zinc-200 dark:text-zinc-900">
                         <div className="font-medium">{task.name}</div>
-                        <div className="text-stone-300 dark:text-stone-600">
+                        <div className="text-zinc-300 dark:text-zinc-600">
                           {assignment.plannedHours}u gepland / {assignment.actualHours}u gewerkt
                         </div>
                       </div>

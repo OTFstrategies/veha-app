@@ -34,7 +34,7 @@ import { ProjectFormModal, type ProjectFormData } from '@/components/projects/Pr
 const STATUS_CONFIG: Record<ProjectStatus, { label: string; className: string }> = {
   gepland: {
     label: 'Gepland',
-    className: 'bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300',
+    className: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
   },
   actief: {
     label: 'Actief',
@@ -96,7 +96,7 @@ function ProjectCard({ project, onView, onEdit, onDelete, onClientClick }: Proje
             onClick={onView}
             className="block text-left"
           >
-            <h3 className="truncate font-medium text-foreground hover:text-stone-600 dark:hover:text-stone-300">
+            <h3 className="truncate font-medium text-foreground hover:text-zinc-600 dark:hover:text-zinc-300">
               {project.name}
             </h3>
           </button>
@@ -168,13 +168,13 @@ function ProjectCard({ project, onView, onEdit, onDelete, onClientClick }: Proje
 
         {/* Progress */}
         <div className="flex items-center gap-2">
-          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
             <div
               className={cn(
                 'h-full rounded-full transition-all',
                 project.progress === 100
                   ? 'bg-green-500'
-                  : 'bg-stone-800 dark:bg-stone-200'
+                  : 'bg-zinc-800 dark:bg-zinc-200'
               )}
               style={{ width: `${project.progress}%` }}
             />
@@ -222,15 +222,15 @@ function LoadingState() {
           key={i}
           className="flex flex-col rounded-lg border border-border bg-card p-4 animate-pulse"
         >
-          <div className="h-5 w-3/4 rounded bg-stone-200 dark:bg-stone-700" />
-          <div className="mt-2 h-4 w-1/2 rounded bg-stone-200 dark:bg-stone-700" />
+          <div className="h-5 w-3/4 rounded bg-zinc-200 dark:bg-zinc-700" />
+          <div className="mt-2 h-4 w-1/2 rounded bg-zinc-200 dark:bg-zinc-700" />
           <div className="mt-3 flex gap-2">
-            <div className="h-5 w-16 rounded-full bg-stone-200 dark:bg-stone-700" />
-            <div className="h-5 w-16 rounded-full bg-stone-200 dark:bg-stone-700" />
+            <div className="h-5 w-16 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+            <div className="h-5 w-16 rounded-full bg-zinc-200 dark:bg-zinc-700" />
           </div>
           <div className="mt-auto pt-4 flex justify-between">
-            <div className="h-3 w-24 rounded bg-stone-200 dark:bg-stone-700" />
-            <div className="h-3 w-16 rounded bg-stone-200 dark:bg-stone-700" />
+            <div className="h-3 w-24 rounded bg-zinc-200 dark:bg-zinc-700" />
+            <div className="h-3 w-16 rounded bg-zinc-200 dark:bg-zinc-700" />
           </div>
         </div>
       ))}
@@ -389,8 +389,8 @@ export default function ProjectsPage() {
               className={cn(
                 'rounded-full px-3 py-1 text-sm font-medium transition-colors',
                 statusFilter === 'all'
-                  ? 'bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900'
-                  : 'bg-stone-100 text-stone-600 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700'
+                  ? 'bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-900'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700'
               )}
             >
               Alle
@@ -402,8 +402,8 @@ export default function ProjectsPage() {
                 className={cn(
                   'rounded-full px-3 py-1 text-sm font-medium transition-colors',
                   statusFilter === status
-                    ? config.className + ' ring-2 ring-offset-1 ring-stone-400'
-                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700'
+                    ? config.className + ' ring-2 ring-offset-1 ring-zinc-400'
+                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700'
                 )}
               >
                 {config.label}

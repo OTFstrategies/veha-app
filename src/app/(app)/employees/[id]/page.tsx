@@ -187,7 +187,7 @@ export default function EmployeeDetailPage() {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-stone-200 border-t-stone-800" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-800" />
           <p className="text-sm text-muted-foreground">Medewerker laden...</p>
         </div>
       </div>
@@ -212,7 +212,7 @@ export default function EmployeeDetailPage() {
   if (!employee) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="rounded-lg border border-stone-200 bg-white p-6 text-center dark:border-stone-800 dark:bg-stone-900">
+        <div className="rounded-lg border border-zinc-200 bg-white p-6 text-center dark:border-zinc-800 dark:bg-zinc-900">
           <p className="text-sm text-muted-foreground">Medewerker niet gevonden.</p>
         </div>
       </div>

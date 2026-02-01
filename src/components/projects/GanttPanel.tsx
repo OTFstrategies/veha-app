@@ -336,7 +336,7 @@ export function GanttPanel({
   return (
     <div className="flex h-full flex-col">
       {/* Header Row */}
-      <div className="flex shrink-0 border-b border-border bg-stone-50 dark:bg-stone-900">
+      <div className="flex shrink-0 border-b border-border bg-zinc-50 dark:bg-zinc-900">
         {/* Grid Header */}
         <div className="shrink-0 border-r border-border" style={{ width: GRID_WIDTH }}>
           <div className="flex h-10 items-center text-xs font-medium text-muted-foreground">
@@ -415,11 +415,11 @@ export function GanttPanel({
                   isSelected &&
                     !isRecentlyChanged &&
                     !isDependencyHighlighted &&
-                    'bg-stone-100 dark:bg-stone-800',
+                    'bg-zinc-100 dark:bg-zinc-800',
                   !isSelected &&
                     !isRecentlyChanged &&
                     !isDependencyHighlighted &&
-                    'hover:bg-stone-50 dark:hover:bg-stone-900'
+                    'hover:bg-zinc-50 dark:hover:bg-zinc-900'
                 )}
                 style={{ height: ROW_HEIGHT }}
                 onClick={() => onTaskSelect(task.id)}
@@ -436,7 +436,7 @@ export function GanttPanel({
                         e.stopPropagation()
                         toggleExpand(task.id)
                       }}
-                      className="rounded p-0.5 hover:bg-stone-200 dark:hover:bg-stone-700"
+                      className="rounded p-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {isExpanded ? (
                         <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
@@ -505,13 +505,13 @@ export function GanttPanel({
                   className="flex items-center justify-center px-1"
                   style={{ width: GRID_COLUMNS.progress }}
                 >
-                  <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+                  <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                     <div
                       className={cn(
                         'h-full rounded-full transition-all',
                         task.progress === 100
                           ? 'bg-green-500'
-                          : 'bg-stone-800 dark:bg-stone-200'
+                          : 'bg-zinc-800 dark:bg-zinc-200'
                       )}
                       style={{ width: `${task.progress}%` }}
                     />
@@ -582,7 +582,7 @@ export function GanttPanel({
                 return (
                   <div
                     key={i}
-                    className="absolute bottom-0 top-0 bg-stone-100/50 dark:bg-stone-800/30"
+                    className="absolute bottom-0 top-0 bg-zinc-100/50 dark:bg-zinc-800/30"
                     style={{
                       left: i * timelineConfig.columnWidth,
                       width: timelineConfig.columnWidth,

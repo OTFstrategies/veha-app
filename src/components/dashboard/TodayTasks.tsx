@@ -30,8 +30,8 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-stone-100 dark:bg-stone-800">
-            <Calendar className="h-4 w-4 text-stone-600 dark:text-stone-400" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+            <Calendar className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
           </div>
           <div>
             <h2 className="font-semibold">Vandaag</h2>
@@ -48,8 +48,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
         {taskGroups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <CheckCircle2 className="mb-3 h-10 w-10 text-green-500" />
-            <p className="font-medium">Geen taken gepland voor vandaag</p>
-            <p className="mt-1 text-sm text-muted-foreground">Geniet van je vrije dag!</p>
+            <p className="font-medium text-muted-foreground">Geen taken</p>
           </div>
         ) : (
           taskGroups.map((group) => (
@@ -68,7 +67,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                     onClick={() => onTaskClick?.(task.id, group.projectId)}
                     className={cn(
                       'group flex w-full items-center gap-3 rounded-lg border border-transparent p-3 text-left transition-all',
-                      'hover:border-border hover:bg-stone-50 dark:hover:bg-stone-800/50',
+                      'hover:border-border hover:bg-zinc-50 dark:hover:bg-zinc-800/50',
                       task.status === 'done' && 'opacity-60'
                     )}
                   >
@@ -80,7 +79,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                           ? 'bg-green-100 dark:bg-green-900/30'
                           : task.status === 'in_progress'
                           ? 'bg-blue-100 dark:bg-blue-900/30'
-                          : 'bg-stone-100 dark:bg-stone-800'
+                          : 'bg-zinc-100 dark:bg-zinc-800'
                       )}
                     >
                       {task.status === 'done' ? (
@@ -102,13 +101,13 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                       </p>
                       {/* Progress Bar */}
                       <div className="mt-1.5 flex items-center gap-2">
-                        <div className="h-1 flex-1 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+                        <div className="h-1 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                           <div
                             className={cn(
                               'h-full rounded-full transition-all',
                               task.progress === 100
                                 ? 'bg-green-500'
-                                : 'bg-stone-600 dark:bg-stone-400'
+                                : 'bg-zinc-600 dark:bg-zinc-400'
                             )}
                             style={{ width: `${task.progress}%` }}
                           />

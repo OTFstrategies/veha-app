@@ -182,9 +182,9 @@ function PortalLayoutContent({ children }: PortalShellProps) {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-stone-50 dark:bg-stone-950">
+      <div className="flex h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-stone-800 dark:border-stone-700 dark:border-t-stone-200" />
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-800 dark:border-zinc-700 dark:border-t-zinc-200" />
           <p className="text-sm text-muted-foreground">Laden...</p>
         </div>
       </div>
@@ -197,7 +197,7 @@ function PortalLayoutContent({ children }: PortalShellProps) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50 dark:bg-stone-950">
+    <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-zinc-950">
       <PortalHeader
         userEmail={userData.email}
         userName={userData.fullName}
@@ -209,7 +209,7 @@ function PortalLayoutContent({ children }: PortalShellProps) {
           {children}
         </div>
       </main>
-      <footer className="border-t border-stone-200 bg-white px-3 py-3 sm:px-4 sm:py-4 dark:border-stone-800 dark:bg-stone-900">
+      <footer className="border-t border-zinc-200 bg-white px-3 py-3 sm:px-4 sm:py-4 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-6xl text-center text-xs text-muted-foreground">
           <p>VEHA Klantportaal - Projecten en voortgang</p>
         </div>

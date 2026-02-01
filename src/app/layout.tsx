@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Mono } from "next/font/google";
+import { Inter, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeScript } from "@/components/ThemeScript";
 import { QueryProvider } from "@/providers/query-provider";
 import { ToastProvider } from "@/components/ui/toast";
@@ -11,8 +11,15 @@ const inter = Inter({
   display: "swap",
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
   display: "swap",
@@ -34,7 +41,7 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body
-        className={`${inter.variable} ${ibmPlexMono.variable} font-sans antialiased`}
+        className={`${inter.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <QueryProvider>
           <ToastProvider>

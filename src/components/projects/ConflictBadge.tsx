@@ -94,11 +94,11 @@ function ConflictDetails({ conflicts }: ConflictDetailsProps) {
         {conflicts.map((conflict) => (
           <div
             key={conflict.id}
-            className="p-3 rounded-lg bg-stone-50 dark:bg-stone-800 space-y-2"
+            className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 space-y-2"
           >
             {/* Employee and overlap info */}
             <div className="flex items-center justify-between">
-              <span className="font-medium text-stone-900 dark:text-stone-100">
+              <span className="font-medium text-zinc-900 dark:text-zinc-100">
                 {conflict.employeeName}
               </span>
               <span className="text-xs text-orange-600 dark:text-orange-400">
@@ -108,21 +108,21 @@ function ConflictDetails({ conflicts }: ConflictDetailsProps) {
             </div>
 
             {/* Task details */}
-            <div className="text-sm text-stone-600 dark:text-stone-400 space-y-1">
+            <div className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
               <div className="flex items-center gap-2">
-                <span className="w-16 text-xs text-stone-500 dark:text-stone-500 shrink-0">
+                <span className="w-16 text-xs text-zinc-500 dark:text-zinc-500 shrink-0">
                   Taak 1:
                 </span>
                 <span className="truncate">{conflict.task1Name}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-16 text-xs text-stone-500 dark:text-stone-500 shrink-0">
+                <span className="w-16 text-xs text-zinc-500 dark:text-zinc-500 shrink-0">
                   Taak 2:
                 </span>
                 <span className="truncate">{conflict.task2Name}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-16 text-xs text-stone-500 dark:text-stone-500 shrink-0">
+                <span className="w-16 text-xs text-zinc-500 dark:text-zinc-500 shrink-0">
                   Overlap:
                 </span>
                 <span>
@@ -136,7 +136,7 @@ function ConflictDetails({ conflicts }: ConflictDetailsProps) {
       </div>
 
       {/* Tip */}
-      <p className="text-xs text-stone-500 dark:text-stone-400">
+      <p className="text-xs text-zinc-500 dark:text-zinc-400">
         Tip: Pas de planning aan of wijs een andere medewerker toe.
       </p>
     </div>

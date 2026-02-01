@@ -302,7 +302,7 @@ export function EmployeeFormModal({
                     "cursor-pointer transition-colors",
                     skills.includes(skill.value as Skill)
                       ? ""
-                      : "hover:bg-stone-100 dark:hover:bg-stone-800"
+                      : "hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   )}
                   onClick={() => !isLoading && toggleSkill(skill.value as Skill)}
                 >
@@ -323,7 +323,7 @@ export function EmployeeFormModal({
                   className={cn(
                     "h-8 w-8 rounded-full transition-all",
                     color === c
-                      ? "ring-2 ring-offset-2 ring-stone-900 dark:ring-stone-50"
+                      ? "ring-2 ring-offset-2 ring-zinc-900 dark:ring-zinc-50"
                       : "hover:scale-110"
                   )}
                   style={{ backgroundColor: c }}
@@ -343,7 +343,7 @@ export function EmployeeFormModal({
                 id="isActive"
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
-                className="h-4 w-4 rounded border-stone-300"
+                className="h-4 w-4 rounded border-zinc-300"
                 disabled={isLoading}
               />
               <Label htmlFor="isActive" className="cursor-pointer">

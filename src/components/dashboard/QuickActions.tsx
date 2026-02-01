@@ -39,8 +39,8 @@ export function QuickActions({ actions, onAction }: QuickActionsProps) {
             size="sm"
             className={cn(
               'gap-2 border-dashed',
-              'hover:border-solid hover:border-stone-400 hover:bg-stone-50',
-              'dark:hover:border-stone-500 dark:hover:bg-stone-800'
+              'hover:border-solid hover:border-zinc-400 hover:bg-zinc-50',
+              'dark:hover:border-zinc-500 dark:hover:bg-zinc-800'
             )}
             onClick={() => onAction?.(action.id)}
           >

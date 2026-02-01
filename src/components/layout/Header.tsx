@@ -52,9 +52,9 @@ export function Header({ userEmail }: HeaderProps) {
     : "U";
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-stone-200 bg-white px-6 dark:border-stone-800 dark:bg-stone-900">
+    <header className="flex h-16 items-center justify-between border-b border-zinc-200 bg-white px-6 dark:border-zinc-800 dark:bg-zinc-900">
       <div className="flex items-center gap-4">
-        <h1 className="text-lg font-semibold text-stone-900 dark:text-stone-50">
+        <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           Dashboard
         </h1>
       </div>
@@ -82,7 +82,7 @@ export function Header({ userEmail }: HeaderProps) {
             >
               <Avatar className="h-9 w-9">
                 <AvatarImage src="" alt={userEmail ?? "User"} />
-                <AvatarFallback className="bg-stone-200 text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+                <AvatarFallback className="bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>

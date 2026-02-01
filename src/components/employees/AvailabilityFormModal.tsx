@@ -41,9 +41,9 @@ function getStatusColor(status: AvailabilityStatus): string {
     ziek: "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800",
     vakantie: "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800",
     vrij: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800",
-    training: "bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/20 dark:text-violet-400 dark:border-violet-800",
+    training: "bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:border-zinc-600",
   };
-  return colors[status] || "bg-stone-100 text-stone-700 border-stone-200";
+  return colors[status] || "bg-zinc-100 text-zinc-700 border-zinc-200";
 }
 
 // =============================================================================
@@ -167,8 +167,8 @@ export function AvailabilityFormModal({
                   className={cn(
                     "rounded-md border px-3 py-2 text-sm font-medium transition-all",
                     status === option.value
-                      ? cn(getStatusColor(option.value as AvailabilityStatus), "ring-2 ring-offset-1 ring-stone-400")
-                      : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800"
+                      ? cn(getStatusColor(option.value as AvailabilityStatus), "ring-2 ring-offset-1 ring-zinc-400")
+                      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
                   )}
                 >
                   {option.label}

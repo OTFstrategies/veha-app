@@ -141,7 +141,7 @@ export function GanttToolbar({
         <Button
           size="sm"
           onClick={onAddTask}
-          className="h-8 gap-1.5 bg-stone-800 text-stone-50 hover:bg-stone-700 dark:bg-stone-200 dark:text-stone-900 dark:hover:bg-stone-300"
+          className="h-8 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           <Plus className="h-3.5 w-3.5" />
           Taak toevoegen

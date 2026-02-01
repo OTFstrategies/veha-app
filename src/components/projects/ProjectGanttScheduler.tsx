@@ -551,11 +551,11 @@ export function ProjectGanttScheduler({
 
           {/* Resizable Splitter */}
           <div
-            className="group absolute left-0 right-0 z-10 flex h-2 cursor-row-resize items-center justify-center bg-border hover:bg-stone-300 dark:hover:bg-stone-600"
+            className="group absolute left-0 right-0 z-10 flex h-2 cursor-row-resize items-center justify-center bg-border hover:bg-zinc-300 dark:hover:bg-zinc-600"
             style={{ top: `calc(${splitRatio}% - 4px)` }}
             onMouseDown={handleSplitterMouseDown}
           >
-            <div className="h-0.5 w-12 rounded-full bg-stone-400 transition-all group-hover:w-20 group-hover:bg-stone-500 dark:bg-stone-500 dark:group-hover:bg-stone-400" />
+            <div className="h-0.5 w-12 rounded-full bg-zinc-400 transition-all group-hover:w-20 group-hover:bg-zinc-500 dark:bg-zinc-500 dark:group-hover:bg-zinc-400" />
           </div>
 
           {/* Scheduler Panel (Bottom) */}

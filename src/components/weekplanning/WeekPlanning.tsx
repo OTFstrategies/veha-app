@@ -43,13 +43,13 @@ const defaultAvailabilityStyles: AvailabilityStyles = {
     label: 'VAKANTIE',
   },
   vrij: {
-    bgColor: 'bg-stone-100 dark:bg-stone-800',
-    textColor: 'text-stone-500 dark:text-stone-400',
+    bgColor: 'bg-zinc-100 dark:bg-zinc-800',
+    textColor: 'text-zinc-500 dark:text-zinc-400',
     label: 'VRIJ',
   },
   training: {
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-    textColor: 'text-purple-700 dark:text-purple-300',
+    bgColor: 'bg-zinc-200 dark:bg-zinc-700',
+    textColor: 'text-zinc-700 dark:text-zinc-300',
     label: 'TRAINING',
   },
 }
@@ -142,7 +142,7 @@ export function WeekPlanning({
           <button
             key={task.id}
             onClick={() => onTaskClick?.(task.id, task.projectId)}
-            className="group flex-1 rounded-md border border-border bg-card p-1.5 text-left transition-all hover:border-stone-300 hover:shadow-sm dark:hover:border-stone-600"
+            className="group flex-1 rounded-md border border-border bg-card p-1.5 text-left transition-all hover:border-zinc-300 hover:shadow-sm dark:hover:border-zinc-600"
           >
             <p className="truncate text-xs font-medium">{task.name}</p>
             <p className="truncate text-[10px] text-muted-foreground">
@@ -194,10 +194,10 @@ export function WeekPlanning({
       <div className="flex-1 overflow-auto">
         <div className="min-w-fit">
           {/* Header Row */}
-          <div className="sticky top-0 z-20 flex border-b border-border bg-stone-50 dark:bg-stone-900">
+          <div className="sticky top-0 z-20 flex border-b border-border bg-zinc-50 dark:bg-zinc-900">
             {/* Employee Column Header */}
             <div
-              className="sticky left-0 z-30 shrink-0 border-r border-border bg-stone-50 px-4 py-3 dark:bg-stone-900"
+              className="sticky left-0 z-30 shrink-0 border-r border-border bg-zinc-50 px-4 py-3 dark:bg-zinc-900"
               style={{ width: EMPLOYEE_COLUMN_WIDTH }}
             >
               <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -242,7 +242,7 @@ export function WeekPlanning({
                 onClick={() => onEmployeeClick?.(employee.id)}
                 className={cn(
                   'sticky left-0 z-10 flex shrink-0 items-center gap-3 border-r border-border bg-card px-4 transition-colors',
-                  'hover:bg-stone-50 dark:hover:bg-stone-800/50'
+                  'hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                 )}
                 style={{ width: EMPLOYEE_COLUMN_WIDTH }}
               >

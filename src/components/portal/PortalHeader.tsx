@@ -65,21 +65,21 @@ export function PortalHeader({ userEmail, userName, clientName, userRole }: Port
   const isViewer = userRole === "klant_viewer";
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-stone-200 bg-white px-3 sm:h-16 sm:px-4 md:px-6 dark:border-stone-800 dark:bg-stone-900">
+    <header className="flex h-14 items-center justify-between border-b border-zinc-200 bg-white px-3 sm:h-16 sm:px-4 md:px-6 dark:border-zinc-800 dark:bg-zinc-900">
       {/* Logo and Title */}
       <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
         <Link href="/portal" className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <span className="text-lg font-bold text-stone-900 sm:text-xl dark:text-stone-50">
+          <span className="text-lg font-bold text-zinc-900 sm:text-xl dark:text-zinc-50">
             VEHA
           </span>
-          <span className="hidden text-sm text-stone-500 sm:block dark:text-stone-400">
+          <span className="hidden text-sm text-zinc-500 sm:block dark:text-zinc-400">
             Klantportaal
           </span>
         </Link>
         {clientName && (
           <>
-            <span className="hidden text-stone-300 md:block dark:text-stone-600">|</span>
-            <span className="hidden max-w-[200px] truncate text-sm font-medium text-stone-700 md:block dark:text-stone-300">
+            <span className="hidden text-zinc-300 md:block dark:text-zinc-600">|</span>
+            <span className="hidden max-w-[200px] truncate text-sm font-medium text-zinc-700 md:block dark:text-zinc-300">
               {clientName}
             </span>
           </>
@@ -110,7 +110,7 @@ export function PortalHeader({ userEmail, userName, clientName, userRole }: Port
               aria-label="Gebruikersmenu"
             >
               <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-stone-200 text-sm text-stone-700 dark:bg-stone-700 dark:text-stone-200">
+                <AvatarFallback className="bg-zinc-200 text-sm text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
@@ -122,7 +122,7 @@ export function PortalHeader({ userEmail, userName, clientName, userRole }: Port
                 <div className="flex items-center gap-2">
                   <p className="truncate text-sm font-medium leading-none">{displayName}</p>
                   {isViewer && (
-                    <span className="inline-flex shrink-0 items-center gap-0.5 rounded bg-stone-100 px-1.5 py-0.5 text-[10px] text-stone-500 dark:bg-stone-800 dark:text-stone-400">
+                    <span className="inline-flex shrink-0 items-center gap-0.5 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
                       <Eye className="h-2.5 w-2.5" />
                       Viewer
                     </span>

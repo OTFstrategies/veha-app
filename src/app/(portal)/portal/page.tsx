@@ -194,7 +194,7 @@ export default function PortalDashboardPage() {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-xl font-bold sm:text-2xl lg:text-3xl">Mijn Projecten</h1>
             {isViewer && (
-              <div className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-1 text-xs text-stone-600 dark:bg-stone-800 dark:text-stone-400">
+              <div className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                 <Eye className="h-3 w-3" />
                 Alleen lezen
               </div>
@@ -213,14 +213,14 @@ export default function PortalDashboardPage() {
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           <div className="rounded-lg border bg-card p-3 sm:p-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
-              <div className="h-2 w-2 shrink-0 rounded-full bg-stone-700 dark:bg-stone-300" />
+              <div className="h-2 w-2 shrink-0 rounded-full bg-zinc-700 dark:bg-zinc-300" />
               <span className="truncate">Actief</span>
             </div>
             <p className="mt-1 text-xl font-bold tabular-nums sm:text-2xl">{activeProjects}</p>
           </div>
           <div className="rounded-lg border bg-card p-3 sm:p-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
-              <div className="h-2 w-2 shrink-0 rounded-full bg-stone-400" />
+              <div className="h-2 w-2 shrink-0 rounded-full bg-zinc-400" />
               <span className="truncate">Gepland</span>
             </div>
             <p className="mt-1 text-xl font-bold tabular-nums sm:text-2xl">{plannedProjects}</p>
@@ -240,7 +240,7 @@ export default function PortalDashboardPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
             <Input
               type="search"
               placeholder="Zoek projecten..."
@@ -258,7 +258,7 @@ export default function PortalDashboardPage() {
                 <Filter className="h-4 w-4" />
                 <span className="hidden sm:inline">Status</span>
                 {statusFilter.length > 0 && (
-                  <span className="ml-1 rounded-full bg-stone-900 px-2 text-xs text-white dark:bg-stone-100 dark:text-stone-900">
+                  <span className="ml-1 rounded-full bg-zinc-900 px-2 text-xs text-white dark:bg-zinc-100 dark:text-zinc-900">
                     {statusFilter.length}
                   </span>
                 )}
@@ -281,13 +281,13 @@ export default function PortalDashboardPage() {
 
       {/* Results count */}
       {projects && projects.length > 0 && hasActiveFilters && (
-        <div className="flex flex-wrap items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
           <span>
             {filteredProjects.length} project{filteredProjects.length !== 1 ? "en" : ""} gevonden
           </span>
           <button
             onClick={clearFilters}
-            className="text-stone-700 underline underline-offset-2 hover:text-stone-900 dark:text-stone-300 dark:hover:text-stone-100"
+            className="text-zinc-700 underline underline-offset-2 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
           >
             Filters wissen
           </button>
@@ -314,13 +314,13 @@ export default function PortalDashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50 px-6 py-12 text-center dark:border-stone-700 dark:bg-stone-900">
+              <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center dark:border-zinc-700 dark:bg-zinc-900">
                 <p className="text-muted-foreground">
                   Geen projecten gevonden met de huidige filters.
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="mt-2 text-sm text-stone-700 underline underline-offset-2 hover:text-stone-900 dark:text-stone-300 dark:hover:text-stone-100"
+                  className="mt-2 text-sm text-zinc-700 underline underline-offset-2 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
                 >
                   Filters wissen
                 </button>

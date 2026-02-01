@@ -136,7 +136,7 @@ export default function EmployeesPage() {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-stone-200 border-t-stone-800" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-800" />
           <p className="text-sm text-muted-foreground">Medewerkers laden...</p>
         </div>
       </div>

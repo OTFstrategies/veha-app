@@ -66,7 +66,7 @@ function WeekPlanningContent() {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-stone-200 border-t-stone-600" />
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-600" />
           <p className="mt-4 text-muted-foreground">
             Weekplanning laden...
           </p>

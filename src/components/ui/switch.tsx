@@ -17,7 +17,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           "disabled:cursor-not-allowed disabled:opacity-50",
           checked
             ? "bg-lime-600 dark:bg-lime-500"
-            : "bg-stone-200 dark:bg-stone-700",
+            : "bg-zinc-200 dark:bg-zinc-700",
           className
         )}
       >

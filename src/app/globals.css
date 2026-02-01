@@ -8,39 +8,39 @@
   /* Colors - Primary (VEHA Zwart) */
   --color-primary: #2e2d2c;
   --color-primary-light: #57534e;
-  --color-primary-dark: #1c1917;
+  --color-primary-dark: #18181b;
 
   /* Colors - Secondary (VEHA Beige) */
   --color-secondary: #CBC4B5;
   --color-secondary-light: #d6d3d1;
   --color-secondary-dark: #b5ad9e;
 
-  /* Colors - Neutral */
-  --background: #fafaf9;
-  --foreground: #1c1917;
+  /* Colors - Neutral (Zinc palette) */
+  --background: #fafafa;
+  --foreground: #18181b;
 
   /* Card and UI surfaces */
   --card: #ffffff;
-  --card-foreground: #1c1917;
+  --card-foreground: #18181b;
   --popover: #ffffff;
-  --popover-foreground: #1c1917;
+  --popover-foreground: #18181b;
 
   /* Muted colors */
-  --muted: #f5f5f4;
-  --muted-foreground: #78716c;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
 
   /* Accent */
-  --accent: #f5f5f4;
-  --accent-foreground: #1c1917;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
 
   /* Border and input */
-  --border: #e7e5e4;
-  --input: #e7e5e4;
-  --ring: #a8a29e;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #3b82f6;
 
   /* Semantic Colors */
   --destructive: #ef4444;
-  --destructive-foreground: #fafaf9;
+  --destructive-foreground: #fafafa;
   --success: #22c55e;
   --warning: #f59e0b;
   --info: #3b82f6;
@@ -48,53 +48,53 @@
   /* Gantt-specific Colors */
   --gantt-task-bar: #CBC4B5;
   --gantt-task-bar-hover: #b5ad9e;
-  --gantt-progress: #2e2d2c;
-  --gantt-milestone: #2e2d2c;
-  --gantt-summary: #9ca3af;
-  --gantt-dependency: #6b7280;
+  --gantt-progress: #18181b;
+  --gantt-milestone: #18181b;
+  --gantt-summary: #a1a1aa;
+  --gantt-dependency: #71717a;
   --gantt-critical-path: #ef4444;
   --gantt-today-line: #3b82f6;
-  --gantt-weekend: #f3f4f6;
+  --gantt-weekend: #f4f4f5;
 
   /* Typography */
-  --font-heading: var(--font-inter), system-ui, sans-serif;
+  --font-heading: var(--font-dm-sans), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), monospace;
+  --font-mono: var(--font-jetbrains-mono), monospace;
 
   /* Border Radius */
   --radius: 0.5rem;
 }
 
-/* Dark mode */
+/* Dark mode (Zinc palette) */
 .dark {
-  --background: #1c1917;
-  --foreground: #fafaf9;
+  --background: #09090b;
+  --foreground: #fafafa;
 
-  --card: #292524;
-  --card-foreground: #fafaf9;
-  --popover: #292524;
-  --popover-foreground: #fafaf9;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
 
-  --muted: #292524;
-  --muted-foreground: #a8a29e;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
 
-  --accent: #44403c;
-  --accent-foreground: #fafaf9;
+  --accent: #3f3f46;
+  --accent-foreground: #fafafa;
 
-  --border: #44403c;
-  --input: #44403c;
-  --ring: #78716c;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #3b82f6;
 
   --destructive: #991b1b;
-  --destructive-foreground: #fafaf9;
+  --destructive-foreground: #fafafa;
 
   /* Gantt colors - Dark mode */
-  --gantt-task-bar: #a8a29e;
-  --gantt-task-bar-hover: #78716c;
-  --gantt-progress: #fafaf9;
-  --gantt-milestone: #fafaf9;
-  --gantt-summary: #78716c;
-  --gantt-weekend: #292524;
+  --gantt-task-bar: #a1a1aa;
+  --gantt-task-bar-hover: #71717a;
+  --gantt-progress: #fafafa;
+  --gantt-milestone: #fafafa;
+  --gantt-summary: #71717a;
+  --gantt-weekend: #27272a;
 }
 
 @theme inline {
@@ -114,7 +114,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-ibm-plex-mono);
+  --font-mono: var(--font-jetbrains-mono);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -132,7 +132,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-body);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Headings use DM Sans */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
 }
 
 /* Scrollbar styling */

@@ -44,7 +44,7 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
               project.isDelayed
                 ? 'border-amber-200 dark:border-amber-800/50'
                 : 'border-border',
-              'hover:border-stone-300 hover:shadow-md dark:hover:border-stone-600'
+              'hover:border-zinc-300 hover:shadow-md dark:hover:border-zinc-600'
             )}
           >
             {/* Delayed Warning */}
@@ -67,7 +67,7 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
                 <span className="text-xs text-muted-foreground">Voortgang</span>
                 <span className="text-xs font-medium tabular-nums">{project.progress}%</span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+              <div className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                 <div
                   className={cn(
                     'h-full rounded-full transition-all',
@@ -75,7 +75,7 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
                       ? 'bg-green-500'
                       : project.isDelayed
                       ? 'bg-amber-500'
-                      : 'bg-stone-700 dark:bg-stone-300'
+                      : 'bg-zinc-700 dark:bg-zinc-300'
                   )}
                   style={{ width: `${project.progress}%` }}
                 />
@@ -105,7 +105,7 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
                   </Avatar>
                 ))}
                 {project.assignees.length > 4 && (
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-stone-100 text-[10px] font-medium text-stone-600 dark:bg-stone-800 dark:text-stone-400">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-zinc-100 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                     +{project.assignees.length - 4}
                   </div>
                 )}

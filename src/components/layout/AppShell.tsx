@@ -66,7 +66,7 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex h-screen overflow-hidden bg-stone-50 dark:bg-stone-950">
+      <div className="flex h-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950">
         <Sidebar collapsed={sidebarCollapsed} onToggle={handleSidebarToggle} />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Header userEmail={userEmail} />

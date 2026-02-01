@@ -173,8 +173,8 @@ export function EmployeeList({
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-l-lg transition-colors',
                 viewMode === 'grid'
-                  ? 'bg-stone-100 dark:bg-stone-800'
-                  : 'hover:bg-stone-50 dark:hover:bg-stone-900'
+                  ? 'bg-zinc-100 dark:bg-zinc-800'
+                  : 'hover:bg-zinc-50 dark:hover:bg-zinc-900'
               )}
             >
               <Grid3X3 className="h-4 w-4" />
@@ -184,8 +184,8 @@ export function EmployeeList({
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-r-lg transition-colors',
                 viewMode === 'list'
-                  ? 'bg-stone-100 dark:bg-stone-800'
-                  : 'hover:bg-stone-50 dark:hover:bg-stone-900'
+                  ? 'bg-zinc-100 dark:bg-zinc-800'
+                  : 'hover:bg-zinc-50 dark:hover:bg-zinc-900'
               )}
             >
               <LayoutList className="h-4 w-4" />
@@ -199,8 +199,8 @@ export function EmployeeList({
         {filteredEmployees.length === 0 ? (
           // Empty State
           <div className="flex h-full flex-col items-center justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-stone-100 dark:bg-stone-800">
-              <Users className="h-8 w-8 text-stone-400" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
+              <Users className="h-8 w-8 text-zinc-400" />
             </div>
             <h3 className="mt-4 text-lg font-medium">Geen medewerkers gevonden</h3>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -224,7 +224,7 @@ export function EmployeeList({
                 onClick={() => onView?.(employee.id)}
                 className={cn(
                   'group relative overflow-hidden rounded-xl border bg-card p-5 text-left transition-all',
-                  'hover:border-stone-300 hover:shadow-md dark:hover:border-stone-600',
+                  'hover:border-zinc-300 hover:shadow-md dark:hover:border-zinc-600',
                   !employee.isActive && 'opacity-60'
                 )}
               >
@@ -311,7 +311,7 @@ export function EmployeeList({
         ) : (
           // List View
           <table className="w-full">
-            <thead className="sticky top-0 z-10 border-b border-border bg-stone-50 dark:bg-stone-900">
+            <thead className="sticky top-0 z-10 border-b border-border bg-zinc-50 dark:bg-zinc-900">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Medewerker
@@ -337,7 +337,7 @@ export function EmployeeList({
               {filteredEmployees.map((employee) => (
                 <tr
                   key={employee.id}
-                  className="group cursor-pointer transition-colors hover:bg-stone-50 dark:hover:bg-stone-900"
+                  className="group cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
                   onClick={() => onView?.(employee.id)}
                 >
                   {/* Employee */}
@@ -408,7 +408,7 @@ export function EmployeeList({
                       className={cn(
                         employee.isActive
                           ? 'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400'
-                          : 'border-stone-200 bg-stone-50 text-stone-500 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400'
+                          : 'border-zinc-200 bg-zinc-50 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
                       )}
                     >
                       {employee.isActive ? 'Actief' : 'Inactief'}

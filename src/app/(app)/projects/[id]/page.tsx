@@ -39,7 +39,7 @@ function ErrorState({ message, onBack }: { message: string; onBack: () => void }
         <p className="text-sm text-muted-foreground">{message}</p>
         <button
           onClick={onBack}
-          className="mt-2 text-sm text-stone-600 underline hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100"
+          className="mt-2 text-sm text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
         >
           Terug naar projecten
         </button>

@@ -271,10 +271,10 @@ export default function ClientsPage() {
     return (
       <div className="flex h-full flex-col items-center justify-center p-8">
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             Geen werkruimte geselecteerd
           </h2>
-          <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Selecteer een werkruimte om klanten te bekijken.
           </p>
         </div>
@@ -286,8 +286,8 @@ export default function ClientsPage() {
   if (isLoading) {
     return (
       <div className="flex h-full flex-col items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-stone-400" />
-        <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">
+        <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
           Klanten laden...
         </p>
       </div>
@@ -302,7 +302,7 @@ export default function ClientsPage() {
           <h2 className="text-lg font-semibold text-red-600 dark:text-red-400">
             Fout bij laden
           </h2>
-          <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             {error.message || "Er is iets misgegaan bij het laden van de klanten."}
           </p>
         </div>

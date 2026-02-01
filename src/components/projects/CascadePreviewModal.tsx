@@ -71,7 +71,7 @@ export function CascadePreviewModal({
 
         <div className="py-4">
           {!hasChanges ? (
-            <p className="py-4 text-center text-sm text-stone-500 dark:text-stone-400">
+            <p className="py-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
               Geen taken worden beinvloed door deze dependency.
             </p>
           ) : (
@@ -88,19 +88,19 @@ export function CascadePreviewModal({
                 {previews.map((preview) => (
                   <div
                     key={preview.taskId}
-                    className="rounded-lg border border-stone-200 p-3 dark:border-stone-700"
+                    className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-700"
                   >
-                    <p className="mb-2 font-medium text-stone-900 dark:text-stone-100">
+                    <p className="mb-2 font-medium text-zinc-900 dark:text-zinc-100">
                       {preview.taskName}
                     </p>
                     <div className="flex items-center gap-2 text-sm">
-                      <div className="text-stone-500 dark:text-stone-400">
+                      <div className="text-zinc-500 dark:text-zinc-400">
                         <span className="line-through">
                           {formatDate(preview.oldStartDate)} -{" "}
                           {formatDate(preview.oldEndDate)}
                         </span>
                       </div>
-                      <ArrowRight className="h-4 w-4 text-stone-400" />
+                      <ArrowRight className="h-4 w-4 text-zinc-400" />
                       <div className="font-medium text-orange-600 dark:text-orange-400">
                         {formatDate(preview.newStartDate)} -{" "}
                         {formatDate(preview.newEndDate)}

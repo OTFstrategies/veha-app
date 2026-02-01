@@ -33,10 +33,10 @@ interface NoteCardProps {
 
 function NoteCard({ note, canDelete, onDelete, isDeleting }: NoteCardProps) {
   return (
-    <div className="rounded-lg border border-stone-200 bg-white p-4 dark:border-stone-700 dark:bg-stone-800/50">
+    <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-stone-900 whitespace-pre-wrap dark:text-stone-100">
+          <p className="text-sm text-zinc-900 whitespace-pre-wrap dark:text-zinc-100">
             {note.content}
           </p>
         </div>
@@ -46,14 +46,14 @@ function NoteCard({ note, canDelete, onDelete, isDeleting }: NoteCardProps) {
             size="icon"
             onClick={onDelete}
             disabled={isDeleting}
-            className="shrink-0 h-8 w-8 text-stone-400 hover:text-red-500 dark:text-stone-500 dark:hover:text-red-400"
+            className="shrink-0 h-8 w-8 text-zinc-400 hover:text-red-500 dark:text-zinc-500 dark:hover:text-red-400"
             aria-label="Notitie verwijderen"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
         )}
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-stone-500 dark:text-stone-400">
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
         <span className="font-medium">{note.authorName || note.authorEmail}</span>
         <span aria-hidden="true">-</span>
         <time dateTime={note.createdAt}>
@@ -74,7 +74,7 @@ function NotesSkeleton() {
       {Array.from({ length: 2 }).map((_, i) => (
         <div
           key={i}
-          className="h-24 rounded-lg border border-stone-200 bg-stone-100 animate-pulse dark:border-stone-700 dark:bg-stone-800"
+          className="h-24 rounded-lg border border-zinc-200 bg-zinc-100 animate-pulse dark:border-zinc-700 dark:bg-zinc-800"
         />
       ))}
     </div>
@@ -122,8 +122,8 @@ export function ClientNotes({ projectId, userRole, currentUserId }: ClientNotesP
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-stone-500" />
-          <h3 className="font-semibold text-stone-900 dark:text-stone-100">
+          <MessageSquare className="h-5 w-5 text-zinc-500" />
+          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
             Notities
           </h3>
         </div>
@@ -135,8 +135,8 @@ export function ClientNotes({ projectId, userRole, currentUserId }: ClientNotesP
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
-        <MessageSquare className="h-5 w-5 text-stone-500 dark:text-stone-400" />
-        <h3 className="font-semibold text-stone-900 dark:text-stone-100">
+        <MessageSquare className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
+        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
           Notities ({notes?.length || 0})
         </h3>
       </div>
@@ -167,8 +167,8 @@ export function ClientNotes({ projectId, userRole, currentUserId }: ClientNotesP
       {/* Notes list */}
       <div className="space-y-4">
         {notes?.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-stone-300 bg-stone-50 p-8 text-center dark:border-stone-600 dark:bg-stone-800/50">
-            <p className="text-sm text-stone-500 dark:text-stone-400">
+          <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center dark:border-zinc-600 dark:bg-zinc-800/50">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
               Nog geen notities voor dit project.
               {canAddNotes && " Voeg de eerste toe!"}
             </p>

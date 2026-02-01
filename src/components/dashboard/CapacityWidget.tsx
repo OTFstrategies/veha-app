@@ -49,8 +49,8 @@ export function CapacityWidget({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-stone-100 dark:bg-stone-800">
-            <Users className="h-4 w-4 text-stone-600 dark:text-stone-400" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+            <Users className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
           </div>
           <div>
             <h2 className="font-semibold">Capaciteit Deze Week</h2>
@@ -80,7 +80,7 @@ export function CapacityWidget({
             onClick={() => onEmployeeClick?.(employee.id)}
             className={cn(
               'flex w-full items-center gap-4 px-5 py-3 text-left transition-colors',
-              'hover:bg-stone-50 dark:hover:bg-stone-800/50',
+              'hover:bg-zinc-50 dark:hover:bg-zinc-800/50',
               employee.status === 'overbooked' && 'bg-red-50/50 dark:bg-red-900/10'
             )}
           >
@@ -113,7 +113,7 @@ export function CapacityWidget({
               </div>
 
               {/* Progress Bar */}
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-700">
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                 <div
                   className={cn(
                     'h-full rounded-full transition-all',
