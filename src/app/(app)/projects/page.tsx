@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Building2,
   Calendar,
@@ -249,12 +249,22 @@ function LoadingState() {
 
 export default function ProjectsPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [search, setSearch] = React.useState('')
   const [statusFilter, setStatusFilter] = React.useState<ProjectStatus | 'all'>('all')
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false)
   const [editingProject, setEditingProject] = React.useState<Project | null>(null)
 
   const { data: projects, isLoading, error } = useProjects()
+
+  // Open create modal when action=new query param is present
+  React.useEffect(() => {
+    if (searchParams.get('action') === 'new') {
+      setIsCreateModalOpen(true)
+      // Clear the query param to prevent reopening on navigation
+      router.replace('/projects', { scroll: false })
+    }
+  }, [searchParams, router])
   const deleteProject = useDeleteProject()
   const createProject = useCreateProject()
   const updateProject = useUpdateProject()

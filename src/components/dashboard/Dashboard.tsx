@@ -85,7 +85,7 @@ export function Dashboard({
   const handleFABAction = (actionId: string) => {
     switch (actionId) {
       case 'new-project':
-        router.push('/projects/new')
+        router.push('/projects?action=new')
         break
       case 'new-task':
         // Tasks worden aangemaakt binnen projecten
@@ -99,7 +99,7 @@ export function Dashboard({
 
   // Keyboard shortcuts: Ctrl+P = New Project, Ctrl+T = New Task, Ctrl+W = Week Planning
   useHotkeys([
-    { key: 'p', ctrlKey: true, callback: () => router.push('/projects/new') },
+    { key: 'p', ctrlKey: true, callback: () => router.push('/projects?action=new') },
     { key: 't', ctrlKey: true, callback: () => router.push('/projects') },
     { key: 'w', ctrlKey: true, callback: () => router.push('/resources?tab=weekplanning') },
   ])

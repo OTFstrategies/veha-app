@@ -279,10 +279,13 @@ Resources:
 
 ### Supabase Project
 
-- **Project ID:** eciuocuiqwjkhntyjqla
-- **URL:** https://eciuocuiqwjkhntyjqla.supabase.co
-- **Region:** EU (te bevestigen)
-- **Plan:** Pro ($10/maand)
+- **Project ID:** ikpmlhmbooaxfrlpzcfa
+- **URL:** https://ikpmlhmbooaxfrlpzcfa.supabase.co
+- **Database:** VEHA Hub (gedeelde database met veha-hub.vercel.app)
+- **Region:** EU
+- **Plan:** Pro
+
+> **Let op:** VEHA Dashboard gebruikt nu de VEHA Hub database voor SSO en gedeelde workspace data.
 
 ### Vercel Deployment
 

@@ -4,12 +4,18 @@ import { Suspense, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, Package, Wrench, Calendar } from "lucide-react"
+import { useToast } from "@/components/ui/toast"
+import { useWorkspaceStore } from "@/stores/workspace-store"
 
 // Import existing employee page content
 import EmployeesPageContent from "./EmployeesPageContent"
 import { MaterialList } from "@/components/resources/MaterialList"
 import { EquipmentList } from "@/components/resources/EquipmentList"
 import { WeekPlanningSection } from "./WeekPlanningSection"
+import { MaterialFormModal, type MaterialFormData } from "@/components/resources/MaterialFormModal"
+import { EquipmentFormModal, type EquipmentFormData } from "@/components/resources/EquipmentFormModal"
+import { useCreateMaterial } from "@/queries/materials"
+import { useCreateEquipment } from "@/queries/equipment"
 
 const tabs = [
   { id: "medewerkers", label: "Medewerkers", icon: Users },
@@ -22,35 +28,97 @@ function ResourcesPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const activeTab = searchParams.get("tab") || "medewerkers"
+  const { addToast } = useToast()
+  const { currentWorkspaceId } = useWorkspaceStore()
 
-  // State for selected items (for future modal/detail views)
+  // State for modals
+  const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false)
+  const [isEquipmentModalOpen, setIsEquipmentModalOpen] = useState(false)
+
+  // State for selected items (for future edit modal views)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null)
 
+  // Mutations
+  const createMaterial = useCreateMaterial()
+  const createEquipment = useCreateEquipment()
+
   const handleTabChange = (value: string) => {
     router.push(`/resources?tab=${value}`)
   }
 
-  // Material handlers - TODO: Implement modal functionality
+  // Material handlers
   const handleAddMaterial = () => {
-    // TODO: Open add material modal
+    setIsMaterialModalOpen(true)
   }
 
   const handleViewMaterial = (materialId: string) => {
     setSelectedMaterialId(materialId)
-    // TODO: Open material detail modal
+    // TODO: Open material detail/edit modal
   }
 
-  // Equipment handlers - TODO: Implement modal functionality
+  const handleMaterialSubmit = async (data: MaterialFormData) => {
+    if (!currentWorkspaceId) {
+      addToast({ type: "error", title: "Geen werkruimte geselecteerd" })
+      return
+    }
+
+    try {
+      await createMaterial.mutateAsync({
+        workspace_id: currentWorkspaceId,
+        name: data.name,
+        description: data.description,
+        material_type: data.material_type,
+        unit: data.unit,
+        unit_price: data.unit_price,
+        quantity_in_stock: data.quantity_in_stock,
+        min_stock_level: data.min_stock_level,
+        supplier: data.supplier,
+        supplier_article_number: data.supplier_article_number,
+        notes: data.notes,
+      })
+      addToast({ type: "success", title: "Materiaal toegevoegd" })
+      setIsMaterialModalOpen(false)
+    } catch (error) {
+      console.error("Failed to create material:", error)
+      addToast({ type: "error", title: "Fout bij toevoegen van materiaal" })
+    }
+  }
+
+  // Equipment handlers
   const handleAddEquipment = () => {
-    // TODO: Open add equipment modal
+    setIsEquipmentModalOpen(true)
   }
 
   const handleViewEquipment = (equipmentId: string) => {
     setSelectedEquipmentId(equipmentId)
-    // TODO: Open equipment detail modal
+    // TODO: Open equipment detail/edit modal
+  }
+
+  const handleEquipmentSubmit = async (data: EquipmentFormData) => {
+    if (!currentWorkspaceId) {
+      addToast({ type: "error", title: "Geen werkruimte geselecteerd" })
+      return
+    }
+
+    try {
+      await createEquipment.mutateAsync({
+        workspace_id: currentWorkspaceId,
+        name: data.name,
+        equipment_type: data.equipment_type,
+        license_plate: data.license_plate,
+        daily_rate: data.daily_rate,
+        daily_capacity_hours: data.daily_capacity_hours,
+        notes: data.notes,
+      })
+      addToast({ type: "success", title: "Middel toegevoegd" })
+      setIsEquipmentModalOpen(false)
+    } catch (error) {
+      console.error("Failed to create equipment:", error)
+      addToast({ type: "error", title: "Fout bij toevoegen van middel" })
+    }
   }
 
   return (
@@ -91,6 +159,22 @@ function ResourcesPageContent() {
           </TabsContent>
         </div>
       </Tabs>
+
+      {/* Material Form Modal */}
+      <MaterialFormModal
+        open={isMaterialModalOpen}
+        onOpenChange={setIsMaterialModalOpen}
+        onSubmit={handleMaterialSubmit}
+        isLoading={createMaterial.isPending}
+      />
+
+      {/* Equipment Form Modal */}
+      <EquipmentFormModal
+        open={isEquipmentModalOpen}
+        onOpenChange={setIsEquipmentModalOpen}
+        onSubmit={handleEquipmentSubmit}
+        isLoading={createEquipment.isPending}
+      />
     </div>
   )
 }
