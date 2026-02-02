@@ -1,10 +1,19 @@
 "use client"
 
+import * as React from "react"
 import { useWorkspaceStore } from "@/stores/workspace-store"
-import { useEquipment } from "@/queries/equipment"
-import { Wrench, Plus, Truck, Hammer, Settings } from "lucide-react"
+import { useEquipment, useDeleteEquipment } from "@/queries/equipment"
+import { Wrench, Plus, Truck, Hammer, Settings, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { AlertDialog } from "@/components/ui/alert-dialog"
 
 const statusLabels: Record<string, string> = {
   beschikbaar: "Beschikbaar",
@@ -35,11 +44,29 @@ const typeLabels: Record<string, string> = {
 interface EquipmentListProps {
   onAddEquipment?: () => void
   onViewEquipment?: (equipmentId: string) => void
+  onEditEquipment?: (equipmentId: string) => void
 }
 
-export function EquipmentList({ onAddEquipment, onViewEquipment }: EquipmentListProps) {
+export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment }: EquipmentListProps) {
   const { currentWorkspaceId } = useWorkspaceStore()
   const { data: equipment, isLoading } = useEquipment(currentWorkspaceId)
+  const deleteEquipment = useDeleteEquipment()
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
+  const [equipmentToDelete, setEquipmentToDelete] = React.useState<{ id: string; name: string } | null>(null)
+
+  const handleDeleteClick = (id: string, name: string) => {
+    setEquipmentToDelete({ id, name })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (equipmentToDelete) {
+      await deleteEquipment.mutateAsync(equipmentToDelete.id)
+      setDeleteDialogOpen(false)
+      setEquipmentToDelete(null)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -86,44 +113,87 @@ export function EquipmentList({ onAddEquipment, onViewEquipment }: EquipmentList
           {equipment.map((item) => {
             const TypeIcon = typeIcons[item.equipment_type] || Wrench
             return (
-              <button
+              <div
                 key={item.id}
-                onClick={() => onViewEquipment?.(item.id)}
-                className="p-4 w-full flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors text-left"
-                type="button"
-                aria-label={`Bekijk ${item.name}`}
+                className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
               >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
-                    <TypeIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="font-medium">{item.name}</p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>{typeLabels[item.equipment_type] || item.equipment_type}</span>
-                      {item.license_plate && (
-                        <>
-                          <span className="text-zinc-300 dark:text-zinc-600">|</span>
-                          <span className="font-mono">{item.license_plate}</span>
-                        </>
-                      )}
-                      {item.daily_capacity_hours > 0 && (
-                        <>
-                          <span className="text-zinc-300 dark:text-zinc-600">|</span>
-                          <span>{item.daily_capacity_hours}u/dag</span>
-                        </>
-                      )}
+                <button
+                  onClick={() => onViewEquipment?.(item.id)}
+                  className="flex-1 flex items-center justify-between cursor-pointer text-left"
+                  type="button"
+                  aria-label={`Bekijk ${item.name}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
+                      <TypeIcon className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-medium">{item.name}</p>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>{typeLabels[item.equipment_type] || item.equipment_type}</span>
+                        {item.license_plate && (
+                          <>
+                            <span className="text-zinc-300 dark:text-zinc-600">|</span>
+                            <span className="font-mono">{item.license_plate}</span>
+                          </>
+                        )}
+                        {item.daily_capacity_hours > 0 && (
+                          <>
+                            <span className="text-zinc-300 dark:text-zinc-600">|</span>
+                            <span>{item.daily_capacity_hours}u/dag</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <Badge className={statusColors[item.status] || "bg-zinc-100 text-zinc-800"}>
-                  {statusLabels[item.status] || item.status}
-                </Badge>
-              </button>
+                  <Badge className={statusColors[item.status] || "bg-zinc-100 text-zinc-800"}>
+                    {statusLabels[item.status] || item.status}
+                  </Badge>
+                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="ml-2 h-8 w-8"
+                      aria-label="Middel acties"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onViewEquipment?.(item.id)}>
+                      Bekijken
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onEditEquipment?.(item.id)}>
+                      Bewerken
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-red-600 dark:text-red-400"
+                      onClick={() => handleDeleteClick(item.id, item.name)}
+                    >
+                      Verwijderen
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             )
           })}
         </div>
       )}
+
+      <AlertDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Middel verwijderen"
+        description={`Weet je zeker dat je "${equipmentToDelete?.name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.`}
+        confirmLabel="Verwijderen"
+        cancelLabel="Annuleren"
+        variant="destructive"
+        onConfirm={handleConfirmDelete}
+        isLoading={deleteEquipment.isPending}
+      />
     </div>
   )
 }

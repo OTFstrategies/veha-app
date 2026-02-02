@@ -1,10 +1,19 @@
 "use client"
 
+import * as React from "react"
 import { useWorkspaceStore } from "@/stores/workspace-store"
-import { useMaterials } from "@/queries/materials"
-import { Package, Plus } from "lucide-react"
+import { useMaterials, useDeleteMaterial } from "@/queries/materials"
+import { Package, Plus, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { AlertDialog } from "@/components/ui/alert-dialog"
 
 const statusLabels: Record<string, string> = {
   op_voorraad: "Op voorraad",
@@ -29,11 +38,29 @@ const typeLabels: Record<string, string> = {
 interface MaterialListProps {
   onAddMaterial?: () => void
   onViewMaterial?: (materialId: string) => void
+  onEditMaterial?: (materialId: string) => void
 }
 
-export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProps) {
+export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: MaterialListProps) {
   const { currentWorkspaceId } = useWorkspaceStore()
   const { data: materials, isLoading } = useMaterials(currentWorkspaceId)
+  const deleteMaterial = useDeleteMaterial()
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
+  const [materialToDelete, setMaterialToDelete] = React.useState<{ id: string; name: string } | null>(null)
+
+  const handleDeleteClick = (id: string, name: string) => {
+    setMaterialToDelete({ id, name })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (materialToDelete) {
+      await deleteMaterial.mutateAsync(materialToDelete.id)
+      setDeleteDialogOpen(false)
+      setMaterialToDelete(null)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -78,34 +105,77 @@ export function MaterialList({ onAddMaterial, onViewMaterial }: MaterialListProp
       ) : (
         <div className="border rounded-lg divide-y">
           {materials.map((material) => (
-            <button
+            <div
               key={material.id}
-              onClick={() => onViewMaterial?.(material.id)}
-              className="p-4 w-full flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors text-left"
-              type="button"
-              aria-label={`Bekijk ${material.name}`}
+              className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
             >
-              <div className="space-y-1">
-                <p className="font-medium">{material.name}</p>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>{material.quantity_in_stock} {material.unit}</span>
-                  <span className="text-zinc-300 dark:text-zinc-600">|</span>
-                  <span>{typeLabels[material.material_type] || material.material_type}</span>
-                  {material.supplier && (
-                    <>
-                      <span className="text-zinc-300 dark:text-zinc-600">|</span>
-                      <span>{material.supplier}</span>
-                    </>
-                  )}
+              <button
+                onClick={() => onViewMaterial?.(material.id)}
+                className="flex-1 flex items-center justify-between cursor-pointer text-left"
+                type="button"
+                aria-label={`Bekijk ${material.name}`}
+              >
+                <div className="space-y-1">
+                  <p className="font-medium">{material.name}</p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>{material.quantity_in_stock} {material.unit}</span>
+                    <span className="text-zinc-300 dark:text-zinc-600">|</span>
+                    <span>{typeLabels[material.material_type] || material.material_type}</span>
+                    {material.supplier && (
+                      <>
+                        <span className="text-zinc-300 dark:text-zinc-600">|</span>
+                        <span>{material.supplier}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <Badge className={statusColors[material.status] || "bg-zinc-100 text-zinc-800"}>
-                {statusLabels[material.status] || material.status}
-              </Badge>
-            </button>
+                <Badge className={statusColors[material.status] || "bg-zinc-100 text-zinc-800"}>
+                  {statusLabels[material.status] || material.status}
+                </Badge>
+              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="ml-2 h-8 w-8"
+                    aria-label="Materiaal acties"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => onViewMaterial?.(material.id)}>
+                    Bekijken
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onEditMaterial?.(material.id)}>
+                    Bewerken
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-red-600 dark:text-red-400"
+                    onClick={() => handleDeleteClick(material.id, material.name)}
+                  >
+                    Verwijderen
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           ))}
         </div>
       )}
+
+      <AlertDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Materiaal verwijderen"
+        description={`Weet je zeker dat je "${materialToDelete?.name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.`}
+        confirmLabel="Verwijderen"
+        cancelLabel="Annuleren"
+        variant="destructive"
+        onConfirm={handleConfirmDelete}
+        isLoading={deleteMaterial.isPending}
+      />
     </div>
   )
 }
