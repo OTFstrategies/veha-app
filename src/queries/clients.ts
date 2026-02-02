@@ -215,10 +215,11 @@ export function useClient(
 
 export function useCreateClient() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async (input: CreateClientInput) => {
+      // Get fresh workspace ID at mutation time
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       if (!workspaceId) {
         throw new Error("No workspace selected")
       }
@@ -245,15 +246,18 @@ export function useCreateClient() {
         throw new Error(`Failed to create client: ${error.message}`)
       }
 
-      return data
+      return { ...data, _workspaceId: workspaceId }
     },
     onMutate: async (newClient) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
+      if (!workspaceId) return { previousClients: undefined, workspaceId: null }
+
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId || "") })
+      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId) })
 
       // Snapshot the previous value
       const previousClients = queryClient.getQueryData<Client[]>(
-        clientKeys.list(workspaceId || "")
+        clientKeys.list(workspaceId)
       )
 
       // Optimistically update to the new value
@@ -273,36 +277,39 @@ export function useCreateClient() {
           projects: [],
         }
 
-        queryClient.setQueryData<Client[]>(clientKeys.list(workspaceId || ""), [
+        queryClient.setQueryData<Client[]>(clientKeys.list(workspaceId), [
           ...previousClients,
           optimisticClient,
         ])
       }
 
-      return { previousClients }
+      return { previousClients, workspaceId }
     },
     onError: (_error, _newClient, context) => {
       // Rollback on error
-      if (context?.previousClients) {
+      if (context?.previousClients && context.workspaceId) {
         queryClient.setQueryData(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(context.workspaceId),
           context.previousClients
         )
       }
     },
-    onSettled: () => {
+    onSettled: (data) => {
       // Always refetch after error or success
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+      const workspaceId = data?._workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
 
 export function useUpdateClient() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async ({ id, ...input }: UpdateClientInput) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { data, error } = await supabase
@@ -325,18 +332,21 @@ export function useUpdateClient() {
         throw new Error(`Failed to update client: ${error.message}`)
       }
 
-      return data
+      return { ...data, _workspaceId: workspaceId }
     },
     onMutate: async (updatedClient) => {
-      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId || "") })
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
+      if (!workspaceId) return { previousClients: undefined, workspaceId: null }
+
+      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId) })
 
       const previousClients = queryClient.getQueryData<Client[]>(
-        clientKeys.list(workspaceId || "")
+        clientKeys.list(workspaceId)
       )
 
       if (previousClients) {
         queryClient.setQueryData<Client[]>(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(workspaceId),
           previousClients.map((client) =>
             client.id === updatedClient.id
               ? { ...client, ...updatedClient }
@@ -345,28 +355,31 @@ export function useUpdateClient() {
         )
       }
 
-      return { previousClients }
+      return { previousClients, workspaceId }
     },
     onError: (_error, _updatedClient, context) => {
-      if (context?.previousClients) {
+      if (context?.previousClients && context.workspaceId) {
         queryClient.setQueryData(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(context.workspaceId),
           context.previousClients
         )
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?._workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
 
 export function useDeleteClient() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async (clientId: string) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { error } = await supabase.from("clients").delete().eq("id", clientId)
@@ -375,34 +388,40 @@ export function useDeleteClient() {
         throw new Error(`Failed to delete client: ${error.message}`)
       }
 
-      return clientId
+      return { clientId, workspaceId }
     },
     onMutate: async (clientId) => {
-      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId || "") })
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
+      if (!workspaceId) return { previousClients: undefined, workspaceId: null }
+
+      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId) })
 
       const previousClients = queryClient.getQueryData<Client[]>(
-        clientKeys.list(workspaceId || "")
+        clientKeys.list(workspaceId)
       )
 
       if (previousClients) {
         queryClient.setQueryData<Client[]>(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(workspaceId),
           previousClients.filter((client) => client.id !== clientId)
         )
       }
 
-      return { previousClients }
+      return { previousClients, workspaceId }
     },
     onError: (_error, _clientId, context) => {
-      if (context?.previousClients) {
+      if (context?.previousClients && context.workspaceId) {
         queryClient.setQueryData(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(context.workspaceId),
           context.previousClients
         )
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?.workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
@@ -413,10 +432,10 @@ export function useDeleteClient() {
 
 export function useCreateContact() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async (input: CreateContactInput) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { data, error } = await supabase
@@ -436,13 +455,16 @@ export function useCreateContact() {
         throw new Error(`Failed to create contact: ${error.message}`)
       }
 
-      return data
+      return { ...data, _workspaceId: workspaceId }
     },
     onMutate: async (newContact) => {
-      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId || "") })
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
+      if (!workspaceId) return { previousClients: undefined, workspaceId: null }
+
+      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId) })
 
       const previousClients = queryClient.getQueryData<Client[]>(
-        clientKeys.list(workspaceId || "")
+        clientKeys.list(workspaceId)
       )
 
       if (previousClients) {
@@ -456,7 +478,7 @@ export function useCreateContact() {
         }
 
         queryClient.setQueryData<Client[]>(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(workspaceId),
           previousClients.map((client) =>
             client.id === newContact.client_id
               ? { ...client, contacts: [...client.contacts, optimisticContact] }
@@ -465,28 +487,31 @@ export function useCreateContact() {
         )
       }
 
-      return { previousClients }
+      return { previousClients, workspaceId }
     },
     onError: (_error, _newContact, context) => {
-      if (context?.previousClients) {
+      if (context?.previousClients && context.workspaceId) {
         queryClient.setQueryData(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(context.workspaceId),
           context.previousClients
         )
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?._workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
 
 export function useUpdateContact() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async ({ id, ...input }: UpdateContactInput) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { data, error } = await supabase
@@ -506,20 +531,23 @@ export function useUpdateContact() {
         throw new Error(`Failed to update contact: ${error.message}`)
       }
 
-      return data
+      return { ...data, _workspaceId: workspaceId }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?._workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
 
 export function useDeleteContact() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async (contactId: string) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { error } = await supabase.from("client_contacts").delete().eq("id", contactId)
@@ -528,10 +556,13 @@ export function useDeleteContact() {
         throw new Error(`Failed to delete contact: ${error.message}`)
       }
 
-      return contactId
+      return { contactId, workspaceId }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?.workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
@@ -542,10 +573,10 @@ export function useDeleteContact() {
 
 export function useCreateLocation() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async (input: CreateLocationInput) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { data, error } = await supabase
@@ -565,13 +596,16 @@ export function useCreateLocation() {
         throw new Error(`Failed to create location: ${error.message}`)
       }
 
-      return data
+      return { ...data, _workspaceId: workspaceId }
     },
     onMutate: async (newLocation) => {
-      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId || "") })
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
+      if (!workspaceId) return { previousClients: undefined, workspaceId: null }
+
+      await queryClient.cancelQueries({ queryKey: clientKeys.list(workspaceId) })
 
       const previousClients = queryClient.getQueryData<Client[]>(
-        clientKeys.list(workspaceId || "")
+        clientKeys.list(workspaceId)
       )
 
       if (previousClients) {
@@ -585,7 +619,7 @@ export function useCreateLocation() {
         }
 
         queryClient.setQueryData<Client[]>(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(workspaceId),
           previousClients.map((client) =>
             client.id === newLocation.client_id
               ? { ...client, locations: [...client.locations, optimisticLocation] }
@@ -594,28 +628,31 @@ export function useCreateLocation() {
         )
       }
 
-      return { previousClients }
+      return { previousClients, workspaceId }
     },
     onError: (_error, _newLocation, context) => {
-      if (context?.previousClients) {
+      if (context?.previousClients && context.workspaceId) {
         queryClient.setQueryData(
-          clientKeys.list(workspaceId || ""),
+          clientKeys.list(context.workspaceId),
           context.previousClients
         )
       }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?._workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
 
 export function useUpdateLocation() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async ({ id, ...input }: UpdateLocationInput) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { data, error } = await supabase
@@ -635,20 +672,23 @@ export function useUpdateLocation() {
         throw new Error(`Failed to update location: ${error.message}`)
       }
 
-      return data
+      return { ...data, _workspaceId: workspaceId }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?._workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }
 
 export function useDeleteLocation() {
   const queryClient = useQueryClient()
-  const workspaceId = useWorkspaceStore((state) => state.currentWorkspaceId)
 
   return useMutation({
     mutationFn: async (locationId: string) => {
+      const workspaceId = useWorkspaceStore.getState().currentWorkspaceId
       const supabase = createClient()
 
       const { error } = await supabase.from("client_locations").delete().eq("id", locationId)
@@ -657,10 +697,13 @@ export function useDeleteLocation() {
         throw new Error(`Failed to delete location: ${error.message}`)
       }
 
-      return locationId
+      return { locationId, workspaceId }
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId || "") })
+    onSettled: (data) => {
+      const workspaceId = data?.workspaceId || useWorkspaceStore.getState().currentWorkspaceId
+      if (workspaceId) {
+        queryClient.invalidateQueries({ queryKey: clientKeys.list(workspaceId) })
+      }
     },
   })
 }

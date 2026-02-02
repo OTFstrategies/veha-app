@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useWorkspaceStore } from "@/stores/workspace-store";
@@ -53,34 +53,29 @@ export function useWorkspaces() {
 export function useCurrentWorkspace() {
   const { currentWorkspaceId, setCurrentWorkspace } = useWorkspaceStore();
   const { data: workspaces, isLoading } = useWorkspaces();
-  const hasAutoSelected = useRef(false);
 
   const currentWorkspace = workspaces?.find(
     (w) => w.id === currentWorkspaceId
   );
 
-  // Auto-select first workspace if none selected or current is invalid
-  // Use useEffect to prevent render-time side effects
+  // Validate and auto-select workspace
   useEffect(() => {
-    const shouldAutoSelect =
-      !isLoading &&
-      workspaces &&
-      workspaces.length > 0 &&
-      (!currentWorkspaceId || !currentWorkspace) &&
-      !hasAutoSelected.current;
+    if (isLoading || !workspaces || workspaces.length === 0) return;
 
-    if (shouldAutoSelect) {
-      hasAutoSelected.current = true;
+    const validIds = workspaces.map((w) => w.id);
+
+    // Check of stored workspace nog bestaat in Hub
+    if (currentWorkspaceId && !validIds.includes(currentWorkspaceId)) {
+      console.warn("[VEHA] Stored workspace not found in Hub, resetting to first workspace");
+      setCurrentWorkspace(workspaces[0].id);
+      return;
+    }
+
+    // Auto-select first workspace als geen geselecteerd
+    if (!currentWorkspaceId) {
       setCurrentWorkspace(workspaces[0].id);
     }
-  }, [isLoading, workspaces, currentWorkspaceId, currentWorkspace, setCurrentWorkspace]);
-
-  // Reset auto-select flag when workspace is cleared
-  useEffect(() => {
-    if (!currentWorkspaceId) {
-      hasAutoSelected.current = false;
-    }
-  }, [currentWorkspaceId]);
+  }, [isLoading, workspaces, currentWorkspaceId, setCurrentWorkspace]);
 
   // Return the actual workspace ID (either current or first available)
   const effectiveWorkspaceId =
