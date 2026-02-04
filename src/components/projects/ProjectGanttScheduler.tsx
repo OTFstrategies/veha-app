@@ -14,7 +14,8 @@ import { SchedulerPanel } from './SchedulerPanel'
 import { GanttToolbar } from './GanttToolbar'
 import { ProjectHeader } from './ProjectHeader'
 import { TaskEditor } from './TaskEditor'
-import { useCriticalPath, useUpdateTaskDates } from '@/queries/tasks'
+import { useCriticalPath, useUpdateTaskDates, useUndoTaskChanges, useRedoTaskChanges } from '@/queries/tasks'
+import { useTaskHistoryStore } from '@/stores/task-history-store'
 import { useToast } from '@/components/ui/toast'
 import { addDaysToDate, pixelsToDays } from './utils/snap'
 import type { GanttZoomLevel, ViewOptions, TimelineConfig } from './types'
@@ -95,6 +96,14 @@ export function ProjectGanttScheduler({
   // Update Task Dates Mutation
   // ---------------------------------------------------------------------------
   const updateTaskDates = useUpdateTaskDates()
+
+  // ---------------------------------------------------------------------------
+  // Undo/Redo
+  // ---------------------------------------------------------------------------
+  const canUndo = useTaskHistoryStore((state) => state.canUndo)
+  const canRedo = useTaskHistoryStore((state) => state.canRedo)
+  const undoMutation = useUndoTaskChanges()
+  const redoMutation = useRedoTaskChanges()
 
   // ---------------------------------------------------------------------------
   // State
@@ -407,6 +416,67 @@ export function ProjectGanttScheduler({
       document.removeEventListener('mouseup', handleMouseUp)
     }
   }, [])
+
+  // ---------------------------------------------------------------------------
+  // Keyboard Shortcuts for Undo/Redo
+  // ---------------------------------------------------------------------------
+
+  React.useEffect(() => {
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      // Don't trigger in input fields
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return
+      }
+
+      // Undo: Ctrl+Z (not Shift)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        if (canUndo() && !undoMutation.isPending) {
+          try {
+            const entry = await undoMutation.mutateAsync(project.id)
+            addToast({
+              type: 'info',
+              title: 'Ongedaan gemaakt',
+              description: entry.description,
+            })
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'Fout bij ongedaan maken'
+            addToast({
+              type: 'error',
+              title: 'Fout',
+              description: message,
+            })
+          }
+        }
+      }
+
+      // Redo: Ctrl+Y or Ctrl+Shift+Z
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey) || (e.key === 'Z' && e.shiftKey))) {
+        e.preventDefault()
+        if (canRedo() && !redoMutation.isPending) {
+          try {
+            const entry = await redoMutation.mutateAsync(project.id)
+            addToast({
+              type: 'info',
+              title: 'Opnieuw uitgevoerd',
+              description: entry.description,
+            })
+          } catch (error) {
+            const message = error instanceof Error ? error.message : 'Fout bij opnieuw uitvoeren'
+            addToast({
+              type: 'error',
+              title: 'Fout',
+              description: message,
+            })
+          }
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [project.id, canUndo, canRedo, undoMutation, redoMutation, addToast])
 
   // ---------------------------------------------------------------------------
   // Task Selection
