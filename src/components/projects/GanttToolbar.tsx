@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useToast } from '@/components/ui/toast'
 import { useTaskHistoryStore } from '@/stores/task-history-store'
-import { useUndoTaskChanges } from '@/queries/tasks'
+import { useUndoTaskChanges, useRedoTaskChanges } from '@/queries/tasks'
 import type { GanttZoomLevel, ViewOptions } from './types'
 
 // =============================================================================
@@ -74,6 +74,7 @@ export function GanttToolbar({
   const canUndo = useTaskHistoryStore((state) => state.canUndo)
   const canRedo = useTaskHistoryStore((state) => state.canRedo)
   const undoMutation = useUndoTaskChanges()
+  const redoMutation = useRedoTaskChanges()
   const { addToast } = useToast()
 
   // ---------------------------------------------------------------------------
@@ -130,6 +131,24 @@ export function GanttToolbar({
     }
   }
 
+  async function handleRedo() {
+    try {
+      const entry = await redoMutation.mutateAsync(projectId)
+      addToast({
+        type: 'info',
+        title: 'Opnieuw uitgevoerd',
+        description: entry.description,
+      })
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Fout bij opnieuw uitvoeren'
+      addToast({
+        type: 'error',
+        title: 'Fout',
+        description: message,
+      })
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
@@ -166,8 +185,9 @@ export function GanttToolbar({
             variant="ghost"
             size="icon"
             className="h-8 w-8 rounded-l-none border-l border-border"
-            disabled={true}
-            title="Redo niet beschikbaar"
+            onClick={handleRedo}
+            disabled={!canRedo() || redoMutation.isPending}
+            title="Opnieuw (Ctrl+Y)"
           >
             <Redo2 className="h-3.5 w-3.5" />
           </Button>
