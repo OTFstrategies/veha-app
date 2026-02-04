@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ClientNotes } from "./ClientNotes";
+import { PortalGantt } from "./PortalGantt";
 import type { PortalProjectDetail, PortalTaskSummary } from "@/types/portal";
 
 // =============================================================================
@@ -314,6 +315,18 @@ export function PortalProjectView({ project, userRole, userId }: PortalProjectVi
               </div>
             )}
           </div>
+
+          {/* Planning Gantt Chart */}
+          {project.tasks && project.tasks.length > 0 && (
+            <div>
+              <h2 className="mb-4 text-lg font-semibold">Planning</h2>
+              <PortalGantt
+                tasks={project.tasks}
+                projectStartDate={project.startDate}
+                projectEndDate={project.endDate}
+              />
+            </div>
+          )}
 
           {/* Client Notes Section */}
           <div className="border-t border-zinc-200 pt-8 dark:border-zinc-700">
