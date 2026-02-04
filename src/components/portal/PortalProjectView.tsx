@@ -158,22 +158,24 @@ function TaskItem({ task }: TaskItemProps) {
 
         {/* Progress and Dates */}
         <div className="mt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-muted-foreground">
-          {/* Progress */}
+          {/* Progress Bar */}
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-12 sm:w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <div className="w-20 bg-zinc-200 rounded-full h-2 dark:bg-zinc-700">
               <div
                 className={cn(
-                  "h-full rounded-full transition-all",
+                  "h-2 rounded-full transition-all",
                   isDone
-                    ? "bg-green-500"
+                    ? "bg-green-600"
                     : isInProgress
-                    ? "bg-zinc-600 dark:bg-zinc-300"
-                    : "bg-zinc-400"
+                    ? "bg-green-500"
+                    : "bg-green-400"
                 )}
                 style={{ width: `${task.progress}%` }}
               />
             </div>
-            <span className="tabular-nums">{task.progress}%</span>
+            <span className="text-xs text-muted-foreground w-10 text-right tabular-nums">
+              {task.progress}%
+            </span>
           </div>
 
           {/* Dates */}
