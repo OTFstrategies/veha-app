@@ -8,6 +8,7 @@ import {
   Columns3,
   FolderKanban,
   GanttChart,
+  Layers,
   LayoutGrid,
   MoreHorizontal,
   Pencil,
@@ -24,6 +25,7 @@ import { Input } from '@/components/ui/input'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuCheckboxItem,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -31,6 +33,7 @@ import {
 import { useProjects, useDeleteProject, useCreateProject, useUpdateProject } from '@/queries/projects'
 import type { Project, ProjectStatus, WorkType } from '@/types/projects'
 import { ProjectFormModal, type ProjectFormData } from '@/components/projects/ProjectFormModal'
+import { useListViewStore, type GroupByOption } from '@/stores/list-view-store'
 
 // =============================================================================
 // Status Badge Config
@@ -257,6 +260,9 @@ export default function ProjectsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false)
   const [editingProject, setEditingProject] = React.useState<Project | null>(null)
 
+  // Grouping state from store
+  const { projectsGroupBy, setProjectsGroupBy } = useListViewStore()
+
   const { data: projects, isLoading, error } = useProjects()
 
   // Open create modal when action=new query param is present
@@ -289,6 +295,61 @@ export default function ProjectsPage() {
       return matchesSearch && matchesStatus
     })
   }, [projects, search, statusFilter])
+
+  // Group projects
+  const groupedProjects = React.useMemo(() => {
+    if (projectsGroupBy === 'none') {
+      return [{ key: 'all', label: 'Alle projecten', projects: filteredProjects }]
+    }
+
+    const groups: Record<string, Project[]> = {}
+
+    filteredProjects.forEach((project) => {
+      let groupKey: string
+
+      switch (projectsGroupBy) {
+        case 'status':
+          groupKey = project.status
+          break
+        case 'client':
+          groupKey = project.clientId || 'no-client'
+          break
+        case 'workType':
+          groupKey = project.workType || 'overig'
+          break
+        default:
+          groupKey = 'all'
+      }
+
+      if (!groups[groupKey]) {
+        groups[groupKey] = []
+      }
+      groups[groupKey].push(project)
+    })
+
+    // Get label for each group
+    const getGroupLabel = (groupBy: GroupByOption, key: string): string => {
+      switch (groupBy) {
+        case 'status':
+          return STATUS_CONFIG[key as ProjectStatus]?.label || key
+        case 'client':
+          if (key === 'no-client') return 'Geen klant'
+          // Find client name from first project in group
+          const clientProject = groups[key]?.[0]
+          return clientProject?.clientName || key
+        case 'workType':
+          return WORK_TYPE_LABELS[key as WorkType] || key
+        default:
+          return 'Alle projecten'
+      }
+    }
+
+    return Object.entries(groups).map(([key, projectsList]) => ({
+      key,
+      label: getGroupLabel(projectsGroupBy, key),
+      projects: projectsList,
+    }))
+  }, [filteredProjects, projectsGroupBy])
 
   // Handlers
   const handleView = (id: string) => {
@@ -386,6 +447,49 @@ export default function ProjectsPage() {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            {/* Grouping Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Layers className="h-4 w-4 mr-2" />
+                  Groeperen
+                  {projectsGroupBy !== 'none' && (
+                    <Badge variant="secondary" className="ml-2">
+                      {projectsGroupBy === 'status' ? 'Status' :
+                       projectsGroupBy === 'client' ? 'Klant' :
+                       projectsGroupBy === 'workType' ? 'Werktype' : ''}
+                    </Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuCheckboxItem
+                  checked={projectsGroupBy === 'none'}
+                  onCheckedChange={() => setProjectsGroupBy('none')}
+                >
+                  Geen groepering
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={projectsGroupBy === 'status'}
+                  onCheckedChange={() => setProjectsGroupBy('status')}
+                >
+                  Op status
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={projectsGroupBy === 'client'}
+                  onCheckedChange={() => setProjectsGroupBy('client')}
+                >
+                  Op klant
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={projectsGroupBy === 'workType'}
+                  onCheckedChange={() => setProjectsGroupBy('workType')}
+                >
+                  Op werktype
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* View Switcher */}
             <div className="flex items-center gap-1 rounded-lg border border-border p-1 bg-muted/50">
               <Link
@@ -488,16 +592,30 @@ export default function ProjectsPage() {
             <EmptyState onCreate={handleCreate} />
           )
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProjects.map(project => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onView={() => handleView(project.id)}
-                onEdit={() => handleEdit(project.id)}
-                onDelete={() => handleDelete(project.id)}
-                onClientClick={() => handleClientClick(project.clientId)}
-              />
+          <div className="space-y-6">
+            {groupedProjects.map((group) => (
+              <div key={group.key}>
+                {projectsGroupBy !== 'none' && (
+                  <div className="flex items-center gap-2 mb-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">
+                      {group.label}
+                    </h3>
+                    <Badge variant="secondary">{group.projects.length}</Badge>
+                  </div>
+                )}
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.projects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      onView={() => handleView(project.id)}
+                      onEdit={() => handleEdit(project.id)}
+                      onDelete={() => handleDelete(project.id)}
+                      onClientClick={() => handleClientClick(project.clientId)}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
