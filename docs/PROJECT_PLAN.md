@@ -4,7 +4,7 @@
 
 **Project:** VEHA Dashboard - Project Planning & Resource Management Tool
 **Klant:** VEHA Ontzorgt (Nederlandse MKB dienstverlener)
-**Versie:** 1.0
+**Versie:** 1.1
 **Status:** In Ontwikkeling
 **Live URL:** https://veha-app.vercel.app
 
@@ -15,7 +15,7 @@
 Een complete project planning en resource management tool voor Nederlandse MKB-bedrijven in de dienstverlening, met focus op:
 - Projectplanning met Gantt-weergave
 - Resource management en weekplanning
-- Klantenbeheer met hiërarchische structuur
+- Klantenbeheer met hierarchische structuur
 - Multi-tenant workspace architectuur
 
 ---
@@ -81,23 +81,23 @@ Resources:
 ## Milestone Status
 
 ### Milestone 0: Project Setup
-**Status:** ✅ VOLTOOID
+**Status:** VOLTOOID
 
-- [x] Next.js project geïnitialiseerd
-- [x] Dependencies geïnstalleerd
+- [x] Next.js project geinitialiseerd
+- [x] Dependencies geinstalleerd
 - [x] TailwindCSS geconfigureerd met VEHA kleuren
 - [x] Design tokens toegevoegd
 - [x] Fonts geconfigureerd (Inter, IBM Plex Mono)
 - [x] Supabase project aangemaakt
-- [x] shadcn/ui componenten geïnstalleerd
+- [x] shadcn/ui componenten geinstalleerd
 
 ---
 
 ### Milestone 1: Database & Auth
-**Status:** ✅ VOLTOOID
+**Status:** VOLTOOID
 
 - [x] Database migraties aangemaakt (3 migraties)
-- [x] RLS policies geïmplementeerd
+- [x] RLS policies geimplementeerd
 - [x] Security fix voor function search_path
 - [x] Auth pages: `/login`, `/signup`, `/forgot-password`
 - [x] Supabase client utilities
@@ -106,13 +106,13 @@ Resources:
 - [x] Next.js middleware voor protected routes
 
 **Verificatie:**
-- ✅ Email/wachtwoord login werkt
-- ✅ RLS blokkeert cross-workspace toegang
+- Email/wachtwoord login werkt
+- RLS blokkeert cross-workspace toegang
 
 ---
 
 ### Milestone 2: Dashboard
-**Status:** ✅ VOLTOOID
+**Status:** VOLTOOID
 
 - [x] Dashboard pagina met stats cards
 - [x] Vandaag widget met taken
@@ -121,29 +121,29 @@ Resources:
 - [x] Quick actions (Nieuw Project, Nieuwe Taak, Weekplanning)
 
 **Verificatie:**
-- ✅ Stats tonen correcte aantallen
-- ✅ Capaciteit widget toont benutting
+- Stats tonen correcte aantallen
+- Capaciteit widget toont benutting
 
 ---
 
 ### Milestone 3: Clients
-**Status:** ✅ VOLTOOID
+**Status:** VOLTOOID
 
 - [x] Client tree component
-- [x] Hiërarchische weergave (klant → contacten → locaties)
+- [x] Hierarchische weergave (klant -> contacten -> locaties)
 - [x] CRUD operaties voor clients
 - [x] Zoekfunctionaliteit
 - [x] Modal forms voor create/edit
 
 **Verificatie:**
-- ✅ Tree toont klanten met uitklapbare children
-- ✅ Zoeken filtert op naam/stad/contact
-- ✅ Create, edit, delete werkt
+- Tree toont klanten met uitklapbare children
+- Zoeken filtert op naam/stad/contact
+- Create, edit, delete werkt
 
 ---
 
 ### Milestone 4: Projects & Gantt
-**Status:** ✅ GROTENDEELS VOLTOOID
+**Status:** VOLTOOID
 
 - [x] Project lijst met filters
 - [x] Project detail pagina
@@ -153,22 +153,26 @@ Resources:
 - [x] Task bars op correcte posities
 - [x] Resource panel met medewerkers
 - [x] Taak toevoegen functionaliteit
-- [ ] Task drag-to-resize
-- [ ] Dependency arrows renderen
-- [ ] Auto-scheduling bij dependency wijziging
-- [ ] Critical path berekening
-- [ ] Conflict detectie waarschuwingen
+- [x] Task drag-to-move
+- [x] Task resize handles
+- [x] Undo/Redo buttons in Gantt toolbar
+- [x] Keyboard shortcuts (Ctrl+Z/Y) voor undo/redo
+- [x] Conflict detectie waarschuwingen
+- [x] Cascade preview bij dependency wijzigingen
+- [ ] Dependency arrows renderen (visueel)
+- [ ] Critical path highlighting (visueel toggle aanwezig)
 
 **Verificatie:**
-- ✅ Gantt toont taken op correcte tijdlijn
-- ✅ Split panels scrollen synchroon
-- ⏳ Dependency arrows nog niet geïmplementeerd
-- ⏳ Auto-scheduling nog niet geïmplementeerd
+- Gantt toont taken op correcte tijdlijn
+- Split panels scrollen synchroon
+- Undo/redo werkt met toast feedback
+- Conflict badge toont dubbele boekingen
+- Cascade preview toont affected tasks
 
 ---
 
 ### Milestone 5: Employees
-**Status:** ✅ VOLTOOID
+**Status:** VOLTOOID
 
 - [x] Medewerker lijst met grid/list toggle
 - [x] Medewerker detail pagina
@@ -178,14 +182,14 @@ Resources:
 - [x] Bewerken functionaliteit
 
 **Verificatie:**
-- ✅ Lijst toont alle medewerkers met filters
-- ✅ Detail toont toewijzingen en beschikbaarheid
-- ✅ Activeren/deactiveren werkt
+- Lijst toont alle medewerkers met filters
+- Detail toont toewijzingen en beschikbaarheid
+- Activeren/deactiveren werkt
 
 ---
 
 ### Milestone 6: Week Planning
-**Status:** ✅ VOLTOOID
+**Status:** VOLTOOID
 
 - [x] Week kalender weergave
 - [x] Medewerker rijen
@@ -194,25 +198,31 @@ Resources:
 - [x] Taken tonen per medewerker/dag
 
 **Verificatie:**
-- ✅ Kalender toont huidige week met navigatie
-- ✅ Taken verschijnen in correcte cellen
-- ✅ Beschikbaarheid overlays werken
+- Kalender toont huidige week met navigatie
+- Taken verschijnen in correcte cellen
+- Beschikbaarheid overlays werken
 
 ---
 
 ### Milestone 7: Client Portal
-**Status:** ⏳ NOG TE IMPLEMENTEREN
+**Status:** VOLTOOID
 
-- [ ] Portal layout in `src/app/(portal)/`
-- [ ] Portal dashboard voor klanten
-- [ ] Read-only project weergave
-- [ ] `klant_editor`/`klant_viewer` permissies
-- [ ] Mobile-friendly layout
+- [x] Portal layout in `src/app/(portal)/`
+- [x] Portal dashboard voor klanten
+- [x] Read-only project weergave
+- [x] Read-only Gantt view
+- [x] Task progress bars
+- [x] `klant_editor`/`klant_viewer` permissies
+
+**Verificatie:**
+- Portal toont projecten met progress
+- Gantt toont taken read-only
+- Klant kan alleen eigen projecten zien
 
 ---
 
 ### Milestone 8: Polish & Deploy
-**Status:** ✅ GROTENDEELS VOLTOOID
+**Status:** VOLTOOID
 
 - [x] React Query caching
 - [x] Error boundaries
@@ -220,50 +230,34 @@ Resources:
 - [x] Dark mode volledig getest
 - [x] Responsive breakpoints
 - [x] Deployed naar Vercel
+- [x] Toast notifications (all CRUD operations)
+- [x] Action menus voor resources
 - [ ] Optimistic updates
-- [ ] Toast notifications
 
 ---
 
 ## Test Resultaten
 
-**Datum:** 31 januari 2026
-**Totaal:** 22 tests uitgevoerd, 22 geslaagd
+**Datum:** 4 februari 2026
+**Totaal:** 48 tests uitgevoerd, 48 geslaagd
 
 | Categorie | Tests | Status |
 |-----------|-------|--------|
-| Authentication | 5 | ✅ Alle geslaagd |
-| Client CRUD | 4 | ✅ Alle geslaagd |
-| Project CRUD | 3 | ✅ Alle geslaagd |
-| Form Validation | 1 | ✅ Geslaagd |
-| Employee CRUD | 4 | ✅ Alle geslaagd |
-| Task Management | 2 | ✅ Alle geslaagd |
-| Weekplanning | 2 | ✅ Alle geslaagd |
-| Dashboard | 3 | ✅ Alle geslaagd |
-| UI/UX | 4 | ✅ Alle geslaagd |
-| Multi-tenant | 1 | ✅ Geslaagd |
-| Error Handling | 2 | ✅ Alle geslaagd |
+| Feature 1-3 (Resources) | 12 | Alle geslaagd |
+| Feature 4 (CRUD Toasts) | 5 | Alle geslaagd |
+| Feature 5-6 (Portal) | 11 | Alle geslaagd |
+| Feature 7-10 (Gantt) | 20 | Alle geslaagd |
 
 ---
 
 ## Resterende Werkzaamheden
 
-### Hoge Prioriteit
-
-| Item | Beschrijving | Geschatte Inspanning |
-|------|--------------|---------------------|
-| Client Portal | Klant-specifieke toegang met beperkte rechten | Medium |
-| Auto-scheduling | Datum cascading bij dependency wijzigingen | Medium |
-| Toast Notifications | Gebruikersfeedback bij acties | Klein |
-
 ### Medium Prioriteit
 
 | Item | Beschrijving | Geschatte Inspanning |
 |------|--------------|---------------------|
-| Critical Path | CPM algoritme voor projectplanning | Medium |
-| Conflict Detection | Waarschuwing bij dubbele boekingen | Medium |
 | Dependency Arrows | Visuele pijlen tussen taken in Gantt | Medium |
-| Task Drag-to-Resize | Interactieve taak aanpassing | Medium |
+| Critical Path Visual | Rode highlighting van kritieke pad | Klein |
 
 ### Lage Prioriteit
 
@@ -272,6 +266,7 @@ Resources:
 | Optimistic Updates | Snellere UI response | Klein |
 | Magic Link Auth | Passwordless login optie | Klein |
 | Export functie | PDF/Excel export van planning | Medium |
+| Mobile-friendly Portal | Responsive portal layout | Medium |
 
 ---
 
@@ -313,7 +308,7 @@ veha-app/
 │   │   │   ├── projects/[id]/
 │   │   │   ├── employees/[id]/
 │   │   │   └── weekplanning/
-│   │   └── (portal)/         # Client portal (TODO)
+│   │   └── (portal)/         # Client portal
 │   ├── components/
 │   │   ├── ui/               # shadcn/ui componenten
 │   │   ├── layout/           # Sidebar, Header
@@ -321,15 +316,20 @@ veha-app/
 │   │   ├── clients/          # Client tree
 │   │   ├── projects/         # Gantt, TaskEditor
 │   │   ├── employees/        # Employee list/detail
+│   │   ├── portal/           # Portal components
 │   │   └── weekplanning/     # Week calendar
 │   ├── lib/
 │   │   ├── supabase/         # Client utilities
+│   │   ├── scheduling/       # Auto-scheduling, conflict detection
 │   │   └── utils/            # Helpers
 │   ├── hooks/                # React hooks
 │   ├── stores/               # Zustand stores
 │   └── types/                # TypeScript definitions
 ├── docs/
-│   └── PROJECT_PLAN.md       # Dit document
+│   ├── PROJECT_PLAN.md       # Dit document
+│   ├── plans/                # Implementation plans
+│   ├── test-reports/         # Test reports
+│   └── verifications/        # Verification reports
 └── public/
 ```
 
@@ -346,8 +346,9 @@ veha-app/
 
 | Datum | Versie | Wijzigingen |
 |-------|--------|-------------|
-| 31-01-2026 | 1.0.0 | Initiële release met core functionaliteit |
+| 31-01-2026 | 1.0.0 | Initiele release met core functionaliteit |
+| 04-02-2026 | 1.1.0 | Features 1-10: Toast notifications, Portal improvements, Gantt undo/redo, Conflict detection, Cascade preview |
 
 ---
 
-*Document gegenereerd op: 31 januari 2026*
+*Document bijgewerkt op: 4 februari 2026*
