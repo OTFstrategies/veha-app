@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/components/ui/toast'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -250,6 +251,7 @@ function LoadingState() {
 export default function ProjectsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { addToast } = useToast()
   const [search, setSearch] = React.useState('')
   const [statusFilter, setStatusFilter] = React.useState<ProjectStatus | 'all'>('all')
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false)
@@ -304,8 +306,10 @@ export default function ProjectsPage() {
     if (confirm('Weet je zeker dat je dit project wilt verwijderen?')) {
       try {
         await deleteProject.mutateAsync(id)
+        addToast({ type: 'success', title: 'Project verwijderd' })
       } catch (error) {
         console.error("Failed to delete project:", error)
+        addToast({ type: 'error', title: 'Fout bij verwijderen van project' })
       }
     }
   }
@@ -328,10 +332,11 @@ export default function ProjectsPage() {
         startDate: data.startDate,
         endDate: data.endDate,
       })
+      addToast({ type: 'success', title: 'Project succesvol aangemaakt' })
       setIsCreateModalOpen(false)
     } catch (error) {
       console.error("Failed to create project:", error)
-      // Error will be shown by the form or React Query
+      addToast({ type: 'error', title: 'Fout bij aanmaken van project' })
     }
   }
 
@@ -348,9 +353,11 @@ export default function ProjectsPage() {
         endDate: data.endDate,
         status: data.status,
       })
+      addToast({ type: 'success', title: 'Project succesvol bijgewerkt' })
       setEditingProject(null)
     } catch (error) {
       console.error("Failed to update project:", error)
+      addToast({ type: 'error', title: 'Fout bij opslaan van project' })
     }
   }
 
