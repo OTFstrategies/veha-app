@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { AlertDialog } from "@/components/ui/alert-dialog"
+import { useToast } from "@/components/ui/toast"
 
 const statusLabels: Record<string, string> = {
   op_voorraad: "Op voorraad",
@@ -45,6 +46,7 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
   const { currentWorkspaceId } = useWorkspaceStore()
   const { data: materials, isLoading } = useMaterials(currentWorkspaceId)
   const deleteMaterial = useDeleteMaterial()
+  const { addToast } = useToast()
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [materialToDelete, setMaterialToDelete] = React.useState<{ id: string; name: string } | null>(null)
@@ -57,6 +59,7 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
   const handleConfirmDelete = async () => {
     if (materialToDelete) {
       await deleteMaterial.mutateAsync(materialToDelete.id)
+      addToast({ type: "success", title: "Verwijderd" })
       setDeleteDialogOpen(false)
       setMaterialToDelete(null)
     }

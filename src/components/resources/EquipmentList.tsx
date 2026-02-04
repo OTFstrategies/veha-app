@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { AlertDialog } from "@/components/ui/alert-dialog"
+import { useToast } from "@/components/ui/toast"
 
 const statusLabels: Record<string, string> = {
   beschikbaar: "Beschikbaar",
@@ -51,6 +52,7 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
   const { currentWorkspaceId } = useWorkspaceStore()
   const { data: equipment, isLoading } = useEquipment(currentWorkspaceId)
   const deleteEquipment = useDeleteEquipment()
+  const { addToast } = useToast()
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [equipmentToDelete, setEquipmentToDelete] = React.useState<{ id: string; name: string } | null>(null)
@@ -63,6 +65,7 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
   const handleConfirmDelete = async () => {
     if (equipmentToDelete) {
       await deleteEquipment.mutateAsync(equipmentToDelete.id)
+      addToast({ type: "success", title: "Verwijderd" })
       setDeleteDialogOpen(false)
       setEquipmentToDelete(null)
     }
