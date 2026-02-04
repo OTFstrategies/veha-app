@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { AlertDialog } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/toast"
+import { FilterBar, type FilterOption } from "@/components/ui/filter-bar"
 
 const statusLabels: Record<string, string> = {
   beschikbaar: "Beschikbaar",
@@ -56,6 +57,34 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [equipmentToDelete, setEquipmentToDelete] = React.useState<{ id: string; name: string } | null>(null)
+
+  // Filter state
+  const [statusFilter, setStatusFilter] = React.useState<string[]>([])
+  const [typeFilter, setTypeFilter] = React.useState<string[]>([])
+
+  // Filter options
+  const statusOptions: FilterOption[] = [
+    { value: "beschikbaar", label: "Beschikbaar" },
+    { value: "in_gebruik", label: "In gebruik" },
+    { value: "onderhoud", label: "Onderhoud" },
+    { value: "defect", label: "Defect" },
+  ]
+
+  const typeOptions: FilterOption[] = [
+    { value: "voertuig", label: "Voertuig" },
+    { value: "machine", label: "Machine" },
+    { value: "gereedschap", label: "Gereedschap" },
+  ]
+
+  // Filtered equipment
+  const filteredEquipment = React.useMemo(() => {
+    if (!equipment) return []
+    return equipment.filter((e) => {
+      if (statusFilter.length > 0 && !statusFilter.includes(e.status)) return false
+      if (typeFilter.length > 0 && !typeFilter.includes(e.equipment_type)) return false
+      return true
+    })
+  }, [equipment, statusFilter, typeFilter])
 
   const handleDeleteClick = (id: string, name: string) => {
     setEquipmentToDelete({ id, name })
@@ -101,7 +130,23 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
         </Button>
       </div>
 
-      {!equipment?.length ? (
+      {/* Filters */}
+      <div className="flex gap-2">
+        <FilterBar
+          label="Status"
+          options={statusOptions}
+          selected={statusFilter}
+          onChange={setStatusFilter}
+        />
+        <FilterBar
+          label="Type"
+          options={typeOptions}
+          selected={typeFilter}
+          onChange={setTypeFilter}
+        />
+      </div>
+
+      {!filteredEquipment?.length ? (
         <div className="text-center py-12 border rounded-lg bg-muted/50">
           <Wrench className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground font-medium">Nog geen middelen</p>
@@ -117,7 +162,7 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
         </div>
       ) : (
         <div className="border rounded-lg divide-y">
-          {equipment.map((item) => {
+          {filteredEquipment.map((item) => {
             const TypeIcon = typeIcons[item.equipment_type] || Wrench
             return (
               <div

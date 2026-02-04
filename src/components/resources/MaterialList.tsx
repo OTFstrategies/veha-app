@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { AlertDialog } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/toast"
+import { FilterBar, type FilterOption } from "@/components/ui/filter-bar"
 
 const statusLabels: Record<string, string> = {
   op_voorraad: "Op voorraad",
@@ -50,6 +51,34 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [materialToDelete, setMaterialToDelete] = React.useState<{ id: string; name: string } | null>(null)
+
+  // Filter state
+  const [statusFilter, setStatusFilter] = React.useState<string[]>([])
+  const [typeFilter, setTypeFilter] = React.useState<string[]>([])
+
+  // Filter options
+  const statusOptions: FilterOption[] = [
+    { value: "op_voorraad", label: "Op voorraad" },
+    { value: "bijna_op", label: "Bijna op" },
+    { value: "besteld", label: "Besteld" },
+    { value: "niet_beschikbaar", label: "Niet beschikbaar" },
+  ]
+
+  const typeOptions: FilterOption[] = [
+    { value: "verbruiksmateriaal", label: "Verbruiksmateriaal" },
+    { value: "voorraad", label: "Voorraad" },
+    { value: "onderdelen", label: "Onderdelen" },
+  ]
+
+  // Filtered materials
+  const filteredMaterials = React.useMemo(() => {
+    if (!materials) return []
+    return materials.filter((m) => {
+      if (statusFilter.length > 0 && !statusFilter.includes(m.status)) return false
+      if (typeFilter.length > 0 && !typeFilter.includes(m.material_type)) return false
+      return true
+    })
+  }, [materials, statusFilter, typeFilter])
 
   const handleDeleteClick = (id: string, name: string) => {
     setMaterialToDelete({ id, name })
@@ -95,7 +124,23 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
         </Button>
       </div>
 
-      {!materials?.length ? (
+      {/* Filters */}
+      <div className="flex gap-2">
+        <FilterBar
+          label="Status"
+          options={statusOptions}
+          selected={statusFilter}
+          onChange={setStatusFilter}
+        />
+        <FilterBar
+          label="Type"
+          options={typeOptions}
+          selected={typeFilter}
+          onChange={setTypeFilter}
+        />
+      </div>
+
+      {!filteredMaterials?.length ? (
         <div className="text-center py-12 border rounded-lg bg-muted/50">
           <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <p className="text-muted-foreground font-medium">Nog geen materialen</p>
@@ -111,7 +156,7 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
         </div>
       ) : (
         <div className="border rounded-lg divide-y">
-          {materials.map((material) => (
+          {filteredMaterials.map((material) => (
             <div
               key={material.id}
               className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
