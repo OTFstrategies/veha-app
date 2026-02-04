@@ -569,6 +569,8 @@ export function ProjectGanttScheduler({
         {/* Toolbar */}
         <GanttToolbar
           projectId={project.id}
+          tasks={project.tasks}
+          projectName={project.name}
           zoomLevel={zoomLevel}
           viewOptions={viewOptions}
           showCriticalPath={showCriticalPath}

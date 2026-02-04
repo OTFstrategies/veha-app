@@ -1,3 +1,4 @@
+import * as React from 'react'
 import {
   CalendarDays,
   ChevronDown,
@@ -21,7 +22,10 @@ import {
 import { useToast } from '@/components/ui/toast'
 import { useTaskHistoryStore } from '@/stores/task-history-store'
 import { useUndoTaskChanges, useRedoTaskChanges } from '@/queries/tasks'
+import { ConflictWarning, type ConflictItem } from './ConflictWarning'
+import { getAllEmployeeConflicts } from '@/lib/scheduling/conflict-detection'
 import type { GanttZoomLevel, ViewOptions } from './types'
+import type { Task } from '@/types/projects'
 
 // =============================================================================
 // Props
@@ -29,6 +33,8 @@ import type { GanttZoomLevel, ViewOptions } from './types'
 
 interface GanttToolbarProps {
   projectId: string
+  tasks: Task[]
+  projectName: string
   zoomLevel: GanttZoomLevel
   viewOptions: ViewOptions
   showCriticalPath: boolean
@@ -58,6 +64,8 @@ const ZOOM_ORDER: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
 
 export function GanttToolbar({
   projectId,
+  tasks,
+  projectName,
   zoomLevel,
   viewOptions,
   showCriticalPath,
@@ -76,6 +84,49 @@ export function GanttToolbar({
   const undoMutation = useUndoTaskChanges()
   const redoMutation = useRedoTaskChanges()
   const { addToast } = useToast()
+
+  // ---------------------------------------------------------------------------
+  // Conflict Detection
+  // ---------------------------------------------------------------------------
+
+  const conflicts = React.useMemo<ConflictItem[]>(() => {
+    const allConflicts: ConflictItem[] = []
+
+    // Get unique employee IDs from all task assignments
+    const employeeIds = new Set<string>()
+    const employeeNames = new Map<string, string>()
+
+    tasks.forEach((task) => {
+      task.assignments.forEach((assignment) => {
+        employeeIds.add(assignment.employeeId)
+        employeeNames.set(assignment.employeeId, assignment.employeeName)
+      })
+    })
+
+    // Convert tasks to TaskWithProject format for conflict detection
+    const tasksWithProject = tasks.map((task) => ({
+      ...task,
+      projectId,
+      projectName,
+    }))
+
+    // Check each employee for conflicts
+    employeeIds.forEach((employeeId) => {
+      const employeeConflicts = getAllEmployeeConflicts(employeeId, tasksWithProject)
+
+      employeeConflicts.forEach(({ task1, task2 }) => {
+        // Only add one entry per conflict pair
+        allConflicts.push({
+          employeeName: employeeNames.get(employeeId) || 'Onbekend',
+          taskName: task2.taskName,
+          date: task2.startDate,
+          overlapDays: task2.overlapDays,
+        })
+      })
+    })
+
+    return allConflicts
+  }, [tasks, projectId, projectName])
 
   // ---------------------------------------------------------------------------
   // Zoom Handlers
@@ -155,8 +206,8 @@ export function GanttToolbar({
 
   return (
     <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2">
-      {/* Left: Add Task */}
-      <div className="flex items-center gap-2">
+      {/* Left: Add Task + Conflict Warning */}
+      <div className="flex items-center gap-3">
         <Button
           size="sm"
           onClick={onAddTask}
@@ -165,6 +216,9 @@ export function GanttToolbar({
           <Plus className="h-3.5 w-3.5" />
           Taak
         </Button>
+
+        {/* Conflict Warning */}
+        <ConflictWarning conflicts={conflicts} />
       </div>
 
       {/* Right: Consolidated controls */}
