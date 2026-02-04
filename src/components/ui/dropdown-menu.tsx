@@ -71,6 +71,7 @@ const DropdownMenuTrigger = React.forwardRef<
   }
 
   if (asChild && React.isValidElement(children)) {
+    // eslint-disable-next-line react-hooks/refs, @typescript-eslint/no-explicit-any -- asChild pattern requires ref during render
     return React.cloneElement(children as React.ReactElement<any>, {
       ref,
       onClick: handleClick,

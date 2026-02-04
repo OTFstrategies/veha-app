@@ -379,11 +379,11 @@ function backwardPass(
  */
 export function calculateCriticalPath(
   tasks: Task[],
-  dependencies?: TaskDependency[]
+  _dependencies?: TaskDependency[] // Kept for API compatibility
 ): string[] {
   if (tasks.length === 0) return []
 
-  const result = calculateCriticalPathDetailed(tasks, dependencies)
+  const result = calculateCriticalPathDetailed(tasks, _dependencies)
   return result.criticalPath
 }
 
@@ -396,7 +396,7 @@ export function calculateCriticalPath(
  */
 export function calculateCriticalPathDetailed(
   tasks: Task[],
-  dependencies?: TaskDependency[]
+  _dependencies?: TaskDependency[] // Kept for API compatibility
 ): CriticalPathResult {
   if (tasks.length === 0) {
     return {

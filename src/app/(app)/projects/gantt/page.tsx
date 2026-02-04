@@ -13,8 +13,6 @@ import {
   format,
   differenceInDays,
   isWeekend,
-  isSameMonth,
-  startOfWeek,
 } from 'date-fns'
 import { nl } from 'date-fns/locale'
 import {

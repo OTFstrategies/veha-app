@@ -11,7 +11,7 @@ interface ProjectNotesProps {
   onSave?: (notes: string) => void
 }
 
-export function ProjectNotes({ projectId, initialNotes = "", onSave }: ProjectNotesProps) {
+export function ProjectNotes({ projectId: _projectId, initialNotes = "", onSave }: ProjectNotesProps) {
   const [notes, setNotes] = React.useState(initialNotes)
   const [isSaving, setIsSaving] = React.useState(false)
   const [hasChanges, setHasChanges] = React.useState(false)

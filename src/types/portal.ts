@@ -2,7 +2,7 @@
 // Portal Types - Client-facing portal data types
 // =============================================================================
 
-import type { ProjectStatus, TaskStatus, TaskPriority } from "./database";
+import type { ProjectStatus, TaskStatus } from "./database";
 
 /**
  * Project manager contact information

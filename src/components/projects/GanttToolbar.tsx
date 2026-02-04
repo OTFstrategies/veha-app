@@ -114,7 +114,7 @@ export function GanttToolbar({
     employeeIds.forEach((employeeId) => {
       const employeeConflicts = getAllEmployeeConflicts(employeeId, tasksWithProject)
 
-      employeeConflicts.forEach(({ task1, task2 }) => {
+      employeeConflicts.forEach(({ task2 }) => {
         // Only add one entry per conflict pair
         allConflicts.push({
           employeeName: employeeNames.get(employeeId) || 'Onbekend',

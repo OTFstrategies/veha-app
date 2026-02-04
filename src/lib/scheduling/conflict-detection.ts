@@ -104,26 +104,21 @@ export function detectEmployeeConflicts(
   employeeId: string,
   startDate: string,
   endDate: string,
-  assignments: TaskAssignment[],
+  _assignments: TaskAssignment[], // Kept for API compatibility, uses task.assignments instead
   tasks: Task[],
   excludeTaskId?: string
 ): ConflictInfo[] {
   const conflicts: ConflictInfo[] = []
 
-  // Build a map of tasks for quick lookup
-  const taskMap = new Map(tasks.map((t) => [t.id, t]))
-
-  // Find all assignments for this employee from the provided assignments
-  // Note: assignments might be passed as a flat list from all tasks
-  const employeeAssignments = assignments.filter((a) => a.employeeId === employeeId)
-
-  // Also check assignments embedded in tasks
+  // Check assignments embedded in tasks
+  // Note: the assignments parameter is kept for API compatibility but
+  // we primarily check task.assignments for employee assignments
   for (const task of tasks) {
     if (task.id === excludeTaskId) continue
 
     const taskAssignments = task.assignments.filter((a) => a.employeeId === employeeId)
 
-    for (const assignment of taskAssignments) {
+    for (const _assignment of taskAssignments) {
       // Check if this task overlaps with the proposed period
       if (dateRangesOverlap(startDate, endDate, task.startDate, task.endDate)) {
         const overlapDays = calculateOverlapDays(

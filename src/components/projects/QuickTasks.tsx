@@ -23,7 +23,7 @@ export type { QuickTask }
 // Component
 // =============================================================================
 
-export function QuickTasks({ projectId, tasks, onTasksChange }: QuickTasksProps) {
+export function QuickTasks({ projectId: _projectId, tasks, onTasksChange }: QuickTasksProps) {
   const [newTaskText, setNewTaskText] = React.useState("")
   const inputRef = React.useRef<HTMLInputElement>(null)
 

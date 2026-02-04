@@ -85,6 +85,7 @@ const TooltipTrigger = React.forwardRef<HTMLSpanElement, TooltipTriggerProps>(
           onBlur?: () => void
           ref?: React.Ref<HTMLSpanElement>
         }>,
+        // eslint-disable-next-line react-hooks/refs -- asChild pattern requires ref during render
         {
           onMouseEnter: handleMouseEnter,
           onMouseLeave: handleMouseLeave,

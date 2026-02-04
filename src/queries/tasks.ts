@@ -431,7 +431,7 @@ export function useUpdateTaskDates() {
   return useMutation({
     mutationFn: async ({
       taskId,
-      projectId,
+      projectId: _projectId, // Kept for API compatibility
       startDate,
       endDate,
     }: UpdateTaskDatesInput): Promise<{ taskId: string; startDate: string; endDate: string }> => {
@@ -683,7 +683,7 @@ export function useAddDependencyWithCascade() {
 
   return useMutation({
     mutationFn: async ({
-      projectId,
+      projectId: _projectId, // Kept for API compatibility
       taskId,
       predecessorId,
       type,
@@ -747,7 +747,7 @@ export function useUndoTaskChanges() {
   const canUndo = useTaskHistoryStore((state) => state.canUndo)
 
   return useMutation({
-    mutationFn: async (projectId: string) => {
+    mutationFn: async (_projectId: string) => {
       if (!canUndo()) {
         throw new Error('Niets om ongedaan te maken')
       }
@@ -792,7 +792,7 @@ export function useRedoTaskChanges() {
   const canRedo = useTaskHistoryStore((state) => state.canRedo)
 
   return useMutation({
-    mutationFn: async (projectId: string) => {
+    mutationFn: async (_projectId: string) => {
       if (!canRedo()) {
         throw new Error('Niets om opnieuw te doen')
       }

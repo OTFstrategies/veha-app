@@ -208,7 +208,7 @@ function calculateConstrainedDates(
 export function recalculateTaskDates(
   taskId: string,
   tasks: Task[],
-  dependencies?: TaskDependency[]
+  _dependencies?: TaskDependency[] // Kept for API compatibility
 ): Map<string, TaskDateUpdate> {
   const updates = new Map<string, TaskDateUpdate>()
   const successorMap = buildSuccessorMap(tasks)

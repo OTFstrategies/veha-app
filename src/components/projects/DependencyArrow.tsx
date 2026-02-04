@@ -73,7 +73,6 @@ export function DependencyArrow({
     }
   } else {
     // Target is to the left or very close - need S-shaped path to go around
-    const detourY = goingDown ? 20 : -20
     const verticalMid = (fromY + toY) / 2
 
     path = `

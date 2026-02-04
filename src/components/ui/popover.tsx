@@ -74,6 +74,7 @@ const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTriggerProps>(
           onClick?: () => void
           ref?: React.Ref<HTMLButtonElement>
         }>,
+        // eslint-disable-next-line react-hooks/refs -- asChild pattern requires ref during render
         {
           onClick: handleClick,
           ref,

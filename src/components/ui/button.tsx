@@ -53,6 +53,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     )
 
     if (asChild && React.isValidElement(children)) {
+      // eslint-disable-next-line react-hooks/refs -- asChild pattern requires ref during render
       return React.cloneElement(children as React.ReactElement<{ className?: string; ref?: React.Ref<HTMLElement> }>, {
         className: cn(buttonClassName, (children as React.ReactElement<{ className?: string }>).props.className),
         ref,

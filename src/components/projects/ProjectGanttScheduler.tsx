@@ -279,7 +279,11 @@ export function ProjectGanttScheduler({
 
   // Mouse move handler for resize - use ref to capture current state
   const resizingTaskRef = React.useRef<ResizingTaskState | null>(null)
-  resizingTaskRef.current = resizingTask
+
+  // Sync ref with state in effect to avoid React Compiler warning
+  React.useEffect(() => {
+    resizingTaskRef.current = resizingTask
+  }, [resizingTask])
 
   React.useEffect(() => {
     if (!resizingTask) return
