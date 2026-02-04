@@ -58,8 +58,12 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
 
   const handleConfirmDelete = async () => {
     if (materialToDelete) {
-      await deleteMaterial.mutateAsync(materialToDelete.id)
-      addToast({ type: "success", title: "Verwijderd" })
+      try {
+        await deleteMaterial.mutateAsync(materialToDelete.id)
+        addToast({ type: "success", title: "Verwijderd" })
+      } catch {
+        addToast({ type: "error", title: "Fout bij verwijderen" })
+      }
       setDeleteDialogOpen(false)
       setMaterialToDelete(null)
     }

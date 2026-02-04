@@ -64,8 +64,12 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
 
   const handleConfirmDelete = async () => {
     if (equipmentToDelete) {
-      await deleteEquipment.mutateAsync(equipmentToDelete.id)
-      addToast({ type: "success", title: "Verwijderd" })
+      try {
+        await deleteEquipment.mutateAsync(equipmentToDelete.id)
+        addToast({ type: "success", title: "Verwijderd" })
+      } catch {
+        addToast({ type: "error", title: "Fout bij verwijderen" })
+      }
       setDeleteDialogOpen(false)
       setEquipmentToDelete(null)
     }
