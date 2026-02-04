@@ -26,11 +26,13 @@ export function useGlobalSearch(query: string, enabled: boolean = true) {
         .limit(5)
 
       projects?.forEach((p) => {
+        // Supabase returns single relations as objects, arrays for many
+        const clientData = p.client as unknown as { name: string } | null
         results.push({
           type: "project",
           id: p.id,
           title: p.name,
-          subtitle: (p.client as { name: string } | null)?.name || "Geen klant",
+          subtitle: clientData?.name || "Geen klant",
           href: `/projects/${p.id}`,
         })
       })
@@ -43,7 +45,7 @@ export function useGlobalSearch(query: string, enabled: boolean = true) {
         .limit(5)
 
       tasks?.forEach((t) => {
-        const project = t.project as { id: string; name: string } | null
+        const project = t.project as unknown as { id: string; name: string } | null
         results.push({
           type: "task",
           id: t.id,
