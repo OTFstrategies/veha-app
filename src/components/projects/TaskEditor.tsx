@@ -112,6 +112,8 @@ export function TaskEditor({
     lag: number
   } | null>(null)
   const [previews, setPreviews] = React.useState<DependencyPreview[]>([])
+  const [inlinePreview, setInlinePreview] = React.useState<DependencyPreview[]>([])
+  const [inlinePreviewError, setInlinePreviewError] = React.useState<string | null>(null)
 
   // Conflict warning state
   const [pendingAssignment, setPendingAssignment] = React.useState<string | null>(null)
@@ -140,6 +142,51 @@ export function TaskEditor({
       (t) => t.id !== task.id && !existingPredecessorIds.includes(t.id)
     )
   }, [allTasks, task])
+
+  // ---------------------------------------------------------------------------
+  // Inline Preview Effect
+  // ---------------------------------------------------------------------------
+
+  // Fetch inline preview when dependency selection changes
+  React.useEffect(() => {
+    if (!pendingDependency?.predecessorId) {
+      setInlinePreview([])
+      setInlinePreviewError(null)
+      return
+    }
+
+    let cancelled = false
+
+    const fetchPreview = async () => {
+      try {
+        const result = await previewMutation.mutateAsync({
+          projectId,
+          taskId: task.id,
+          predecessorId: pendingDependency.predecessorId,
+          type: pendingDependency.type,
+          lag: pendingDependency.lag,
+        })
+        if (!cancelled) {
+          setInlinePreview(result)
+          setInlinePreviewError(null)
+        }
+      } catch (error) {
+        if (!cancelled) {
+          const message = error instanceof Error ? error.message : 'Fout bij berekenen wijzigingen'
+          setInlinePreviewError(message)
+          setInlinePreview([])
+        }
+      }
+    }
+
+    // Debounce the preview fetch
+    const timeout = setTimeout(fetchPreview, 300)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timeout)
+    }
+  }, [pendingDependency?.predecessorId, pendingDependency?.type, pendingDependency?.lag, projectId, task.id])
 
   // ---------------------------------------------------------------------------
   // Update Handlers
@@ -733,6 +780,48 @@ export function TaskEditor({
                     </span>
                   </div>
                 </div>
+
+                {/* Inline Cascade Preview */}
+                {inlinePreviewError && (
+                  <div className="rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
+                    {inlinePreviewError}
+                  </div>
+                )}
+
+                {pendingDependency?.predecessorId && inlinePreview.length > 0 && (
+                  <div className="rounded-md bg-amber-50 p-3 dark:bg-amber-900/20">
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                      Deze wijziging zal {inlinePreview.length}{' '}
+                      {inlinePreview.length === 1 ? 'taak' : 'taken'} verplaatsen:
+                    </p>
+                    <ul className="mt-2 space-y-1 text-xs text-amber-700 dark:text-amber-300">
+                      {inlinePreview.slice(0, 3).map((t) => (
+                        <li key={t.taskId} className="flex items-center gap-1">
+                          <span className="text-amber-500">&#8226;</span>
+                          <span className="font-medium">{t.taskName}:</span>
+                          <span className="line-through opacity-60">
+                            {new Date(t.oldStartDate).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}
+                          </span>
+                          <ArrowRight className="h-3 w-3" />
+                          <span>
+                            {new Date(t.newStartDate).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })} - {new Date(t.newEndDate).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}
+                          </span>
+                        </li>
+                      ))}
+                      {inlinePreview.length > 3 && (
+                        <li className="text-amber-600 dark:text-amber-400">
+                          ... en {inlinePreview.length - 3} meer
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                {pendingDependency?.predecessorId && inlinePreview.length === 0 && !inlinePreviewError && !previewMutation.isPending && (
+                  <div className="rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-300">
+                    Geen taken worden beinvloed door deze dependency.
+                  </div>
+                )}
 
                 {/* Add button */}
                 <Button
