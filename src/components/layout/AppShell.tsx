@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
+import { QuickSearchDialog } from "@/components/ui/quick-search-dialog";
 import { createClient } from "@/lib/supabase/client";
 
 interface AppShellProps {
@@ -38,6 +39,7 @@ function getQueryClient() {
 export function AppShell({ children }: AppShellProps) {
   const queryClient = getQueryClient();
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     async function getUser() {
@@ -50,6 +52,18 @@ export function AppShell({ children }: AppShellProps) {
     getUser();
   }, []);
 
+  // Ctrl+K shortcut for quick search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex h-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950">
@@ -59,6 +73,7 @@ export function AppShell({ children }: AppShellProps) {
           <main className="relative flex-1 overflow-auto p-6">{children}</main>
         </div>
       </div>
+      <QuickSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
