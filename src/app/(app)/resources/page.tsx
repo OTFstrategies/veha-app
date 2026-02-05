@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Users, Package, Wrench, Calendar } from "lucide-react"
+import { Users, Package, Wrench, Calendar, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/toast"
 import { useWorkspaceStore } from "@/stores/workspace-store"
 
@@ -12,6 +12,7 @@ import EmployeesPageContent from "./EmployeesPageContent"
 import { MaterialList } from "@/components/resources/MaterialList"
 import { EquipmentList } from "@/components/resources/EquipmentList"
 import { WeekPlanningSection } from "./WeekPlanningSection"
+import { ResourceHistogram } from "@/components/resources/ResourceHistogram"
 import { MaterialFormModal, type MaterialFormData } from "@/components/resources/MaterialFormModal"
 import { EquipmentFormModal, type EquipmentFormData } from "@/components/resources/EquipmentFormModal"
 import { useCreateMaterial } from "@/queries/materials"
@@ -22,6 +23,7 @@ const tabs = [
   { id: "materialen", label: "Materialen", icon: Package },
   { id: "middelen", label: "Middelen", icon: Wrench },
   { id: "weekplanning", label: "Weekplanning", icon: Calendar },
+  { id: "bezetting", label: "Bezetting", icon: BarChart3 },
 ]
 
 function ResourcesPageContent() {
@@ -156,6 +158,35 @@ function ResourcesPageContent() {
 
           <TabsContent value="weekplanning" className="h-full mt-0">
             <WeekPlanningSection />
+          </TabsContent>
+
+          <TabsContent value="bezetting" className="h-full mt-0 p-6">
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-lg font-semibold">Resource Bezetting</h2>
+                <p className="text-sm text-muted-foreground">
+                  Overzicht van teamcapaciteit en geplande uren per week
+                </p>
+              </div>
+              <div className="bg-card rounded-lg border border-border p-6">
+                <ResourceHistogram weeksToShow={12} height={400} />
+              </div>
+              <div className="flex items-center gap-6">
+                <span className="text-sm text-muted-foreground font-medium">Legenda:</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-sm bg-green-500" />
+                  <span className="text-sm text-muted-foreground">Optimaal (70-100%)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-sm bg-red-500" />
+                  <span className="text-sm text-muted-foreground">Overbezet (&gt;100%)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-sm bg-amber-500" />
+                  <span className="text-sm text-muted-foreground">Onderbezet (&lt;70%)</span>
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </div>
       </Tabs>
