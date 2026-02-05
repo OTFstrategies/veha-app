@@ -11,6 +11,7 @@ export interface ViewOptions {
   showProgress: boolean
   showTodayLine: boolean
   showWeekends: boolean
+  showBaseline: boolean
 }
 
 /**

@@ -161,6 +161,14 @@ export interface Task {
   status: TaskStatus
   priority: TaskPriority
   sort_order: number
+  // Baseline tracking fields
+  baseline_start_date: string | null
+  baseline_end_date: string | null
+  baseline_duration: number | null
+  is_baseline_set: boolean
+  baseline_set_at: string | null
+  variance_start_days: number
+  variance_end_days: number
   created_at: string
   updated_at: string
 }

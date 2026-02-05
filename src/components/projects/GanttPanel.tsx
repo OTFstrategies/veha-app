@@ -7,6 +7,8 @@ import { DraggableTaskBar } from './DraggableTaskBar'
 import { GhostTaskBar } from './GhostTaskBar'
 import { DependencyArrow } from './DependencyArrow'
 import { GanttLegend } from './GanttLegend'
+import { BaselineTaskBar } from './BaselineTaskBar'
+import { VarianceIndicator } from './VarianceIndicator'
 import type { TimelineConfig, ViewOptions, GanttZoomLevel } from './types'
 import type { Task, TaskDependency, DependencyType } from '@/types/projects'
 import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
@@ -196,6 +198,24 @@ export function GanttPanel({
       )
       const left = dayOffset * timelineConfig.columnWidth
       const width = task.duration * timelineConfig.columnWidth
+
+      return { left, width }
+    },
+    [timelineConfig.startDate, timelineConfig.columnWidth]
+  )
+
+  // Calculate baseline bar position
+  const getBaselinePosition = React.useCallback(
+    (task: Task) => {
+      if (!task.isBaselineSet || !task.baselineStartDate || !task.baselineDuration) {
+        return null
+      }
+      const startDate = new Date(task.baselineStartDate)
+      const dayOffset = Math.floor(
+        (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
+      )
+      const left = dayOffset * timelineConfig.columnWidth
+      const width = task.baselineDuration * timelineConfig.columnWidth
 
       return { left, width }
     },
@@ -483,11 +503,17 @@ export function GanttPanel({
 
                 {/* Task Name */}
                 <div
-                  className={cn('truncate px-2 text-sm', task.isSummary && 'font-medium')}
+                  className={cn('flex items-center gap-1 px-2 text-sm', task.isSummary && 'font-medium')}
                   style={{ width: GRID_COLUMNS.task }}
                 >
                   {task.isMilestone && <Diamond className="mr-1 inline h-3 w-3 fill-current" />}
-                  {task.name}
+                  <span className="truncate flex-1">{task.name}</span>
+                  {task.isBaselineSet && viewOptions.showBaseline && (
+                    <div className="flex gap-0.5 shrink-0">
+                      <VarianceIndicator varianceDays={task.varianceStartDays} type="start" />
+                      <VarianceIndicator varianceDays={task.varianceEndDays} type="end" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Start Date */}
@@ -634,6 +660,23 @@ export function GanttPanel({
                 style={{ top: (index + 1) * ROW_HEIGHT - 1 }}
               />
             ))}
+
+            {/* Baseline bars (shown behind task bars) */}
+            {viewOptions.showBaseline && flatTasks.map((task, rowIndex) => {
+              const baselinePosition = getBaselinePosition(task)
+              if (!baselinePosition) return null
+
+              return (
+                <BaselineTaskBar
+                  key={`baseline-${task.id}`}
+                  left={baselinePosition.left}
+                  width={baselinePosition.width}
+                  top={rowIndex * ROW_HEIGHT}
+                  height={ROW_HEIGHT}
+                  visible={true}
+                />
+              )
+            })}
 
             {/* Ghost bars showing original position during drag/resize */}
             {(activeTaskId || resizingTaskId) && flatTasks.map((task, rowIndex) => {

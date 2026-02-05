@@ -115,6 +115,7 @@ export function ProjectGanttScheduler({
     showProgress: true,
     showTodayLine: true,
     showWeekends: true,
+    showBaseline: true,
   })
   const [showCriticalPath, setShowCriticalPath] = React.useState(false)
   const [splitRatio, setSplitRatio] = React.useState(60) // Gantt gets 60%

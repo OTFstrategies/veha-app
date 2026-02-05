@@ -78,6 +78,14 @@ export interface Task {
   parentId: string | null
   dependencies: TaskDependency[]
   assignments: TaskAssignment[]
+  // Baseline tracking fields
+  baselineStartDate: string | null
+  baselineEndDate: string | null
+  baselineDuration: number | null
+  isBaselineSet: boolean
+  baselineSetAt: string | null
+  varianceStartDays: number
+  varianceEndDays: number
 }
 
 /**

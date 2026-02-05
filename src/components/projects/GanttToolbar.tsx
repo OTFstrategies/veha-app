@@ -3,6 +3,8 @@ import {
   CalendarDays,
   ChevronDown,
   Eye,
+  Flag,
+  FlagOff,
   GitBranch,
   Minus,
   Plus,
@@ -21,7 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useToast } from '@/components/ui/toast'
 import { useTaskHistoryStore } from '@/stores/task-history-store'
-import { useUndoTaskChanges, useRedoTaskChanges } from '@/queries/tasks'
+import { useUndoTaskChanges, useRedoTaskChanges, useSetProjectBaseline, useClearProjectBaseline } from '@/queries/tasks'
 import { ConflictWarning, type ConflictItem } from './ConflictWarning'
 import { ExportMenu } from '@/components/ui/export-menu'
 import { useProjectExport } from '@/hooks/use-project-export'
@@ -92,6 +94,11 @@ export function GanttToolbar({
     projectName,
     tasks,
   })
+
+  // Baseline functionality
+  const setBaselineMutation = useSetProjectBaseline()
+  const clearBaselineMutation = useClearProjectBaseline()
+  const hasBaseline = tasks?.some((t) => t.isBaselineSet) ?? false
 
   // ---------------------------------------------------------------------------
   // Conflict Detection
@@ -294,6 +301,47 @@ export function GanttToolbar({
             <Minus className="h-3.5 w-3.5" />
           </Button>
         </div>
+
+        {/* Baseline Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 gap-1.5">
+              <Flag className="h-3.5 w-3.5" />
+              Baseline
+              <ChevronDown className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Baseline beheer</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem
+              checked={viewOptions.showBaseline && hasBaseline}
+              onCheckedChange={() => hasBaseline && handleViewOptionToggle('showBaseline')}
+              className={!hasBaseline ? 'opacity-50 cursor-not-allowed' : ''}
+            >
+              Toon baseline {!hasBaseline && '(geen baseline ingesteld)'}
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            <button
+              className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground w-full"
+              onClick={() => setBaselineMutation.mutate(projectId)}
+              disabled={setBaselineMutation.isPending}
+            >
+              <Flag className="mr-2 h-3.5 w-3.5" />
+              {hasBaseline ? 'Baseline bijwerken' : 'Baseline instellen'}
+            </button>
+            {hasBaseline && (
+              <button
+                className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground w-full text-red-600 dark:text-red-400"
+                onClick={() => clearBaselineMutation.mutate(projectId)}
+                disabled={clearBaselineMutation.isPending}
+              >
+                <FlagOff className="mr-2 h-3.5 w-3.5" />
+                Baseline wissen
+              </button>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Export Menu */}
         <ExportMenu

@@ -81,6 +81,14 @@ function transformTask(dbTask: DbTaskWithRelations): Task {
     parentId: dbTask.parent_id,
     dependencies: dbTask.task_dependencies?.map(transformDependency) ?? [],
     assignments: dbTask.task_assignments?.map(transformAssignment) ?? [],
+    // Baseline fields
+    baselineStartDate: dbTask.baseline_start_date ?? null,
+    baselineEndDate: dbTask.baseline_end_date ?? null,
+    baselineDuration: dbTask.baseline_duration ?? null,
+    isBaselineSet: dbTask.is_baseline_set ?? false,
+    baselineSetAt: dbTask.baseline_set_at ?? null,
+    varianceStartDays: dbTask.variance_start_days ?? 0,
+    varianceEndDays: dbTask.variance_end_days ?? 0,
   }
 }
 

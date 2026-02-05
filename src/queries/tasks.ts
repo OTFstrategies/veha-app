@@ -80,6 +80,14 @@ function transformTask(dbTask: DbTaskWithRelations): Task {
     parentId: dbTask.parent_id,
     dependencies: dbTask.task_dependencies?.map(transformDependency) ?? [],
     assignments: dbTask.task_assignments?.map(transformAssignment) ?? [],
+    // Baseline fields
+    baselineStartDate: dbTask.baseline_start_date ?? null,
+    baselineEndDate: dbTask.baseline_end_date ?? null,
+    baselineDuration: dbTask.baseline_duration ?? null,
+    isBaselineSet: dbTask.is_baseline_set ?? false,
+    baselineSetAt: dbTask.baseline_set_at ?? null,
+    varianceStartDays: dbTask.variance_start_days ?? 0,
+    varianceEndDays: dbTask.variance_end_days ?? 0,
   }
 }
 
@@ -622,6 +630,14 @@ export function usePreviewDependencyChanges() {
           lag: dep.lag_days,
         })),
         assignments: [],
+        // Baseline fields (not relevant for scheduling validation)
+        baselineStartDate: null,
+        baselineEndDate: null,
+        baselineDuration: null,
+        isBaselineSet: false,
+        baselineSetAt: null,
+        varianceStartDays: 0,
+        varianceEndDays: 0,
       }))
 
       // 3. Validate no cycle would be created
@@ -893,6 +909,94 @@ export function useRemoveDependency() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.list(variables.projectId) })
       queryClient.invalidateQueries({ queryKey: projectKeys.detail(variables.projectId) })
+    },
+  })
+}
+
+// =============================================================================
+// Baseline Mutations
+// =============================================================================
+
+/**
+ * Set baseline for all tasks in a project
+ * Copies current dates to baseline fields
+ */
+export function useSetProjectBaseline() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (projectId: string): Promise<void> => {
+      const supabase = createClient()
+
+      // First get all tasks for the project
+      const { data: tasks, error: fetchError } = await supabase
+        .from('tasks')
+        .select('id, start_date, end_date, duration')
+        .eq('project_id', projectId)
+
+      if (fetchError) {
+        throw new Error(`Failed to fetch tasks: ${fetchError.message}`)
+      }
+
+      // Update each task with baseline values
+      const now = new Date().toISOString()
+      const updates = tasks.map((task) =>
+        supabase
+          .from('tasks')
+          .update({
+            baseline_start_date: task.start_date,
+            baseline_end_date: task.end_date,
+            baseline_duration: task.duration,
+            is_baseline_set: true,
+            baseline_set_at: now,
+          })
+          .eq('id', task.id)
+      )
+
+      const results = await Promise.all(updates)
+      const errors = results.filter((r) => r.error)
+
+      if (errors.length > 0) {
+        throw new Error(`Failed to set baseline for some tasks`)
+      }
+    },
+    onSuccess: (_data, projectId) => {
+      queryClient.invalidateQueries({ queryKey: taskKeys.list(projectId) })
+      queryClient.invalidateQueries({ queryKey: projectKeys.detail(projectId) })
+    },
+  })
+}
+
+/**
+ * Clear baseline for all tasks in a project
+ */
+export function useClearProjectBaseline() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (projectId: string): Promise<void> => {
+      const supabase = createClient()
+
+      const { error } = await supabase
+        .from('tasks')
+        .update({
+          baseline_start_date: null,
+          baseline_end_date: null,
+          baseline_duration: null,
+          is_baseline_set: false,
+          baseline_set_at: null,
+          variance_start_days: 0,
+          variance_end_days: 0,
+        })
+        .eq('project_id', projectId)
+
+      if (error) {
+        throw new Error(`Failed to clear baseline: ${error.message}`)
+      }
+    },
+    onSuccess: (_data, projectId) => {
+      queryClient.invalidateQueries({ queryKey: taskKeys.list(projectId) })
+      queryClient.invalidateQueries({ queryKey: projectKeys.detail(projectId) })
     },
   })
 }
