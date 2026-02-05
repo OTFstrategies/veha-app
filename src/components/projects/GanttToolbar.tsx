@@ -23,6 +23,8 @@ import { useToast } from '@/components/ui/toast'
 import { useTaskHistoryStore } from '@/stores/task-history-store'
 import { useUndoTaskChanges, useRedoTaskChanges } from '@/queries/tasks'
 import { ConflictWarning, type ConflictItem } from './ConflictWarning'
+import { ExportMenu } from '@/components/ui/export-menu'
+import { useProjectExport } from '@/hooks/use-project-export'
 import { getAllEmployeeConflicts } from '@/lib/scheduling/conflict-detection'
 import type { GanttZoomLevel, ViewOptions } from './types'
 import type { Task } from '@/types/projects'
@@ -84,6 +86,12 @@ export function GanttToolbar({
   const undoMutation = useUndoTaskChanges()
   const redoMutation = useRedoTaskChanges()
   const { addToast } = useToast()
+
+  // Export functionality
+  const { exportCSV, exportExcel, isExporting } = useProjectExport({
+    projectName,
+    tasks,
+  })
 
   // ---------------------------------------------------------------------------
   // Conflict Detection
@@ -286,6 +294,14 @@ export function GanttToolbar({
             <Minus className="h-3.5 w-3.5" />
           </Button>
         </div>
+
+        {/* Export Menu */}
+        <ExportMenu
+          onExportCSV={exportCSV}
+          onExportExcel={exportExcel}
+          disabled={!tasks || tasks.length === 0}
+          isExporting={isExporting}
+        />
 
         {/* View Options - Consolidated dropdown */}
         <DropdownMenu>
