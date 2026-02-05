@@ -17,6 +17,8 @@ import { TaskEditor } from './TaskEditor'
 import { useCriticalPath, useUpdateTaskDates, useUndoTaskChanges, useRedoTaskChanges } from '@/queries/tasks'
 import { useTaskHistoryStore } from '@/stores/task-history-store'
 import { useToast } from '@/components/ui/toast'
+import { useRealtimeTasks } from '@/hooks/use-realtime-tasks'
+import { usePresence } from '@/hooks/use-presence'
 import { addDaysToDate, pixelsToDays } from './utils/snap'
 import type { GanttZoomLevel, ViewOptions, TimelineConfig } from './types'
 import type { Project, Task } from '@/types/projects'
@@ -144,6 +146,21 @@ export function ProjectGanttScheduler({
   // ---------------------------------------------------------------------------
 
   const { data: criticalPathData } = useCriticalPath(project.tasks)
+
+  // ---------------------------------------------------------------------------
+  // Real-Time Updates
+  // ---------------------------------------------------------------------------
+
+  // Subscribe to real-time task changes
+  useRealtimeTasks(project.id)
+
+  // Track user presence and what they're viewing
+  const { setViewingTask } = usePresence(project.id)
+
+  // Update presence when task selection changes
+  React.useEffect(() => {
+    setViewingTask(selectedTaskId)
+  }, [selectedTaskId, setViewingTask])
 
   // ---------------------------------------------------------------------------
   // Timeline Configuration

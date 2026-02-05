@@ -26,6 +26,7 @@ import { useTaskHistoryStore } from '@/stores/task-history-store'
 import { useUndoTaskChanges, useRedoTaskChanges, useSetProjectBaseline, useClearProjectBaseline } from '@/queries/tasks'
 import { ConflictWarning, type ConflictItem } from './ConflictWarning'
 import { ExportMenu } from '@/components/ui/export-menu'
+import { PresenceAvatars } from '@/components/ui/presence-avatars'
 import { useProjectExport } from '@/hooks/use-project-export'
 import { getAllEmployeeConflicts } from '@/lib/scheduling/conflict-detection'
 import type { GanttZoomLevel, ViewOptions } from './types'
@@ -238,6 +239,12 @@ export function GanttToolbar({
 
       {/* Right: Consolidated controls */}
       <div className="flex items-center gap-2">
+        {/* Presence Avatars */}
+        <PresenceAvatars size="sm" maxDisplay={4} />
+
+        {/* Separator */}
+        <div className="h-6 w-px bg-border mx-1" />
+
         {/* Undo/Redo buttons */}
         <div className="flex items-center rounded-md border border-border">
           <Button
