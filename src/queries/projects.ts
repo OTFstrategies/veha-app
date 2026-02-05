@@ -89,6 +89,10 @@ function transformTask(dbTask: DbTaskWithRelations): Task {
     baselineSetAt: dbTask.baseline_set_at ?? null,
     varianceStartDays: dbTask.variance_start_days ?? 0,
     varianceEndDays: dbTask.variance_end_days ?? 0,
+    // Constraint fields
+    constraintType: (dbTask.constraint_type as import('@/types/projects').TaskConstraintType) ?? 'ASAP',
+    constraintDate: dbTask.constraint_date ?? null,
+    calendarId: dbTask.calendar_id ?? null,
   }
 }
 

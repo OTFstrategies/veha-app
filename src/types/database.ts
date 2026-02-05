@@ -169,6 +169,10 @@ export interface Task {
   baseline_set_at: string | null
   variance_start_days: number
   variance_end_days: number
+  // Scheduling constraint fields
+  constraint_type: string
+  constraint_date: string | null
+  calendar_id: string | null
   created_at: string
   updated_at: string
 }

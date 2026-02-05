@@ -28,6 +28,19 @@ export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent'
 export type DependencyType = 'FS' | 'SS' | 'FF' | 'SF'
 
 /**
+ * Task constraint types for scheduling
+ * - ASAP: As Soon As Possible (default)
+ * - ALAP: As Late As Possible
+ * - MFO: Must Finish On
+ * - MSO: Must Start On
+ * - SNET: Start No Earlier Than
+ * - SNLT: Start No Later Than
+ * - FNET: Finish No Earlier Than
+ * - FNLT: Finish No Later Than
+ */
+export type TaskConstraintType = 'ASAP' | 'ALAP' | 'MFO' | 'MSO' | 'SNET' | 'SNLT' | 'FNET' | 'FNLT'
+
+/**
  * Option type for dropdowns and selects
  */
 export interface SelectOption {
@@ -86,6 +99,10 @@ export interface Task {
   baselineSetAt: string | null
   varianceStartDays: number
   varianceEndDays: number
+  // Scheduling constraint fields
+  constraintType: TaskConstraintType
+  constraintDate: string | null
+  calendarId: string | null
 }
 
 /**
