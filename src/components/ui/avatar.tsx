@@ -22,6 +22,7 @@ const AvatarImage = React.forwardRef<
   HTMLImageElement,
   React.ImgHTMLAttributes<HTMLImageElement>
 >(({ className, alt = "", ...props }, ref) => (
+  // eslint-disable-next-line @next/next/no-img-element -- Avatar uses external URLs with unknown dimensions
   <img
     ref={ref}
     alt={alt}

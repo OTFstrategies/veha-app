@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import { startOfWeek, endOfWeek, eachWeekOfInterval, format, isWithinInterval } from 'date-fns'
+import { endOfWeek, eachWeekOfInterval, format, isWithinInterval } from 'date-fns'
 import { nl } from 'date-fns/locale'
 
 // =============================================================================

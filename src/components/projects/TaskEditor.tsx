@@ -185,7 +185,7 @@ export function TaskEditor({
       cancelled = true
       clearTimeout(timeout)
     }
-  }, [pendingDependency?.predecessorId, pendingDependency?.type, pendingDependency?.lag, projectId, task.id])
+  }, [pendingDependency?.predecessorId, pendingDependency?.type, pendingDependency?.lag, projectId, task.id, previewMutation])
 
   // ---------------------------------------------------------------------------
   // Update Handlers
