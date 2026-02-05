@@ -16,6 +16,8 @@ import {
 import { AlertDialog } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/toast"
 import { FilterBar, type FilterOption } from "@/components/ui/filter-bar"
+import { ExportMenu } from "@/components/ui/export-menu"
+import { exportToCSV, exportToExcel, type ExcelColumn } from "@/lib/export"
 
 const statusLabels: Record<string, string> = {
   beschikbaar: "Beschikbaar",
@@ -86,6 +88,46 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
     })
   }, [equipment, statusFilter, typeFilter])
 
+  // Export functionality
+  interface EquipmentExport {
+    [key: string]: string | number
+    name: string
+    type: string
+    status: string
+    licensePlate: string
+    dailyCapacity: number
+  }
+
+  const equipmentColumns: ExcelColumn<EquipmentExport>[] = [
+    { key: "name", header: "Naam", width: 25 },
+    { key: "type", header: "Type", width: 15 },
+    { key: "status", header: "Status", width: 15 },
+    { key: "licensePlate", header: "Kenteken", width: 15 },
+    { key: "dailyCapacity", header: "Capaciteit (u/dag)", width: 15 },
+  ]
+
+  const formatEquipmentForExport = (): EquipmentExport[] => {
+    return filteredEquipment.map((e) => ({
+      name: e.name,
+      type: typeLabels[e.equipment_type] || e.equipment_type,
+      status: statusLabels[e.status] || e.status,
+      licensePlate: e.license_plate || "",
+      dailyCapacity: e.daily_capacity_hours || 0,
+    }))
+  }
+
+  const handleExportCSV = () => {
+    const data = formatEquipmentForExport()
+    exportToCSV(data, "middelen", equipmentColumns)
+    addToast({ type: "success", title: "CSV geëxporteerd" })
+  }
+
+  const handleExportExcel = async () => {
+    const data = formatEquipmentForExport()
+    await exportToExcel(data, "middelen", equipmentColumns, "Middelen")
+    addToast({ type: "success", title: "Excel geëxporteerd" })
+  }
+
   const handleDeleteClick = (id: string, name: string) => {
     setEquipmentToDelete({ id, name })
     setDeleteDialogOpen(true)
@@ -120,14 +162,21 @@ export function EquipmentList({ onAddEquipment, onViewEquipment, onEditEquipment
           <h2 className="text-lg font-semibold">Middelen</h2>
           <p className="text-sm text-muted-foreground">Beheer voertuigen, machines en gereedschap</p>
         </div>
-        <Button
-          size="sm"
-          className="h-9 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
-          onClick={onAddEquipment}
-        >
-          <Plus className="h-4 w-4" />
-          Middel
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExportMenu
+            onExportCSV={handleExportCSV}
+            onExportExcel={handleExportExcel}
+            disabled={!filteredEquipment?.length}
+          />
+          <Button
+            size="sm"
+            className="h-9 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            onClick={onAddEquipment}
+          >
+            <Plus className="h-4 w-4" />
+            Middel
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}

@@ -16,6 +16,8 @@ import {
 import { AlertDialog } from "@/components/ui/alert-dialog"
 import { useToast } from "@/components/ui/toast"
 import { FilterBar, type FilterOption } from "@/components/ui/filter-bar"
+import { ExportMenu } from "@/components/ui/export-menu"
+import { exportToCSV, exportToExcel, type ExcelColumn } from "@/lib/export"
 
 const statusLabels: Record<string, string> = {
   op_voorraad: "Op voorraad",
@@ -80,6 +82,49 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
     })
   }, [materials, statusFilter, typeFilter])
 
+  // Export functionality
+  interface MaterialExport {
+    [key: string]: string | number
+    name: string
+    type: string
+    status: string
+    quantity: number
+    unit: string
+    supplier: string
+  }
+
+  const materialColumns: ExcelColumn<MaterialExport>[] = [
+    { key: "name", header: "Naam", width: 25 },
+    { key: "type", header: "Type", width: 15 },
+    { key: "status", header: "Status", width: 15 },
+    { key: "quantity", header: "Aantal", width: 10 },
+    { key: "unit", header: "Eenheid", width: 10 },
+    { key: "supplier", header: "Leverancier", width: 20 },
+  ]
+
+  const formatMaterialsForExport = (): MaterialExport[] => {
+    return filteredMaterials.map((m) => ({
+      name: m.name,
+      type: typeLabels[m.material_type] || m.material_type,
+      status: statusLabels[m.status] || m.status,
+      quantity: m.quantity_in_stock,
+      unit: m.unit,
+      supplier: m.supplier || "",
+    }))
+  }
+
+  const handleExportCSV = () => {
+    const data = formatMaterialsForExport()
+    exportToCSV(data, "materialen", materialColumns)
+    addToast({ type: "success", title: "CSV geëxporteerd" })
+  }
+
+  const handleExportExcel = async () => {
+    const data = formatMaterialsForExport()
+    await exportToExcel(data, "materialen", materialColumns, "Materialen")
+    addToast({ type: "success", title: "Excel geëxporteerd" })
+  }
+
   const handleDeleteClick = (id: string, name: string) => {
     setMaterialToDelete({ id, name })
     setDeleteDialogOpen(true)
@@ -114,14 +159,21 @@ export function MaterialList({ onAddMaterial, onViewMaterial, onEditMaterial }: 
           <h2 className="text-lg font-semibold">Materialen</h2>
           <p className="text-sm text-muted-foreground">Beheer je materiaalvoorraad</p>
         </div>
-        <Button
-          size="sm"
-          className="h-9 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
-          onClick={onAddMaterial}
-        >
-          <Plus className="h-4 w-4" />
-          Materiaal
-        </Button>
+        <div className="flex items-center gap-2">
+          <ExportMenu
+            onExportCSV={handleExportCSV}
+            onExportExcel={handleExportExcel}
+            disabled={!filteredMaterials?.length}
+          />
+          <Button
+            size="sm"
+            className="h-9 gap-1.5 bg-zinc-800 text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            onClick={onAddMaterial}
+          >
+            <Plus className="h-4 w-4" />
+            Materiaal
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
