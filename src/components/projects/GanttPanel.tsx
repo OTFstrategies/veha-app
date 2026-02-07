@@ -355,22 +355,29 @@ export function GanttPanel({
   // Mouse Wheel Zoom Handler
   // ---------------------------------------------------------------------------
 
-  const handleWheel = React.useCallback((e: React.WheelEvent) => {
-    // Alleen zoomen als Ctrl ingedrukt is
-    if (e.ctrlKey && onZoomChange) {
-      e.preventDefault()
+  // Ref for non-passive wheel listener (React onWheel is passive, can't preventDefault)
+  const timelineBodyRef = React.useRef<HTMLDivElement>(null)
 
-      const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
-      const currentIndex = zoomOrder.indexOf(timelineConfig.zoomLevel)
+  React.useEffect(() => {
+    const el = timelineBodyRef.current
+    if (!el || !onZoomChange) return
 
-      if (e.deltaY < 0 && currentIndex > 0) {
-        // Scroll up = zoom in (meer detail)
-        onZoomChange(zoomOrder[currentIndex - 1])
-      } else if (e.deltaY > 0 && currentIndex < zoomOrder.length - 1) {
-        // Scroll down = zoom out (minder detail)
-        onZoomChange(zoomOrder[currentIndex + 1])
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault()
+        const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
+        const currentIndex = zoomOrder.indexOf(timelineConfig.zoomLevel)
+
+        if (e.deltaY < 0 && currentIndex > 0) {
+          onZoomChange(zoomOrder[currentIndex - 1])
+        } else if (e.deltaY > 0 && currentIndex < zoomOrder.length - 1) {
+          onZoomChange(zoomOrder[currentIndex + 1])
+        }
       }
     }
+
+    el.addEventListener('wheel', handleWheel, { passive: false })
+    return () => el.removeEventListener('wheel', handleWheel)
   }, [timelineConfig.zoomLevel, onZoomChange])
 
   // ---------------------------------------------------------------------------
@@ -613,10 +620,10 @@ export function GanttPanel({
 
         {/* Timeline Body */}
         <div
+          ref={timelineBodyRef}
           className="relative flex-1 overflow-x-auto overflow-y-hidden"
           style={{ scrollBehavior: 'auto' }}
           onScroll={onScroll}
-          onWheel={handleWheel}
         >
           <div
             className="relative"
