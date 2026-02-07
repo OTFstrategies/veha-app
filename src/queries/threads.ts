@@ -380,9 +380,13 @@ export function useDeleteMessage() {
     mutationFn: async ({
       messageId,
       threadId,
+      entityType,
+      entityId,
     }: {
       messageId: string
       threadId: string
+      entityType: ThreadEntityType
+      entityId: string
     }) => {
       const { error } = await supabase
         .from('thread_messages')
@@ -390,10 +394,13 @@ export function useDeleteMessage() {
         .eq('id', messageId)
 
       if (error) throw error
-      return { threadId }
+      return { threadId, entityType, entityId }
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: threadKeys.messages(result.threadId) })
+      queryClient.invalidateQueries({
+        queryKey: threadKeys.entity(result.entityType, result.entityId),
+      })
     },
   })
 }

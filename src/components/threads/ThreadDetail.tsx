@@ -69,7 +69,7 @@ export function ThreadDetail({
   const handleDeleteMessage = (messageId: string) => {
     if (!confirm('Weet je zeker dat je dit bericht wilt verwijderen?')) return
     deleteMessage.mutate(
-      { messageId, threadId: thread.id },
+      { messageId, threadId: thread.id, entityType, entityId },
       {
         onError: () => addToast({ type: 'error', title: 'Verwijderen mislukt' }),
       }

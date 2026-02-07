@@ -184,7 +184,7 @@ BEGIN
   END IF;
 
   SELECT * INTO thread_record FROM threads WHERE id = NEW.thread_id;
-  SELECT name INTO actor_name FROM profiles WHERE id = NEW.author_id;
+  SELECT full_name INTO actor_name FROM profiles WHERE id = NEW.author_id;
 
   FOREACH mentioned_user IN ARRAY NEW.mentions LOOP
     IF mentioned_user != NEW.author_id THEN
@@ -218,7 +218,7 @@ DECLARE
   actor_name TEXT;
 BEGIN
   SELECT * INTO thread_record FROM threads WHERE id = NEW.thread_id;
-  SELECT name INTO actor_name FROM profiles WHERE id = NEW.author_id;
+  SELECT full_name INTO actor_name FROM profiles WHERE id = NEW.author_id;
 
   FOR participant IN
     SELECT DISTINCT author_id FROM thread_messages
@@ -261,7 +261,7 @@ CREATE POLICY thread_attachments_storage_read ON storage.objects
   FOR SELECT USING (bucket_id = 'thread-attachments' AND auth.uid() IS NOT NULL);
 
 CREATE POLICY thread_attachments_storage_delete ON storage.objects
-  FOR DELETE USING (bucket_id = 'thread-attachments' AND auth.uid() IS NOT NULL);
+  FOR DELETE USING (bucket_id = 'thread-attachments' AND auth.uid() = owner);
 
 -- =============================================================================
 -- Enable Realtime for threads and notifications
