@@ -6,6 +6,7 @@ import {
   Clock,
   Diamond,
   Link2,
+  MessageCircle,
   Trash2,
   UserPlus,
   X,
@@ -34,6 +35,7 @@ import {
 } from '@/queries/tasks'
 import { checkAssignmentConflict } from '@/queries/conflicts'
 import type { ConflictInfo } from '@/lib/scheduling'
+import { ThreadList } from '@/components/threads/ThreadList'
 import type { Task, TaskStatus, TaskPriority, DependencyType, TaskAssignment } from '@/types/projects'
 
 // =============================================================================
@@ -404,7 +406,7 @@ export function TaskEditor({
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 overflow-hidden">
-          <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-transparent p-0">
+          <TabsList className="grid w-full grid-cols-4 rounded-none border-b bg-transparent p-0">
             <TabsTrigger
               value="details"
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none"
@@ -422,6 +424,13 @@ export function TaskEditor({
               className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none"
             >
               Dependencies
+            </TabsTrigger>
+            <TabsTrigger
+              value="threads"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:shadow-none"
+            >
+              <MessageCircle className="h-3.5 w-3.5 mr-1" />
+              Discussie
             </TabsTrigger>
           </TabsList>
 
@@ -832,6 +841,14 @@ export function TaskEditor({
                 </Button>
               </div>
             </div>
+          </TabsContent>
+
+          {/* Threads Tab */}
+          <TabsContent value="threads" className="flex-1 overflow-y-auto p-4">
+            <ThreadList
+              entityType="task"
+              entityId={task.id}
+            />
           </TabsContent>
         </Tabs>
 

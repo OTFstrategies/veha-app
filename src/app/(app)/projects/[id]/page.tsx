@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ChevronDown, ChevronUp, Loader2, StickyNote, CheckSquare } from 'lucide-react'
+import { ChevronDown, ChevronUp, Loader2, MessageCircle, CheckSquare } from 'lucide-react'
 import { ProjectGanttScheduler } from '@/components/projects/ProjectGanttScheduler'
-import { ProjectNotes } from '@/components/projects/ProjectNotes'
+import { ThreadList } from '@/components/threads/ThreadList'
 import { QuickTasks } from '@/components/projects/QuickTasks'
 import type { QuickTask } from '@/types/projects'
 import { Button } from '@/components/ui/button'
@@ -71,7 +71,7 @@ export default function ProjectDetailPage() {
 
   // Edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false)
-  const [showNotes, setShowNotes] = React.useState(false)
+  const [showThreads, setShowThreads] = React.useState(false)
   const [showChecklist, setShowChecklist] = React.useState(false)
   const updateProjectMutation = useUpdateProject()
 
@@ -252,13 +252,13 @@ export default function ProjectDetailPage() {
             variant="ghost"
             size="sm"
             className="h-7 gap-1.5 text-xs"
-            onClick={() => setShowNotes(!showNotes)}
-            aria-expanded={showNotes}
-            aria-controls="project-notes-section"
+            onClick={() => setShowThreads(!showThreads)}
+            aria-expanded={showThreads}
+            aria-controls="project-threads-section"
           >
-            <StickyNote className="h-3.5 w-3.5" />
-            Notities
-            {showNotes ? (
+            <MessageCircle className="h-3.5 w-3.5" />
+            Discussies
+            {showThreads ? (
               <ChevronUp className="h-3 w-3" />
             ) : (
               <ChevronDown className="h-3 w-3" />
@@ -280,26 +280,22 @@ export default function ProjectDetailPage() {
               <ChevronDown className="h-3 w-3" />
             )}
           </Button>
-          {project.notes && !showNotes && !showChecklist && (
-            <span className="ml-auto text-xs text-muted-foreground truncate max-w-md">
-              {project.notes.substring(0, 80)}{project.notes.length > 80 ? '...' : ''}
+          {!showThreads && !showChecklist && (
+            <span className="ml-auto text-xs text-muted-foreground">
+              Open een discussie om samen te werken
             </span>
           )}
         </div>
 
         {/* Collapsible Notes & Checklist Section */}
-        {(showNotes || showChecklist) && (
+        {(showThreads || showChecklist) && (
           <div className="border-b border-border bg-card px-4 py-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {showNotes && (
-                <div id="project-notes-section">
-                  <ProjectNotes
-                    projectId={project.id}
-                    initialNotes={project.notes || ""}
-                    onSave={async (notes) => {
-                      await updateProjectMutation.mutateAsync({ id: project.id, notes })
-                      addToast({ type: 'success', title: 'Notities opgeslagen' })
-                    }}
+              {showThreads && (
+                <div id="project-threads-section" className="max-h-[500px] overflow-y-auto">
+                  <ThreadList
+                    entityType="project"
+                    entityId={project.id}
                   />
                 </div>
               )}

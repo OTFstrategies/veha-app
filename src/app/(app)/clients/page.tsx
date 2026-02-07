@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Loader2 } from "lucide-react"
+import { Loader2, MessageCircle, X } from "lucide-react"
 import { ClientTree } from "@/components/clients/ClientTree"
+import { ThreadList } from "@/components/threads/ThreadList"
+import { Button } from "@/components/ui/button"
 import { ClientFormModal, type ClientFormData } from "@/components/clients/ClientFormModal"
 import { ContactFormModal, type ContactFormData } from "@/components/clients/ContactFormModal"
 import { LocationFormModal, type LocationFormData } from "@/components/clients/LocationFormModal"
@@ -99,6 +101,16 @@ export default function ClientsPage() {
     clientName: "",
   })
 
+  const [threadPanel, setThreadPanel] = React.useState<{
+    open: boolean
+    clientId: string | null
+    clientName: string
+  }>({
+    open: false,
+    clientId: null,
+    clientName: "",
+  })
+
   // ---------------------------------------------------------------------------
   // Handlers
   // ---------------------------------------------------------------------------
@@ -135,9 +147,14 @@ export default function ClientsPage() {
   }
 
   const handleClientSelect = (clientId: string) => {
-    // Could navigate to client detail page or show a detail panel
-    // For now, this is handled by the tree's edit functionality
-    void clientId
+    const client = clients.find((c) => c.id === clientId)
+    if (client) {
+      setThreadPanel({
+        open: true,
+        clientId,
+        clientName: client.name,
+      })
+    }
   }
 
   const handleClientModalClose = () => {
@@ -313,18 +330,50 @@ export default function ClientsPage() {
 
   return (
     <>
-      <ClientTree
-        clients={clients}
-        onClientSelect={handleClientSelect}
-        onProjectClick={handleProjectClick}
-        onAddClient={handleAddClient}
-        onEditClient={handleEditClient}
-        onDeleteClient={handleDeleteClient}
-        onAddContact={handleAddContact}
-        onAddLocation={handleAddLocation}
-        onAddProject={handleAddProject}
-        className="h-full"
-      />
+      <div className="flex h-full">
+        <div className={threadPanel.open ? "flex-1 overflow-hidden" : "w-full"}>
+          <ClientTree
+            clients={clients}
+            onClientSelect={handleClientSelect}
+            onProjectClick={handleProjectClick}
+            onAddClient={handleAddClient}
+            onEditClient={handleEditClient}
+            onDeleteClient={handleDeleteClient}
+            onAddContact={handleAddContact}
+            onAddLocation={handleAddLocation}
+            onAddProject={handleAddProject}
+            className="h-full"
+          />
+        </div>
+
+        {/* Thread Panel */}
+        {threadPanel.open && threadPanel.clientId && (
+          <div className="w-[400px] border-l border-border bg-card flex flex-col">
+            <div className="flex items-center justify-between border-b border-border px-4 py-3">
+              <div className="flex items-center gap-2">
+                <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                <h3 className="text-sm font-semibold truncate">
+                  {threadPanel.clientName}
+                </h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                onClick={() => setThreadPanel({ open: false, clientId: null, clientName: "" })}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <ThreadList
+                entityType="client"
+                entityId={threadPanel.clientId}
+              />
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Client Form Modal */}
       <ClientFormModal
