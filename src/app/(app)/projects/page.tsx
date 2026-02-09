@@ -3,15 +3,10 @@
 import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
-  Building2,
-  Calendar,
   FolderKanban,
   Layers,
-  MoreHorizontal,
-  Pencil,
   Plus,
   Search,
-  Trash2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/toast'
@@ -32,133 +27,7 @@ import { ProjectFormModal, type ProjectFormData } from '@/components/projects/Pr
 import { useListViewStore, type GroupByOption } from '@/stores/list-view-store'
 import { STATUS_CONFIG, WORK_TYPE_LABELS } from '@/components/projects/constants'
 import { ViewSwitcher } from '@/components/projects/ViewSwitcher'
-
-// =============================================================================
-// Project Card Component
-// =============================================================================
-
-interface ProjectCardProps {
-  project: Project
-  onView: () => void
-  onEdit: () => void
-  onDelete: () => void
-  onClientClick: () => void
-}
-
-function ProjectCard({ project, onView, onEdit, onDelete, onClientClick }: ProjectCardProps) {
-  const statusConfig = STATUS_CONFIG[project.status]
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('nl-NL', {
-      day: 'numeric',
-      month: 'short',
-    })
-  }
-
-  return (
-    <div
-      className="group relative flex flex-col rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"
-    >
-      {/* Header */}
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <button
-            onClick={onView}
-            className="block text-left"
-          >
-            <h3 className="truncate font-medium text-foreground hover:text-zinc-600 dark:hover:text-zinc-300">
-              {project.name}
-            </h3>
-          </button>
-          <button
-            onClick={onClientClick}
-            className="mt-1 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Building2 className="h-3 w-3" />
-            <span className="truncate">{project.clientName}</span>
-          </button>
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="Project opties"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onView}>
-              <FolderKanban className="mr-2 h-4 w-4" />
-              Openen
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onEdit}>
-              <Pencil className="mr-2 h-4 w-4" />
-              Bewerken
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={onDelete}
-              className="text-red-600 dark:text-red-400"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Verwijderen
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Badges */}
-      <div className="mb-3 flex flex-wrap gap-2">
-        <Badge className={statusConfig.className}>
-          {statusConfig.label}
-        </Badge>
-        <Badge variant="outline" className="text-xs">
-          {WORK_TYPE_LABELS[project.workType]}
-        </Badge>
-      </div>
-
-      {/* Description */}
-      {project.description && (
-        <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">
-          {project.description}
-        </p>
-      )}
-
-      {/* Footer */}
-      <div className="mt-auto flex items-center justify-between pt-3 border-t border-border">
-        {/* Date Range */}
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Calendar className="h-3 w-3" />
-          <span>
-            {formatDate(project.startDate)} - {formatDate(project.endDate)}
-          </span>
-        </div>
-
-        {/* Progress */}
-        <div className="flex items-center gap-2">
-          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-            <div
-              className={cn(
-                'h-full rounded-full transition-all',
-                project.progress === 100
-                  ? 'bg-green-500'
-                  : 'bg-zinc-800 dark:bg-zinc-200'
-              )}
-              style={{ width: `${project.progress}%` }}
-            />
-          </div>
-          <span className="font-mono text-xs text-muted-foreground">
-            {project.progress}%
-          </span>
-        </div>
-      </div>
-    </div>
-  )
-}
+import { ProjectCard } from '@/components/projects/ProjectCard'
 
 // =============================================================================
 // Empty State Component
@@ -547,6 +416,7 @@ export default function ProjectsPage() {
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {group.projects.map((project) => (
                     <ProjectCard
+                      variant="grid"
                       key={project.id}
                       project={project}
                       onView={() => handleView(project.id)}

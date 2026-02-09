@@ -16,8 +16,6 @@ import {
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
-  Building2,
-  Calendar,
   Loader2,
   Filter,
   ChevronDown,
@@ -37,18 +35,13 @@ import { useProjects, useUpdateProject } from '@/queries/projects'
 import type { Project, ProjectStatus, WorkType } from '@/types/projects'
 import { KANBAN_COLUMNS, WORK_TYPE_LABELS, WORK_TYPES } from '@/components/projects/constants'
 import { ViewSwitcher } from '@/components/projects/ViewSwitcher'
+import { ProjectCard } from '@/components/projects/ProjectCard'
 
 // =============================================================================
 // Sortable Project Card Component
 // =============================================================================
 
-interface ProjectCardProps {
-  project: Project
-  onClick: () => void
-  isDragging?: boolean
-}
-
-function SortableProjectCard({ project, onClick }: ProjectCardProps) {
+function SortableProjectCard({ project, onClick }: { project: Project; onClick: () => void }) {
   const {
     attributes,
     listeners,
@@ -66,73 +59,8 @@ function SortableProjectCard({ project, onClick }: ProjectCardProps) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <ProjectCard project={project} onClick={onClick} isDragging={isDragging} />
+      <ProjectCard variant="kanban" project={project} onClick={onClick} isDragging={isDragging} />
     </div>
-  )
-}
-
-function ProjectCard({ project, onClick, isDragging }: ProjectCardProps) {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('nl-NL', {
-      day: 'numeric',
-      month: 'short',
-    })
-  }
-
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'w-full text-left rounded-lg border border-border bg-card p-3 shadow-sm transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600',
-        isDragging && 'ring-2 ring-blue-500 shadow-lg'
-      )}
-    >
-      {/* Project Name */}
-      <h3 className="font-medium text-foreground truncate">{project.name}</h3>
-
-      {/* Client */}
-      <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-        <Building2 className="h-3 w-3 flex-shrink-0" />
-        <span className="truncate">{project.clientName}</span>
-      </div>
-
-      {/* Work Type Badge */}
-      <div className="mt-2">
-        <Badge variant="outline" className="text-xs">
-          {WORK_TYPE_LABELS[project.workType]}
-        </Badge>
-      </div>
-
-      {/* Footer: Date + Progress */}
-      <div className="mt-3 flex items-center justify-between pt-2 border-t border-border">
-        {/* Date Range */}
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Calendar className="h-3 w-3" />
-          <span>
-            {formatDate(project.startDate)} - {formatDate(project.endDate)}
-          </span>
-        </div>
-
-        {/* Progress */}
-        <div className="flex items-center gap-2">
-          <div className="h-1.5 w-12 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-            <div
-              className={cn(
-                'h-full rounded-full transition-all',
-                project.progress === 100
-                  ? 'bg-green-500'
-                  : 'bg-zinc-800 dark:bg-zinc-200'
-              )}
-              style={{ width: `${project.progress}%` }}
-            />
-          </div>
-          <span className="font-mono text-xs text-muted-foreground">
-            {project.progress}%
-          </span>
-        </div>
-      </div>
-    </button>
   )
 }
 
@@ -376,6 +304,7 @@ export default function ProjectsKanbanPage() {
       <DragOverlay>
         {activeProject && (
           <ProjectCard
+            variant="kanban"
             project={activeProject}
             onClick={() => {}}
             isDragging
