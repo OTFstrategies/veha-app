@@ -355,16 +355,18 @@ export function GanttPanel({
   // Mouse Wheel Zoom Handler
   // ---------------------------------------------------------------------------
 
-  // Ref for non-passive wheel listener (React onWheel is passive, can't preventDefault)
-  const timelineBodyRef = React.useRef<HTMLDivElement>(null)
+  // Ref for non-passive wheel listener on the entire Gantt container
+  // (React onWheel is passive and can't preventDefault to block browser zoom)
+  const ganttContainerRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    const el = timelineBodyRef.current
+    const el = ganttContainerRef.current
     if (!el || !onZoomChange) return
 
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey) {
         e.preventDefault()
+        e.stopPropagation()
         const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
         const currentIndex = zoomOrder.indexOf(timelineConfig.zoomLevel)
 
@@ -385,7 +387,7 @@ export function GanttPanel({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="flex h-full flex-col">
+    <div ref={ganttContainerRef} className="flex h-full flex-col">
       {/* Header Row */}
       <div className="flex shrink-0 border-b border-border bg-zinc-50 dark:bg-zinc-900">
         {/* Grid Header */}
@@ -620,7 +622,6 @@ export function GanttPanel({
 
         {/* Timeline Body */}
         <div
-          ref={timelineBodyRef}
           className="relative flex-1 overflow-x-auto overflow-y-hidden"
           style={{ scrollBehavior: 'auto' }}
           onScroll={onScroll}
