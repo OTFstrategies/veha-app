@@ -31,6 +31,7 @@ import { useProjectExport } from '@/hooks/use-project-export'
 import { getAllEmployeeConflicts } from '@/lib/scheduling/conflict-detection'
 import type { GanttZoomLevel, ViewOptions } from './types'
 import type { Task } from '@/types/projects'
+import { ZOOM_ORDER, ZOOM_LABELS } from './constants'
 
 // =============================================================================
 // Props
@@ -49,19 +50,6 @@ interface GanttToolbarProps {
   onAddTask: () => void
   onScrollToToday: () => void
 }
-
-// =============================================================================
-// Zoom Level Config
-// =============================================================================
-
-const ZOOM_LABELS: Record<GanttZoomLevel, string> = {
-  day: 'Dag',
-  week: 'Week',
-  month: 'Maand',
-  year: 'Jaar',
-}
-
-const ZOOM_ORDER: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
 
 // =============================================================================
 // Component

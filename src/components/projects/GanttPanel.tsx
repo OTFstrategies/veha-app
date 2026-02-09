@@ -12,6 +12,7 @@ import { VarianceIndicator } from './VarianceIndicator'
 import type { TimelineConfig, ViewOptions, GanttZoomLevel } from './types'
 import type { Task, TaskDependency, DependencyType } from '@/types/projects'
 import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
+import { GRID_COLUMNS, GRID_WIDTH, ROW_HEIGHT, ZOOM_ORDER } from './constants'
 
 // =============================================================================
 // Props
@@ -44,25 +45,6 @@ interface GanttPanelProps {
   resizingTaskId?: string | null
   resizeHandle?: 'start' | 'end' | null
 }
-
-// =============================================================================
-// Constants
-// =============================================================================
-
-const GRID_COLUMNS = {
-  expand: 28,
-  wbs: 56,
-  task: 200,
-  start: 80,
-  end: 80,
-  duration: 48,
-  progress: 56,
-  slack: 50,
-  resources: 96,
-}
-
-const GRID_WIDTH = Object.values(GRID_COLUMNS).reduce((a, b) => a + b, 0)
-const ROW_HEIGHT = 36
 
 // =============================================================================
 // Types
@@ -367,13 +349,12 @@ export function GanttPanel({
       if (e.ctrlKey) {
         e.preventDefault()
         e.stopPropagation()
-        const zoomOrder: GanttZoomLevel[] = ['day', 'week', 'month', 'year']
-        const currentIndex = zoomOrder.indexOf(timelineConfig.zoomLevel)
+        const currentIndex = ZOOM_ORDER.indexOf(timelineConfig.zoomLevel)
 
         if (e.deltaY < 0 && currentIndex > 0) {
-          onZoomChange(zoomOrder[currentIndex - 1])
-        } else if (e.deltaY > 0 && currentIndex < zoomOrder.length - 1) {
-          onZoomChange(zoomOrder[currentIndex + 1])
+          onZoomChange(ZOOM_ORDER[currentIndex - 1])
+        } else if (e.deltaY > 0 && currentIndex < ZOOM_ORDER.length - 1) {
+          onZoomChange(ZOOM_ORDER[currentIndex + 1])
         }
       }
     }
