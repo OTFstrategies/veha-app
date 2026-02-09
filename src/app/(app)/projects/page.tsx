@@ -34,41 +34,7 @@ import { useProjects, useDeleteProject, useCreateProject, useUpdateProject } fro
 import type { Project, ProjectStatus, WorkType } from '@/types/projects'
 import { ProjectFormModal, type ProjectFormData } from '@/components/projects/ProjectFormModal'
 import { useListViewStore, type GroupByOption } from '@/stores/list-view-store'
-
-// =============================================================================
-// Status Badge Config
-// =============================================================================
-
-const STATUS_CONFIG: Record<ProjectStatus, { label: string; className: string }> = {
-  gepland: {
-    label: 'Gepland',
-    className: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
-  },
-  actief: {
-    label: 'Actief',
-    className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  },
-  'on-hold': {
-    label: 'On-hold',
-    className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  },
-  afgerond: {
-    label: 'Afgerond',
-    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  },
-  geannuleerd: {
-    label: 'Geannuleerd',
-    className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  },
-}
-
-const WORK_TYPE_LABELS: Record<WorkType, string> = {
-  straatwerk: 'Straatwerk',
-  kitwerk: 'Kitwerk',
-  reinigen: 'Reinigen',
-  kantoor: 'Kantoor',
-  overig: 'Overig',
-}
+import { STATUS_CONFIG, WORK_TYPE_LABELS } from '@/components/projects/constants'
 
 // =============================================================================
 // Project Card Component
