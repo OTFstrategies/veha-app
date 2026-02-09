@@ -27,26 +27,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useProjects } from '@/queries/projects'
 import type { Project, ProjectStatus } from '@/types/projects'
-
-// =============================================================================
-// Status Colors
-// =============================================================================
-
-const STATUS_COLORS: Record<ProjectStatus, string> = {
-  gepland: 'bg-zinc-400 dark:bg-zinc-500',
-  actief: 'bg-green-500 dark:bg-green-600',
-  'on-hold': 'bg-amber-500 dark:bg-amber-600',
-  afgerond: 'bg-blue-500 dark:bg-blue-600',
-  geannuleerd: 'bg-red-400 dark:bg-red-500',
-}
-
-const STATUS_LABELS: Record<ProjectStatus, string> = {
-  gepland: 'Gepland',
-  actief: 'Actief',
-  'on-hold': 'On-hold',
-  afgerond: 'Afgerond',
-  geannuleerd: 'Geannuleerd',
-}
+import { STATUS_CONFIG } from '@/components/projects/constants'
 
 // =============================================================================
 // View Switcher Component
@@ -242,13 +223,13 @@ function ProjectRow({
             onClick={onClick}
             className={cn(
               'absolute top-2 h-8 rounded-md shadow-sm transition-all hover:shadow-md hover:brightness-110',
-              STATUS_COLORS[project.status]
+              STATUS_CONFIG[project.status].barColor
             )}
             style={{
               left: barOffset,
               width: barWidth,
             }}
-            title={`${project.name} - ${STATUS_LABELS[project.status]}`}
+            title={`${project.name} - ${STATUS_CONFIG[project.status].label}`}
           >
             <div className="flex items-center h-full px-2 overflow-hidden">
               <span className="text-xs font-medium text-white truncate">
@@ -302,7 +283,7 @@ function ProjectSidebar({ projects, onProjectClick }: ProjectSidebarProps) {
             <div
               className={cn(
                 'w-2 h-2 rounded-full flex-shrink-0',
-                STATUS_COLORS[project.status]
+                STATUS_CONFIG[project.status].barColor
               )}
             />
             <div className="flex-1 min-w-0">
@@ -455,15 +436,15 @@ export default function ProjectsGanttPage() {
         <span className="text-xs text-muted-foreground font-medium">
           Status:
         </span>
-        {Object.entries(STATUS_LABELS).map(([status, label]) => (
+        {Object.entries(STATUS_CONFIG).map(([status, config]) => (
           <div key={status} className="flex items-center gap-2">
             <div
               className={cn(
                 'w-3 h-3 rounded-sm',
-                STATUS_COLORS[status as ProjectStatus]
+                config.barColor
               )}
             />
-            <span className="text-xs text-muted-foreground">{label}</span>
+            <span className="text-xs text-muted-foreground">{config.label}</span>
           </div>
         ))}
       </div>
