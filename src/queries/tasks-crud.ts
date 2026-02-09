@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Task, TaskDependency, TaskAssignment, TaskStatus, TaskPriority, DependencyType } from '@/types/projects'
 import type { Task as DbTask } from '@/types/database'
 import { projectKeys } from './projects'
-import { useTaskHistoryStore, type TaskSnapshot } from '@/stores/task-history-store'
+import { useTaskHistoryStore } from '@/stores/task-history-store'
 
 // =============================================================================
 // Query Keys

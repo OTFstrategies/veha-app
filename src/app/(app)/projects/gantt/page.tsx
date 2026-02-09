@@ -23,7 +23,7 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useProjects } from '@/queries/projects'
-import type { Project, ProjectStatus } from '@/types/projects'
+import type { Project } from '@/types/projects'
 import { STATUS_CONFIG } from '@/components/projects/constants'
 import { ViewSwitcher } from '@/components/projects/ViewSwitcher'
 

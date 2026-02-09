@@ -17,8 +17,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useProjects, useDeleteProject, useCreateProject, useUpdateProject } from '@/queries/projects'
