@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import {
   DndContext,
   DragEndEvent,
@@ -19,9 +18,6 @@ import { CSS } from '@dnd-kit/utilities'
 import {
   Building2,
   Calendar,
-  GanttChart,
-  LayoutGrid,
-  Columns3,
   Loader2,
   Filter,
   ChevronDown,
@@ -40,6 +36,7 @@ import {
 import { useProjects, useUpdateProject } from '@/queries/projects'
 import type { Project, ProjectStatus, WorkType } from '@/types/projects'
 import { KANBAN_COLUMNS, WORK_TYPE_LABELS, WORK_TYPES } from '@/components/projects/constants'
+import { ViewSwitcher } from '@/components/projects/ViewSwitcher'
 
 // =============================================================================
 // Sortable Project Card Component
@@ -179,38 +176,6 @@ function KanbanColumn({ column, projects, onProjectClick }: KanbanColumnProps) {
           )}
         </div>
       </SortableContext>
-    </div>
-  )
-}
-
-// =============================================================================
-// View Switcher Component
-// =============================================================================
-
-function ViewSwitcher() {
-  return (
-    <div className="flex items-center gap-1 rounded-lg border border-border p-1 bg-muted/50">
-      <Link
-        href="/projects"
-        className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
-        title="Grid weergave"
-      >
-        <LayoutGrid className="h-4 w-4" />
-      </Link>
-      <Link
-        href="/projects/kanban"
-        className="flex items-center justify-center w-8 h-8 rounded-md bg-background text-foreground shadow-sm"
-        title="Kanban weergave"
-      >
-        <Columns3 className="h-4 w-4" />
-      </Link>
-      <Link
-        href="/projects/gantt"
-        className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
-        title="Gantt weergave"
-      >
-        <GanttChart className="h-4 w-4" />
-      </Link>
     </div>
   )
 }
@@ -386,7 +351,7 @@ export default function ProjectsKanbanPage() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <ViewSwitcher />
+            <ViewSwitcher activeView="kanban" />
           </div>
         </div>
 

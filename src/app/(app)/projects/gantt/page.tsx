@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import {
   addMonths,
   startOfMonth,
@@ -17,8 +16,6 @@ import {
 import { nl } from 'date-fns/locale'
 import {
   GanttChart,
-  LayoutGrid,
-  Columns3,
   Loader2,
   ChevronLeft,
   ChevronRight,
@@ -28,38 +25,7 @@ import { Button } from '@/components/ui/button'
 import { useProjects } from '@/queries/projects'
 import type { Project, ProjectStatus } from '@/types/projects'
 import { STATUS_CONFIG } from '@/components/projects/constants'
-
-// =============================================================================
-// View Switcher Component
-// =============================================================================
-
-function ViewSwitcher() {
-  return (
-    <div className="flex items-center gap-1 rounded-lg border border-border p-1 bg-muted/50">
-      <Link
-        href="/projects"
-        className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
-        title="Grid weergave"
-      >
-        <LayoutGrid className="h-4 w-4" />
-      </Link>
-      <Link
-        href="/projects/kanban"
-        className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-background transition-colors"
-        title="Kanban weergave"
-      >
-        <Columns3 className="h-4 w-4" />
-      </Link>
-      <Link
-        href="/projects/gantt"
-        className="flex items-center justify-center w-8 h-8 rounded-md bg-background text-foreground shadow-sm"
-        title="Gantt weergave"
-      >
-        <GanttChart className="h-4 w-4" />
-      </Link>
-    </div>
-  )
-}
+import { ViewSwitcher } from '@/components/projects/ViewSwitcher'
 
 // =============================================================================
 // Loading State Component
@@ -383,7 +349,7 @@ export default function ProjectsGanttPage() {
               {format(endDate, 'MMM yyyy', { locale: nl })}
             </span>
           </div>
-          <ViewSwitcher />
+          <ViewSwitcher activeView="gantt" />
         </div>
       </div>
 
