@@ -13,6 +13,7 @@ import type { TimelineConfig, ViewOptions, GanttZoomLevel } from './types'
 import type { Task, TaskDependency, DependencyType } from '@/types/projects'
 import type { CriticalPathResult } from '@/lib/scheduling/critical-path'
 import { GRID_COLUMNS, GRID_WIDTH, ROW_HEIGHT, ZOOM_ORDER } from './constants'
+import { useTaskPosition } from './gantt/useTaskPosition'
 
 // =============================================================================
 // Props
@@ -171,52 +172,8 @@ export function GanttPanel({
 
   const timelineWidth = timelineDays.length * timelineConfig.columnWidth
 
-  // Calculate task bar position
-  const getTaskBarPosition = React.useCallback(
-    (task: Task) => {
-      const startDate = new Date(task.startDate)
-      const dayOffset = Math.floor(
-        (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
-      )
-      const left = dayOffset * timelineConfig.columnWidth
-      const width = task.duration * timelineConfig.columnWidth
-
-      return { left, width }
-    },
-    [timelineConfig.startDate, timelineConfig.columnWidth]
-  )
-
-  // Calculate baseline bar position
-  const getBaselinePosition = React.useCallback(
-    (task: Task) => {
-      if (!task.isBaselineSet || !task.baselineStartDate || !task.baselineDuration) {
-        return null
-      }
-      const startDate = new Date(task.baselineStartDate)
-      const dayOffset = Math.floor(
-        (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
-      )
-      const left = dayOffset * timelineConfig.columnWidth
-      const width = task.baselineDuration * timelineConfig.columnWidth
-
-      return { left, width }
-    },
-    [timelineConfig.startDate, timelineConfig.columnWidth]
-  )
-
-  // Calculate position for preview dates
-  const getPreviewPosition = React.useCallback((startDateStr: string, endDateStr: string) => {
-    const startDate = new Date(startDateStr)
-    const endDate = new Date(endDateStr)
-    const dayOffset = Math.floor(
-      (startDate.getTime() - timelineConfig.startDate.getTime()) / (1000 * 60 * 60 * 24)
-    )
-    const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
-    const left = dayOffset * timelineConfig.columnWidth
-    const width = duration * timelineConfig.columnWidth
-
-    return { left, width }
-  }, [timelineConfig.startDate, timelineConfig.columnWidth])
+  // Position calculations (consolidated from 3 duplicate functions)
+  const { getTaskBarPosition, getBaselinePosition, getPreviewPosition } = useTaskPosition(timelineConfig)
 
   // Get today's position
   const todayPosition = React.useMemo(() => {
