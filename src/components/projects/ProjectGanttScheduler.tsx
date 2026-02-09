@@ -20,6 +20,7 @@ import { useToast } from '@/components/ui/toast'
 import { useRealtimeTasks } from '@/hooks/use-realtime-tasks'
 import { usePresence } from '@/hooks/use-presence'
 import { addDaysToDate, pixelsToDays } from './utils/snap'
+import { useTaskResize } from '@/hooks/use-task-resize'
 import type { GanttZoomLevel, ViewOptions, TimelineConfig } from './types'
 import type { Project, Task } from '@/types/projects'
 
@@ -61,13 +62,7 @@ export interface ProjectGanttSchedulerProps {
 // Types
 // =============================================================================
 
-interface ResizingTaskState {
-  taskId: string
-  handle: 'start' | 'end'
-  originalStart: string
-  originalEnd: string
-  startX: number
-}
+// ResizingTaskState moved to use-task-resize hook
 
 // =============================================================================
 // Component
@@ -133,8 +128,29 @@ export function ProjectGanttScheduler({
     newEndDate: string
   } | null>(null)
 
-  // Resize state
-  const [resizingTask, setResizingTask] = React.useState<ResizingTaskState | null>(null)
+  // Resize (extracted to hook)
+  const handleResizeComplete = React.useCallback(async (taskId: string, startDate: string, endDate: string) => {
+    try {
+      await updateTaskDates.mutateAsync({
+        taskId,
+        projectId: project.id,
+        startDate,
+        endDate,
+      })
+      onTaskDatesChange?.(taskId, startDate, endDate)
+      addToast({
+        type: 'success',
+        title: 'Taakduur aangepast',
+        description: 'De taakdatums zijn bijgewerkt.',
+      })
+    } catch {
+      addToast({
+        type: 'error',
+        title: 'Fout bij aanpassen',
+        description: 'Kon de taak niet aanpassen. Probeer het opnieuw.',
+      })
+    }
+  }, [updateTaskDates, project.id, onTaskDatesChange, addToast])
 
   // Refs for synchronized scrolling
   const ganttTimelineRef = React.useRef<HTMLDivElement>(null)
@@ -192,6 +208,14 @@ export function ProjectGanttScheduler({
       todayPosition: daysDiff * columnWidths[zoomLevel],
     }
   }, [project.startDate, project.endDate, zoomLevel])
+
+  const { resizingTaskId, resizeHandle, handleResizeStart } = useTaskResize({
+    tasks: project.tasks,
+    columnWidth: timelineConfig.columnWidth,
+    onResizeComplete: handleResizeComplete,
+    setDragPreview,
+    dragPreview,
+  })
 
   // ---------------------------------------------------------------------------
   // DnD Kit Sensors
@@ -278,110 +302,7 @@ export function ProjectGanttScheduler({
     setDragPreview(null)
   }, [dragPreview, project.id, updateTaskDates, onTaskDatesChange, addToast])
 
-  // ---------------------------------------------------------------------------
-  // Resize Handlers
-  // ---------------------------------------------------------------------------
-
-  const handleResizeStart = React.useCallback((taskId: string, handle: 'start' | 'end', startX: number) => {
-    const task = project.tasks.find(t => t.id === taskId)
-    if (!task) return
-
-    setResizingTask({
-      taskId,
-      handle,
-      originalStart: task.startDate,
-      originalEnd: task.endDate,
-      startX,
-    })
-  }, [project.tasks])
-
-  // Mouse move handler for resize - use ref to capture current state
-  const resizingTaskRef = React.useRef<ResizingTaskState | null>(null)
-
-  // Sync ref with state in effect to avoid React Compiler warning
-  React.useEffect(() => {
-    resizingTaskRef.current = resizingTask
-  }, [resizingTask])
-
-  React.useEffect(() => {
-    if (!resizingTask) return
-
-    function handleMouseMove(e: MouseEvent) {
-      const currentResizing = resizingTaskRef.current
-      if (!currentResizing) return
-
-      const deltaX = e.clientX - currentResizing.startX
-      const daysDelta = pixelsToDays(deltaX, timelineConfig.columnWidth)
-
-      let newStartDate = currentResizing.originalStart
-      let newEndDate = currentResizing.originalEnd
-
-      if (currentResizing.handle === 'start') {
-        newStartDate = addDaysToDate(currentResizing.originalStart, daysDelta)
-        // Don't allow start after end (minimum 1 day duration)
-        const newStartMs = new Date(newStartDate).getTime()
-        const endMs = new Date(newEndDate).getTime()
-        if (newStartMs >= endMs) {
-          newStartDate = addDaysToDate(newEndDate, -1)
-        }
-      } else {
-        newEndDate = addDaysToDate(currentResizing.originalEnd, daysDelta)
-        // Don't allow end before start (minimum 1 day duration)
-        const startMs = new Date(newStartDate).getTime()
-        const newEndMs = new Date(newEndDate).getTime()
-        if (newEndMs <= startMs) {
-          newEndDate = addDaysToDate(newStartDate, 1)
-        }
-      }
-
-      setDragPreview({
-        taskId: currentResizing.taskId,
-        newStartDate,
-        newEndDate,
-      })
-    }
-
-    async function handleMouseUp() {
-      const currentPreview = dragPreview
-      if (currentPreview) {
-        // Apply the resize
-        try {
-          await updateTaskDates.mutateAsync({
-            taskId: currentPreview.taskId,
-            projectId: project.id,
-            startDate: currentPreview.newStartDate,
-            endDate: currentPreview.newEndDate,
-          })
-
-          // Call the prop callback if provided
-          onTaskDatesChange?.(currentPreview.taskId, currentPreview.newStartDate, currentPreview.newEndDate)
-
-          addToast({
-            type: 'success',
-            title: 'Taakduur aangepast',
-            description: 'De taakdatums zijn bijgewerkt.',
-          })
-        } catch {
-          addToast({
-            type: 'error',
-            title: 'Fout bij aanpassen',
-            description: 'Kon de taak niet aanpassen. Probeer het opnieuw.',
-          })
-        }
-      }
-
-      setResizingTask(null)
-      setDragPreview(null)
-    }
-
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [resizingTask, dragPreview, timelineConfig.columnWidth, project.id, updateTaskDates, onTaskDatesChange, addToast])
+  // Resize handlers are now in useTaskResize hook (initialized above)
 
   // ---------------------------------------------------------------------------
   // Synchronized Scrolling
@@ -639,8 +560,8 @@ export function ProjectGanttScheduler({
               activeTaskId={activeTaskId}
               dragPreview={dragPreview}
               onResizeStart={handleResizeStart}
-              resizingTaskId={resizingTask?.taskId ?? null}
-              resizeHandle={resizingTask?.handle ?? null}
+              resizingTaskId={resizingTaskId}
+              resizeHandle={resizeHandle}
             />
           </div>
 
