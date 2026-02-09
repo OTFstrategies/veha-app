@@ -39,52 +39,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useProjects, useUpdateProject } from '@/queries/projects'
 import type { Project, ProjectStatus, WorkType } from '@/types/projects'
-
-// =============================================================================
-// Column Configuration
-// =============================================================================
-
-const COLUMNS: Array<{
-  id: ProjectStatus
-  title: string
-  headerColor: string
-  bgColor: string
-}> = [
-  {
-    id: 'gepland',
-    title: 'Gepland',
-    headerColor: 'bg-zinc-500',
-    bgColor: 'bg-zinc-50 dark:bg-zinc-900/50',
-  },
-  {
-    id: 'actief',
-    title: 'Actief',
-    headerColor: 'bg-green-500',
-    bgColor: 'bg-green-50 dark:bg-green-900/20',
-  },
-  {
-    id: 'on-hold',
-    title: 'On-hold',
-    headerColor: 'bg-amber-500',
-    bgColor: 'bg-amber-50 dark:bg-amber-900/20',
-  },
-  {
-    id: 'afgerond',
-    title: 'Afgerond',
-    headerColor: 'bg-blue-500',
-    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-  },
-]
-
-const WORK_TYPE_LABELS: Record<WorkType, string> = {
-  straatwerk: 'Straatwerk',
-  kitwerk: 'Kitwerk',
-  reinigen: 'Reinigen',
-  kantoor: 'Kantoor',
-  overig: 'Overig',
-}
-
-const WORK_TYPES: WorkType[] = ['straatwerk', 'kitwerk', 'reinigen', 'kantoor', 'overig']
+import { KANBAN_COLUMNS, WORK_TYPE_LABELS, WORK_TYPES } from '@/components/projects/constants'
 
 // =============================================================================
 // Sortable Project Card Component
@@ -189,7 +144,7 @@ function ProjectCard({ project, onClick, isDragging }: ProjectCardProps) {
 // =============================================================================
 
 interface KanbanColumnProps {
-  column: (typeof COLUMNS)[0]
+  column: (typeof KANBAN_COLUMNS)[0]
   projects: Project[]
   onProjectClick: (id: string) => void
 }
@@ -440,7 +395,7 @@ export default function ProjectsKanbanPage() {
           <LoadingState />
         ) : (
           <div className="flex-1 flex gap-4 p-6 overflow-x-auto">
-            {COLUMNS.map((column) => (
+            {KANBAN_COLUMNS.map((column) => (
               <KanbanColumn
                 key={column.id}
                 column={column}
