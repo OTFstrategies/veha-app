@@ -20,7 +20,7 @@ import type { Task } from '@/types/projects'
 
 function LoadingState() {
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center" aria-live="polite" aria-busy="true">
       <div className="flex flex-col items-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         <p className="text-sm text-muted-foreground">Project laden...</p>
