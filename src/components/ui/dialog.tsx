@@ -125,12 +125,19 @@ function DialogContent({
   React.useEffect(() => {
     if (open) {
       previouslyFocusedRef.current = document.activeElement as HTMLElement
-      // Delay to allow render
+      // Delay to allow render, prefer inputs over buttons for form dialogs
       requestAnimationFrame(() => {
-        const focusable = contentRef.current?.querySelector<HTMLElement>(
-          'input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        const input = contentRef.current?.querySelector<HTMLElement>(
+          'input:not([disabled]), textarea:not([disabled]), select:not([disabled])'
         )
-        focusable?.focus()
+        if (input) {
+          input.focus()
+        } else {
+          const focusable = contentRef.current?.querySelector<HTMLElement>(
+            'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+          focusable?.focus()
+        }
       })
     } else if (previouslyFocusedRef.current) {
       previouslyFocusedRef.current.focus()
@@ -186,7 +193,7 @@ function DialogContent({
           role="dialog"
           aria-modal="true"
           className={cn(
-            "relative w-full max-w-lg rounded-lg border bg-background p-6 shadow-lg",
+            "glass relative w-full max-w-lg rounded-lg border p-6 shadow-lg",
             "animate-in fade-in-0 zoom-in-95 duration-200",
             className
           )}
