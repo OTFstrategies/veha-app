@@ -219,6 +219,7 @@ export function EmployeeList({
               <button
                 key={employee.id}
                 onClick={() => onView?.(employee.id)}
+                aria-label={`Medewerker: ${employee.name}`}
                 className={cn(
                   'group relative overflow-hidden rounded-xl border bg-card p-5 text-left transition-all',
                   'hover:border-zinc-300 hover:shadow-md dark:hover:border-zinc-600',
@@ -332,8 +333,16 @@ export function EmployeeList({
               {filteredEmployees.map((employee) => (
                 <tr
                   key={employee.id}
-                  className="group cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                  tabIndex={0}
+                  aria-label={`Medewerker: ${employee.name}`}
+                  className="group cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
                   onClick={() => onView?.(employee.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onView?.(employee.id)
+                    }
+                  }}
                 >
                   {/* Employee */}
                   <td className="px-4 py-3">
