@@ -58,6 +58,7 @@ export function PresenceAvatars({
   const spacing = size === "sm" ? "-space-x-1.5" : "-space-x-2"
 
   const getInitials = (name: string) => {
+    if (!name) return '?'
     return name
       .split(" ")
       .map((n) => n[0])
