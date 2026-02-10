@@ -10,6 +10,7 @@ import {
   PinOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 import { WorkspaceSelector } from "./WorkspaceSelector";
 import { SidebarUserMenu } from "./SidebarUserMenu";
@@ -64,7 +65,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "flex h-full flex-col border-r border-zinc-200 bg-white transition-all duration-300 ease-in-out dark:border-zinc-800 dark:bg-zinc-900",
+        "glass-strong flex h-full flex-col border-r border-zinc-200 transition-all duration-300 ease-in-out dark:border-zinc-800",
         isExpanded ? "w-64" : "w-16"
       )}
     >
@@ -115,16 +116,25 @@ export function Sidebar({ userEmail }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
+                  ? "text-zinc-900 dark:text-zinc-50"
                   : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
                 !isExpanded && "justify-center px-2"
               )}
               title={!isExpanded ? item.label : undefined}
             >
-              <Icon className="h-5 w-5 shrink-0" />
-              {isExpanded && <span>{item.label}</span>}
+              {isActive && (
+                <motion.div
+                  layoutId="sidebar-indicator"
+                  className="absolute inset-0 rounded-md bg-zinc-100 dark:bg-zinc-800"
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-3">
+                <Icon className="h-5 w-5 shrink-0" />
+                {isExpanded && <span>{item.label}</span>}
+              </span>
             </Link>
           );
         })}

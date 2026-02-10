@@ -1,4 +1,7 @@
+"use client"
+
 import { cn } from '@/lib/utils'
+import { MotionList, MotionListItem } from '@/lib/motion'
 import type { DashboardStats } from '@/types/dashboard'
 
 // =============================================================================
@@ -39,22 +42,23 @@ export function StatsCards({ stats, onStatClick }: StatsCardsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <MotionList className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {cards.map((card) => (
-        <button
-          key={card.key}
-          onClick={() => onStatClick?.(card.key)}
-          aria-label={`${card.label}: ${card.value}`}
-          className={cn(
-            'rounded-lg bg-zinc-50 p-3 text-center transition-all dark:bg-zinc-800/50',
-            'hover:bg-zinc-100 dark:hover:bg-zinc-800',
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-          )}
-        >
-          <p className="text-3xl font-semibold tracking-tight" aria-hidden="true">{card.value}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">{card.label}</p>
-        </button>
+        <MotionListItem key={card.key}>
+          <button
+            onClick={() => onStatClick?.(card.key)}
+            aria-label={`${card.label}: ${card.value}`}
+            className={cn(
+              'glass glow-hover rounded-lg p-3 text-center transition-all w-full',
+              '',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+            )}
+          >
+            <p className="text-3xl font-semibold tracking-tight" aria-hidden="true">{card.value}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{card.label}</p>
+          </button>
+        </MotionListItem>
       ))}
-    </div>
+    </MotionList>
   )
 }

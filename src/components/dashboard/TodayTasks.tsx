@@ -1,5 +1,8 @@
+"use client"
+
 import { ChevronRight, CheckCircle2, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MotionList, MotionListItem } from '@/lib/motion'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { TodayTaskGroup } from '@/types/dashboard'
 
@@ -27,9 +30,9 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
   }
 
   return (
-    <div className="divide-y divide-border">
+    <MotionList className="divide-y divide-border">
       {taskGroups.map((group) => (
-        <div key={group.projectId} className="py-3 first:pt-0 last:pb-0">
+        <MotionListItem key={group.projectId} className="py-3 first:pt-0 last:pb-0">
           {/* Project Header */}
           <div className="mb-2 flex items-center gap-2">
             <span className="text-sm font-medium">{group.projectName}</span>
@@ -119,8 +122,8 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
               </button>
             ))}
           </div>
-        </div>
+        </MotionListItem>
       ))}
-    </div>
+    </MotionList>
   )
 }

@@ -1,5 +1,8 @@
+"use client"
+
 import { AlertTriangle, ArrowRight, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MotionList, MotionListItem } from '@/lib/motion'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import type { ActiveProject } from '@/types/dashboard'
@@ -34,10 +37,10 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <MotionList className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {projects.map((project) => (
-        <button
-          key={project.id}
+        <MotionListItem key={project.id}>
+          <button
           onClick={() => onProjectClick?.(project.id)}
           aria-label={`Project: ${project.name}, ${project.clientName}, ${project.progress}% voltooid${project.isDelayed ? ', achterstand' : ''}`}
           className={cn(
@@ -128,7 +131,8 @@ export function ActiveProjects({ projects, onProjectClick }: ActiveProjectsProps
             </Badge>
           </div>
         </button>
+        </MotionListItem>
       ))}
-    </div>
+    </MotionList>
   )
 }
