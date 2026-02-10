@@ -27,6 +27,8 @@ const eslintConfig = defineConfig([
       ],
       // Disallow console.log in production code (console.warn/error allowed)
       "no-console": ["warn", { allow: ["warn", "error"] }],
+      // Flag explicit any usage to encourage proper typing
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
 ]);
