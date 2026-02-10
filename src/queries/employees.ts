@@ -75,7 +75,8 @@ async function fetchEmployees(workspaceId: string): Promise<Employee[]> {
     .order('date')
 
   if (availabilityError) {
-    console.error('Failed to fetch availability:', availabilityError.message)
+    // Graceful degradation: employee data laadt ook als availability fetch faalt
+    console.warn('Non-critical: failed to fetch availability:', availabilityError.message)
   }
 
   const availabilityByEmployee = (availability || []).reduce(
@@ -115,7 +116,8 @@ async function fetchEmployee(id: string): Promise<Employee> {
     .order('date')
 
   if (availabilityError) {
-    console.error('Failed to fetch availability:', availabilityError.message)
+    // Graceful degradation: employee detail laadt ook als availability fetch faalt
+    console.warn('Non-critical: failed to fetch availability:', availabilityError.message)
   }
 
   // Fetch task assignments with task and project details
@@ -141,7 +143,8 @@ async function fetchEmployee(id: string): Promise<Employee> {
     .eq('employee_id', id)
 
   if (assignmentsError) {
-    console.error('Failed to fetch assignments:', assignmentsError.message)
+    // Graceful degradation: employee detail laadt ook als assignments fetch faalt
+    console.warn('Non-critical: failed to fetch assignments:', assignmentsError.message)
   }
 
   const assignments: TaskAssignment[] = (assignmentsData || [])
