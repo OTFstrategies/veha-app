@@ -143,7 +143,7 @@ const DropdownMenuContent = React.forwardRef<
         }
       }}
       className={cn(
-        "absolute z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95",
+        "absolute z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md border glass-subtle p-1 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95",
         align === "start" && "left-0",
         align === "center" && "left-1/2 -translate-x-1/2",
         align === "end" && "right-0",

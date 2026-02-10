@@ -51,7 +51,7 @@ export function ProjectCard(props: ProjectCardProps) {
       <button
         onClick={onClick}
         className={cn(
-          'w-full text-left rounded-lg border border-border bg-card p-3 shadow-sm transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600',
+          'w-full text-left rounded-lg border border-border glass glow-hover p-3 shadow-sm transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600',
           isDragging && 'ring-2 ring-zinc-400/30 shadow-lg'
         )}
       >
@@ -90,7 +90,7 @@ export function ProjectCard(props: ProjectCardProps) {
   // Grid variant
   const { onView, onEdit, onDelete, onClientClick } = props
   return (
-    <div className="group relative flex flex-col rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md">
+    <div className="group relative flex flex-col rounded-lg border border-border glass glow-hover p-4 transition-shadow hover:shadow-md">
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <button onClick={onView} className="block text-left">

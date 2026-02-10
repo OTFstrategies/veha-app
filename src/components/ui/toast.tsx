@@ -101,7 +101,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
   return (
     <div
       className={cn(
-        "flex w-80 items-start gap-3 rounded-lg border p-4 shadow-lg animate-in slide-in-from-right-5",
+        "glass flex w-80 items-start gap-3 rounded-lg border p-4 shadow-lg animate-in slide-in-from-right-5",
         colors[toast.type]
       )}
     >
