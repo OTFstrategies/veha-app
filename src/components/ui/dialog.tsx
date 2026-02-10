@@ -92,6 +92,7 @@ function DialogContent({
 }: DialogContentProps) {
   const { open, onOpenChange } = useDialogContext()
   const contentRef = React.useRef<HTMLDivElement>(null)
+  const previouslyFocusedRef = React.useRef<HTMLElement | null>(null)
 
   // Handle escape key
   React.useEffect(() => {
@@ -118,6 +119,51 @@ function DialogContent({
     return () => {
       document.body.style.overflow = ""
     }
+  }, [open])
+
+  // Auto-focus first focusable element + return focus on close
+  React.useEffect(() => {
+    if (open) {
+      previouslyFocusedRef.current = document.activeElement as HTMLElement
+      // Delay to allow render
+      requestAnimationFrame(() => {
+        const focusable = contentRef.current?.querySelector<HTMLElement>(
+          'input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        focusable?.focus()
+      })
+    } else if (previouslyFocusedRef.current) {
+      previouslyFocusedRef.current.focus()
+      previouslyFocusedRef.current = null
+    }
+  }, [open])
+
+  // Focus trap: cycle Tab within dialog
+  React.useEffect(() => {
+    if (!open) return
+
+    const handleTabTrap = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !contentRef.current) return
+
+      const focusableEls = contentRef.current.querySelectorAll<HTMLElement>(
+        'input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"]), a[href]'
+      )
+      if (focusableEls.length === 0) return
+
+      const first = focusableEls[0]
+      const last = focusableEls[focusableEls.length - 1]
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener("keydown", handleTabTrap)
+    return () => document.removeEventListener("keydown", handleTabTrap)
   }, [open])
 
   if (!open) return null
