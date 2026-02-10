@@ -291,6 +291,9 @@ test.describe.serial('Refactoring Verification', () => {
   test('F.1 Task bars render in GanttPanel', async ({ page }) => {
     await navigateToProjectDetail(page);
     const taskRows = page.locator('[style*="height: 36px"], [style*="height:36px"]');
+    await expect(taskRows.first()).toBeVisible({ timeout: 10000 });
+    const count = await taskRows.count();
+    expect(count).toBeGreaterThan(0);
     await page.screenshot({ path: 'test-results/F1-gantt-task-bars.png' });
   });
 
