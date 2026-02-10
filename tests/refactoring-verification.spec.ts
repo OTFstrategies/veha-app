@@ -40,14 +40,13 @@ async function login(page: Page) {
   // Wait for callback to set session and redirect to /dashboard
   await page.waitForURL('**/dashboard', { timeout: 15000 });
   await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(1000);
 }
 
 async function navigateTo(page: Page, path: string) {
   await login(page);
   await page.goto(`${BASE_URL}${path}`);
   await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(1500);
+  await page.waitForLoadState('domcontentloaded');
 }
 
 async function navigateToProjectDetail(page: Page) {
@@ -63,17 +62,19 @@ async function navigateToProjectDetail(page: Page) {
     await anyProjectName.click();
   }
   await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(3000);
 
   // Verify we navigated to a project detail page
-  await expect(page).toHaveURL(/\/projects\/[a-zA-Z0-9-]+$/, { timeout: 5000 });
+  await expect(page).toHaveURL(/\/projects\/[a-zA-Z0-9-]+$/, { timeout: 10000 });
+
+  // Wait for Gantt content to render (task rows or toolbar)
+  await page.locator('[style*="height: 36px"], button[aria-label="Zoom in"]').first().waitFor({ timeout: 15000 }).catch(() => {});
 
   // If error boundary triggered, retry with page reload
   const errorBoundary = page.getByText('Er is iets misgegaan');
   if (await errorBoundary.isVisible({ timeout: 1000 }).catch(() => false)) {
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    await page.locator('[style*="height: 36px"], button[aria-label="Zoom in"]').first().waitFor({ timeout: 15000 }).catch(() => {});
   }
 }
 
@@ -245,42 +246,48 @@ test.describe.serial('Refactoring Verification', () => {
 
   test('E.1 Drag overlay renders during drag', async ({ page }) => {
     await navigateTo(page, '/projects/kanban');
-    await page.waitForTimeout(1000);
 
     const firstCard = page.locator('button[class*="rounded-lg"][class*="border"]').first();
+    await expect(firstCard).toBeVisible({ timeout: 5000 });
 
-    if (await firstCard.isVisible({ timeout: 5000 }).catch(() => false)) {
-      const box = await firstCard.boundingBox();
-      if (box) {
-        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-        await page.mouse.down();
-        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 50, { steps: 10 });
-        await page.waitForTimeout(500);
-        await page.screenshot({ path: 'test-results/E1-drag-overlay.png' });
-        await page.mouse.up();
-      }
+    const box = await firstCard.boundingBox();
+    expect(box).toBeTruthy();
+    if (box) {
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 50, { steps: 10 });
+      await page.waitForTimeout(500); // Wait for drag animation
+      await page.screenshot({ path: 'test-results/E1-drag-overlay.png' });
+      await page.mouse.up();
     }
+
+    // Assert no error boundary triggered during drag
+    const errorBoundary = page.getByText('Er is iets misgegaan');
+    await expect(errorBoundary).not.toBeVisible({ timeout: 2000 });
   });
 
   test('E.2 Drag card between columns updates status', async ({ page }) => {
     await navigateTo(page, '/projects/kanban');
-    await page.waitForTimeout(1000);
 
     await page.screenshot({ path: 'test-results/E2-before-drag.png' });
 
     const firstCard = page.locator('button[class*="rounded-lg"][class*="border"]').first();
-    if (await firstCard.isVisible({ timeout: 5000 }).catch(() => false)) {
-      const cardBox = await firstCard.boundingBox();
-      if (cardBox) {
-        await page.mouse.move(cardBox.x + cardBox.width / 2, cardBox.y + cardBox.height / 2);
-        await page.mouse.down();
-        await page.mouse.move(cardBox.x + 400, cardBox.y + cardBox.height / 2, { steps: 20 });
-        await page.waitForTimeout(500);
-        await page.mouse.up();
-        await page.waitForTimeout(2000);
-      }
+    await expect(firstCard).toBeVisible({ timeout: 5000 });
+
+    const cardBox = await firstCard.boundingBox();
+    expect(cardBox).toBeTruthy();
+    if (cardBox) {
+      await page.mouse.move(cardBox.x + cardBox.width / 2, cardBox.y + cardBox.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(cardBox.x + 400, cardBox.y + cardBox.height / 2, { steps: 20 });
+      await page.waitForTimeout(500); // Wait for drag animation
+      await page.mouse.up();
+      await page.waitForTimeout(2000); // Wait for status update API call
     }
 
+    // Assert no error boundary triggered during cross-column drag
+    const errorBoundary = page.getByText('Er is iets misgegaan');
+    await expect(errorBoundary).not.toBeVisible({ timeout: 2000 });
     await page.screenshot({ path: 'test-results/E2-after-drag.png' });
   });
 
