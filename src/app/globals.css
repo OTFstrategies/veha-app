@@ -1,49 +1,85 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-display: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
 /* =============================================================================
-   Design Tokens for VEHA Dashboard
+   Light Theme - Shadow Huisstijl + Warm Stone + Gantt
    ============================================================================= */
-
 :root {
-  /* Colors - Primary (VEHA Zwart) */
-  --color-primary: #2e2d2c;
-  --color-primary-light: #57534e;
-  --color-primary-dark: #18181b;
-
-  /* Colors - Secondary (VEHA Beige) */
-  --color-secondary: #CBC4B5;
-  --color-secondary-light: #d6d3d1;
-  --color-secondary-dark: #b5ad9e;
-
-  /* Colors - Neutral (Zinc palette) */
-  --background: #fafafa;
-  --foreground: #18181b;
-
-  /* Card and UI surfaces */
-  --card: #ffffff;
-  --card-foreground: #18181b;
-  --popover: #ffffff;
-  --popover-foreground: #18181b;
-
-  /* Muted colors */
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-
-  /* Accent */
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
-
-  /* Border and input */
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #3b82f6;
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.228 0.006 285.885);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.228 0.006 285.885);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.228 0.006 285.885);
+  --primary: oklch(0.228 0.006 285.885);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.228 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.920 0.004 286.32);
+  --accent-foreground: oklch(0.228 0.006 285.885);
+  --destructive: oklch(0.586 0.253 17.585);
+  --destructive-foreground: #fafafa;
+  --border: oklch(0.920 0.004 286.32);
+  --input: oklch(0.920 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067 / 0.3);
+  --radius: 0.5rem;
 
   /* Semantic Colors */
-  --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
   --success: #22c55e;
   --warning: #f59e0b;
   --info: #3b82f6;
+
+  /* VEHA Brand - Warm Stone */
+  --color-primary: #2e2d2c;
+  --color-primary-light: #57534e;
+  --color-primary-dark: #18181b;
+  --color-secondary: #CBC4B5;
+  --color-secondary-light: #d6d3d1;
+  --color-secondary-dark: #b5ad9e;
 
   /* Gantt-specific Colors */
   --gantt-task-bar: #CBC4B5;
@@ -56,240 +92,151 @@
   --gantt-today-line: #3b82f6;
   --gantt-weekend: #f4f4f5;
 
-  /* Typography */
-  --font-heading: var(--font-dm-sans), system-ui, sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), monospace;
+  /* Sidebar */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.228 0.006 285.885);
+  --sidebar-primary: oklch(0.228 0.006 285.885);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-foreground: oklch(0.228 0.006 285.885);
+  --sidebar-border: oklch(0.920 0.004 286.32);
+  --sidebar-ring: oklch(0.705 0.015 286.067 / 0.3);
 
-  /* Border Radius */
-  --radius: 0.5rem;
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.4);
+  --glass-bg-strong: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: 30px;
+  --glass-blur-subtle: 12px;
+  --glass-blur-strong: 40px;
+  --glow: rgba(0, 0, 0, 0.06);
+  --glow-hover: rgba(0, 0, 0, 0.1);
+  --glow-strong: rgba(0, 0, 0, 0.15);
 }
 
-/* Dark mode (Zinc palette) */
+/* =============================================================================
+   Dark Theme
+   ============================================================================= */
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-
-  --card: #18181b;
-  --card-foreground: #fafafa;
-  --popover: #18181b;
-  --popover-foreground: #fafafa;
-
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-
-  --accent: #3f3f46;
-  --accent-foreground: #fafafa;
-
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #3b82f6;
-
-  --destructive: #991b1b;
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.228 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.228 0.006 285.885);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.920 0.004 286.32);
+  --primary-foreground: oklch(0.228 0.006 285.885);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.370 0.013 285.805);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.712 0.194 13.428);
   --destructive-foreground: #fafafa;
+  --border: oklch(0.274 0.006 286.033);
+  --input: oklch(0.274 0.006 286.033);
+  --ring: oklch(0.552 0.016 285.938 / 0.3);
 
-  /* Gantt colors - Dark mode */
+  /* Gantt dark */
   --gantt-task-bar: #a1a1aa;
   --gantt-task-bar-hover: #71717a;
   --gantt-progress: #fafafa;
   --gantt-milestone: #fafafa;
   --gantt-summary: #71717a;
   --gantt-weekend: #27272a;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-}
+  /* Sidebar dark */
+  --sidebar: oklch(0.228 0.006 285.885);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.920 0.004 286.32);
+  --sidebar-primary-foreground: oklch(0.228 0.006 285.885);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.274 0.006 286.033);
+  --sidebar-ring: oklch(0.552 0.016 285.938 / 0.3);
 
-/* =============================================================================
-   Base Styles
-   ============================================================================= */
-
-* {
-  border-color: var(--border);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
-}
-
-/* Headings use DM Sans */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--muted-foreground);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground);
-}
-
-/* =============================================================================
-   Glassmorphism & Glow (Shadow Huisstijl)
-   ============================================================================= */
-
-:root {
-  /* Glass backgrounds */
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-subtle: rgba(255, 255, 255, 0.35);
-  --glass-bg-strong: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-blur: 20px;
-  --glass-blur-subtle: 12px;
-  --glass-blur-strong: 30px;
-  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --glass-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-
-  /* Monochrome glow */
-  --glow: rgba(0, 0, 0, 0.06);
-  --glow-hover: rgba(0, 0, 0, 0.12);
-  --glow-strong: rgba(0, 0, 0, 0.18);
-}
-
-.dark {
+  /* Glass dark */
   --glass-bg: rgba(24, 24, 27, 0.6);
   --glass-bg-subtle: rgba(24, 24, 27, 0.4);
   --glass-bg-strong: rgba(24, 24, 27, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --glass-shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.25);
-
+  --glass-border: rgba(255, 255, 255, 0.08);
   --glow: rgba(255, 255, 255, 0.06);
-  --glow-hover: rgba(255, 255, 255, 0.12);
-  --glow-strong: rgba(255, 255, 255, 0.18);
+  --glow-hover: rgba(255, 255, 255, 0.1);
+  --glow-strong: rgba(255, 255, 255, 0.15);
 }
 
+/* Glass utility classes */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
 }
-
 .glass-subtle {
   background: var(--glass-bg-subtle);
   backdrop-filter: blur(var(--glass-blur-subtle));
   -webkit-backdrop-filter: blur(var(--glass-blur-subtle));
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
 }
-
 .glass-strong {
   background: var(--glass-bg-strong);
   backdrop-filter: blur(var(--glass-blur-strong));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong));
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
 }
+.glow { box-shadow: 0 0 20px var(--glow); }
+.glow-hover:hover { box-shadow: 0 0 20px var(--glow-hover), 0 0 40px var(--glow); }
+.glow-strong { box-shadow: 0 0 30px var(--glow-strong), 0 0 60px var(--glow-hover); }
+.text-glow:hover { text-shadow: 0 0 20px var(--glow-hover); }
 
-.glow {
-  box-shadow: 0 0 20px var(--glow);
-}
-
-.glow-hover {
-  transition: box-shadow 200ms ease-out;
-}
-
-.glow-hover:hover {
-  box-shadow: var(--glass-shadow-hover);
-}
-
-.glow-strong {
-  box-shadow:
-    0 0 30px var(--glow-strong),
-    0 0 60px var(--glow-hover);
-}
-
-.text-glow:hover {
-  text-shadow: 0 0 20px var(--glow-hover);
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slide-up {
-  from { transform: translateY(8px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 15px var(--glow); }
-  50% { box-shadow: 0 0 25px var(--glow-hover); }
-}
-
-.animate-fade-in {
-  animation: fade-in 200ms ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
+/* =============================================================================
+   Base Styles
+   ============================================================================= */
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground font-sans antialiased; }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); @apply font-semibold tracking-tight; }
+  code, pre, kbd, .mono { font-family: var(--font-mono); }
+  html { scroll-behavior: smooth; }
+  button, a, [role="button"] { transition: all 0.15s ease; }
 }
 
 /* =============================================================================
-   Collapsible Animations
+   Animations
    ============================================================================= */
+@layer utilities {
+  .animate-fade-in { animation: fade-in 200ms ease-out; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
+  .animate-slide-up { animation: slide-up 200ms cubic-bezier(0.4, 0, 0.2, 1); }
+  @keyframes slide-up { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .animate-slide-in-right { animation: slide-in-right 300ms cubic-bezier(0.4, 0, 0.2, 1); }
+  @keyframes slide-in-right { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+  @keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 15px var(--glow); } 50% { box-shadow: 0 0 25px var(--glow-hover); } }
+}
+
+/* =============================================================================
+   Scrollbar Styling (VEHA specific)
+   ============================================================================= */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--muted-foreground); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--foreground); }
+
+/* =============================================================================
+   Collapsible Animations (VEHA specific)
+   ============================================================================= */
 .collapsible-content {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 200ms ease-out;
 }
-
-.collapsible-content[data-state="open"] {
-  grid-template-rows: 1fr;
-}
-
-.collapsible-content > div {
-  overflow: hidden;
-}
-
-/* Chevron rotation for collapsible triggers */
-.chevron-icon {
-  transition: transform 200ms ease-out;
-}
-
-[data-state="open"] .chevron-icon {
-  transform: rotate(180deg);
-}
+.collapsible-content[data-state="open"] { grid-template-rows: 1fr; }
+.collapsible-content > div { overflow: hidden; }
+.chevron-icon { transition: transform 200ms ease-out; }
+[data-state="open"] .chevron-icon { transform: rotate(180deg); }
