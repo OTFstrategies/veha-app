@@ -139,12 +139,28 @@
   --input: oklch(0.274 0.006 286.033);
   --ring: oklch(0.552 0.016 285.938 / 0.3);
 
+  /* Semantic Colors dark */
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+
+  /* VEHA Brand dark */
+  --color-primary: #d4d4d8;
+  --color-primary-light: #e4e4e7;
+  --color-primary-dark: #a1a1aa;
+  --color-secondary: #a8a29e;
+  --color-secondary-light: #d6d3d1;
+  --color-secondary-dark: #78716c;
+
   /* Gantt dark */
   --gantt-task-bar: #a1a1aa;
   --gantt-task-bar-hover: #71717a;
   --gantt-progress: #fafafa;
   --gantt-milestone: #fafafa;
   --gantt-summary: #71717a;
+  --gantt-dependency: #a1a1aa;
+  --gantt-critical-path: #f87171;
+  --gantt-today-line: #60a5fa;
   --gantt-weekend: #27272a;
 
   /* Sidebar dark */
@@ -240,3 +256,13 @@
 .collapsible-content > div { overflow: hidden; }
 .chevron-icon { transition: transform 200ms ease-out; }
 [data-state="open"] .chevron-icon { transform: rotate(180deg); }
+
+/* Accessibility: respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
