@@ -25,6 +25,8 @@ const eslintConfig = defineConfig([
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+      // Disallow console.log in production code (console.warn/error allowed)
+      "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   },
 ]);

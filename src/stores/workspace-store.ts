@@ -26,7 +26,6 @@ export const useWorkspaceStore = create<WorkspaceState>()(
         migrate: (persistedState, version) => {
           if (version < 2) {
             // Reset workspace bij migratie naar Hub - oude IDs zijn niet meer geldig
-            console.log("[VEHA] Migrating workspace store to v2, resetting stale workspace ID");
             return { currentWorkspaceId: null };
           }
           return persistedState as WorkspaceState;
