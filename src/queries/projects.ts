@@ -319,7 +319,34 @@ export function useUpdateProject() {
       if (error) throw new Error(`Failed to update project: ${error.message}`)
       return project
     },
-    onSuccess: (_, variables) => {
+    onMutate: async (variables) => {
+      // Cancel outgoing refetches so they don't overwrite our optimistic update
+      await queryClient.cancelQueries({ queryKey: projectKeys.detail(variables.id) })
+      await queryClient.cancelQueries({ queryKey: projectKeys.all })
+
+      // Snapshot the previous value
+      const previousDetail = queryClient.getQueryData(projectKeys.detail(variables.id))
+
+      // Optimistically update the detail cache
+      if (previousDetail) {
+        queryClient.setQueryData(projectKeys.detail(variables.id), (old: Record<string, unknown>) => ({
+          ...old,
+          ...Object.fromEntries(
+            Object.entries(variables).filter(([key]) => key !== 'id' && variables[key as keyof typeof variables] !== undefined)
+          ),
+        }))
+      }
+
+      return { previousDetail }
+    },
+    onError: (_err, variables, context) => {
+      // Rollback on error
+      if (context?.previousDetail) {
+        queryClient.setQueryData(projectKeys.detail(variables.id), context.previousDetail)
+      }
+    },
+    onSettled: (_, _err, variables) => {
+      // Always refetch after error or success
       queryClient.invalidateQueries({ queryKey: projectKeys.all })
       queryClient.invalidateQueries({ queryKey: projectKeys.detail(variables.id) })
     },
