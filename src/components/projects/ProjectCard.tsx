@@ -71,7 +71,7 @@ export function ProjectCard(props: ProjectCardProps) {
             <span>{formatDate(project.startDate)} - {formatDate(project.endDate)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-12 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <div className="h-1.5 w-12 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700" role="progressbar" aria-valuenow={project.progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Voortgang: ${project.progress}%`}>
               <div
                 className={cn(
                   'h-full rounded-full transition-all',
@@ -147,7 +147,7 @@ export function ProjectCard(props: ProjectCardProps) {
           <span>{formatDate(project.startDate)} - {formatDate(project.endDate)}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700" role="progressbar" aria-valuenow={project.progress} aria-valuemin={0} aria-valuemax={100} aria-label={`Voortgang: ${project.progress}%`}>
             <div
               className={cn(
                 'h-full rounded-full transition-all',

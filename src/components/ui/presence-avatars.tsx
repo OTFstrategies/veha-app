@@ -133,6 +133,8 @@ function PresenceAvatar({
           </Avatar>
           {/* Online indicator */}
           <span
+            role="status"
+            aria-label={isActive ? "Online" : "Offline"}
             className={cn(
               "absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-background",
               isActive ? "bg-green-500" : "bg-zinc-400"
