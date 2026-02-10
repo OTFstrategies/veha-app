@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
 
-const BASE_URL = 'http://localhost:5000';
-const LOGIN_EMAIL = 'stelten@vehaontzorgt.nl';
-const LOGIN_PASSWORD = 'HDevo1340';
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:1000';
+const LOGIN_EMAIL = process.env.TEST_LOGIN_EMAIL!;
+const LOGIN_PASSWORD = process.env.TEST_LOGIN_PASSWORD!;
 
 // Helper to login and navigate to VEHA App
 async function loginAndSelectVehaApp(page: Page) {

@@ -1,10 +1,10 @@
 import { test, expect, Page } from '@playwright/test';
 
-const BASE_URL = 'http://localhost:1000';
-const LOGIN_EMAIL = 'stelten@vehaontzorgt.nl';
-const LOGIN_PASSWORD = 'HDevo1340';
-const SUPABASE_URL = 'https://ikpmlhmbooaxfrlpzcfa.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcG1saG1ib29heGZybHB6Y2ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NjUzNjUsImV4cCI6MjA4NTU0MTM2NX0.OaTF51iom5IbHlqURVGbKuGSCqTLLxAGv7SITenFOgU';
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:1000';
+const LOGIN_EMAIL = process.env.TEST_LOGIN_EMAIL!;
+const LOGIN_PASSWORD = process.env.TEST_LOGIN_PASSWORD!;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 // Cache tokens across tests to reduce Supabase API calls
 let cachedTokens: { access_token: string; refresh_token: string } | null = null;
