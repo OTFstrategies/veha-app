@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { useCurrentWorkspace } from "@/hooks/use-workspace";
+import { getInitials } from "@/lib/format";
 import {
   format,
   startOfWeek,
@@ -73,14 +74,6 @@ interface ProjectWithTasksFromQuery {
 // Helper Functions
 // =============================================================================
 
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
 
 function getCapacityStatus(
   plannedHours: number,

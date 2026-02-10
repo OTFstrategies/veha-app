@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tooltip"
 import { usePresenceStore, type UserPresence } from "@/stores/presence-store"
 import { cn } from "@/lib/utils"
+import { getInitials } from "@/lib/format"
 
 // =============================================================================
 // Props
@@ -56,16 +57,6 @@ export function PresenceAvatars({
   const avatarSize = size === "sm" ? "h-6 w-6" : "h-8 w-8"
   const fontSize = size === "sm" ? "text-[10px]" : "text-xs"
   const spacing = size === "sm" ? "-space-x-1.5" : "-space-x-2"
-
-  const getInitials = (name: string) => {
-    if (!name) return '?'
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   return (
     <div className={cn("flex items-center", spacing, className)}>

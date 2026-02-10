@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { getInitials } from '@/lib/format'
 import {
   ChevronDown,
   Grid3X3,
@@ -74,14 +75,6 @@ export function EmployeeList({
   }, [employees, searchQuery, roleFilter, statusFilter])
 
   // Helper functions
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   const getRoleLabel = (role: string) => {
     const found = roles.find((r) => r.value === role)

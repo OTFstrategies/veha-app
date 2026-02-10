@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { getInitials } from '@/lib/format'
 import {
   ArrowLeft,
   Calendar,
@@ -56,14 +57,6 @@ export function EmployeeDetail({
 }: EmployeeDetailProps) {
   const [activeTab, setActiveTab] = React.useState('planning')
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   const getRoleLabel = (role: string) => {
     const labels: Record<string, string> = {

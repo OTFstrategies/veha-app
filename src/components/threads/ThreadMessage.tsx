@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { getInitials } from '@/lib/format'
 import { format } from 'date-fns'
 import { nl } from 'date-fns/locale'
 import { MoreHorizontal, Pencil, Trash2, Paperclip, Download } from 'lucide-react'
@@ -83,12 +84,7 @@ export function ThreadMessage({
   onDelete,
   onDownloadAttachment,
 }: ThreadMessageProps) {
-  const initials = message.authorName
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
+  const initials = getInitials(message.authorName)
 
   return (
     <div className={cn('group flex gap-3 py-3', isOwnMessage && 'bg-muted/30 -mx-3 px-3 rounded-md')}>

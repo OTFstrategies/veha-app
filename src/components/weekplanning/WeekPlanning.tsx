@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, Calendar, AlertTriangle } from 'lucide-react'
+import { getInitials } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -136,14 +137,6 @@ export function WeekPlanning({
   onAvailabilityClick,
 }: WeekPlanningProps) {
   // Helper functions
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   const formatWeekRange = () => {
     const start = new Date(currentWeek.startDate)

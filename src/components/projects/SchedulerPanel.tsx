@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { AlertTriangle } from 'lucide-react'
+import { getInitials } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ConflictBadge } from './ConflictBadge'
@@ -150,14 +151,6 @@ export function SchedulerPanel({
   // Helpers
   // ---------------------------------------------------------------------------
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   // Calculate if employee is overbooked (simplified: > 40 hours/week)
   const isOverbooked = (resource: ResourceData) => {

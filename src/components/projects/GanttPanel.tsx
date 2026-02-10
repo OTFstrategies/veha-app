@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { ChevronDown, ChevronRight, Diamond } from 'lucide-react'
+import { getInitials } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { TimelineHeader } from './TimelineHeader'
@@ -274,14 +275,6 @@ export function GanttPanel({
     return date.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit' })
   }
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
 
   // Default resize handler if not provided
   const handleResizeStart = React.useCallback((taskId: string, handle: 'start' | 'end', startX: number) => {

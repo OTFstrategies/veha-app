@@ -1,4 +1,5 @@
 import { Trash2, UserPlus } from 'lucide-react'
+import { getInitials } from '@/lib/format'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -13,15 +14,6 @@ interface TaskResourcePanelProps {
   onRemoveAssignment: (assignmentId: string) => void
 }
 
-function getInitials(name: string) {
-  if (!name) return '?'
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
-}
 
 export function TaskResourcePanel({
   task,

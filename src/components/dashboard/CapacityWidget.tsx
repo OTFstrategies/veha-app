@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { getInitials } from '@/lib/format'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { CapacityEntry } from '@/types/dashboard'
 
@@ -15,14 +16,6 @@ interface CapacityWidgetProps {
 // Helper
 // =============================================================================
 
-const getInitials = (name: string) => {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
-}
 
 // =============================================================================
 // Component
