@@ -27,10 +27,10 @@ const statusLabels: Record<string, string> = {
 }
 
 const statusColors: Record<string, string> = {
-  beschikbaar: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  in_gebruik: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  onderhoud: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  defect: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+  beschikbaar: "bg-state-success-bg text-state-success-text",
+  in_gebruik: "bg-state-info-bg text-state-info-text",
+  onderhoud: "bg-state-warning-bg text-state-warning-text",
+  defect: "bg-state-error-bg text-state-error-text",
 }
 
 const typeIcons: Record<string, React.ComponentType<{ className?: string }>> = {

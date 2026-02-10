@@ -30,10 +30,10 @@ const ICON_MAP: Record<NotificationType, React.ElementType> = {
 }
 
 const COLOR_MAP: Record<NotificationType, string> = {
-  mention: 'text-blue-500',
-  reply: 'text-purple-500',
-  new_thread: 'text-green-500',
-  assignment: 'text-amber-500',
+  mention: 'text-zinc-600 dark:text-zinc-400',
+  reply: 'text-zinc-500 dark:text-zinc-400',
+  new_thread: 'text-zinc-700 dark:text-zinc-300',
+  assignment: 'text-zinc-600 dark:text-zinc-400',
 }
 
 // =============================================================================
@@ -53,7 +53,7 @@ function NotificationItem({
     <div
       className={cn(
         'flex items-start gap-3 px-4 py-3 hover:bg-accent/50 transition-colors cursor-pointer border-b border-border last:border-0',
-        !notification.isRead && 'bg-blue-50/50 dark:bg-blue-950/20'
+        !notification.isRead && 'bg-zinc-100/50 dark:bg-zinc-800/30'
       )}
       onClick={() => {
         if (!notification.isRead) onMarkRead(notification.id)
@@ -78,7 +78,7 @@ function NotificationItem({
       </div>
 
       {!notification.isRead && (
-        <div className="h-2 w-2 rounded-full bg-blue-500 mt-2 shrink-0" />
+        <div className="h-2 w-2 rounded-full bg-zinc-800 dark:bg-zinc-200 mt-2 shrink-0" />
       )}
     </div>
   )

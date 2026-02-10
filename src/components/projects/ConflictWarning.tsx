@@ -44,7 +44,7 @@ export function ConflictWarning({ conflicts }: ConflictWarningProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="flex items-center gap-1.5 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-amber-700 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400 cursor-help">
+          <div className="flex items-center gap-1.5 rounded-md border border-state-warning-text/20 bg-state-warning-bg px-2 py-1 text-state-warning-text cursor-help">
             <AlertTriangle className="h-3.5 w-3.5" />
             <span className="text-xs font-medium">
               {conflicts.length} {conflicts.length === 1 ? "conflict" : "conflicten"}

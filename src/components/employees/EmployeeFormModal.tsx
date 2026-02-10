@@ -22,7 +22,7 @@ import type { Employee, SelectOption, Skill } from "@/types/employees";
 // =============================================================================
 
 // Default color for employees (color picker removed per design decision)
-const DEFAULT_EMPLOYEE_COLOR = "#3b82f6"; // blue
+const DEFAULT_EMPLOYEE_COLOR = "#3f3f46"; // zinc-700
 
 // =============================================================================
 // Props

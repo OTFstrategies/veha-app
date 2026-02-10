@@ -36,20 +36,20 @@ const ROW_HEIGHT = 40;
 
 function getStatusColor(status: string, progress: number): string {
   if (status === "done" || progress === 100) {
-    return "bg-green-500 dark:bg-green-600";
+    return "bg-zinc-800 dark:bg-zinc-200";
   }
   if (status === "in_progress") {
-    return "bg-blue-500 dark:bg-blue-600";
+    return "bg-zinc-600 dark:bg-zinc-400";
   }
   return "bg-zinc-400 dark:bg-zinc-500";
 }
 
 function getProgressColor(status: string): string {
   if (status === "done") {
-    return "bg-green-700 dark:bg-green-400";
+    return "bg-zinc-900 dark:bg-zinc-100";
   }
   if (status === "in_progress") {
-    return "bg-blue-700 dark:bg-blue-400";
+    return "bg-zinc-800 dark:bg-zinc-200";
   }
   return "bg-zinc-600 dark:bg-zinc-300";
 }
@@ -241,9 +241,9 @@ export function PortalGantt({
                     className={cn(
                       "h-2 w-2 shrink-0 rounded-full",
                       task.status === "done"
-                        ? "bg-green-500"
+                        ? "bg-zinc-800 dark:bg-zinc-200"
                         : task.status === "in_progress"
-                        ? "bg-blue-500"
+                        ? "bg-zinc-600 dark:bg-zinc-400"
                         : "bg-zinc-400"
                     )}
                   />
@@ -251,7 +251,7 @@ export function PortalGantt({
                     {task.name}
                   </span>
                   {task.isMilestone && (
-                    <span className="shrink-0 text-amber-500" title="Mijlpaal">
+                    <span className="shrink-0 text-zinc-500 dark:text-zinc-400" title="Mijlpaal">
                       <svg
                         className="h-3 w-3"
                         fill="currentColor"
@@ -351,11 +351,11 @@ export function PortalGantt({
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 border-t border-border bg-zinc-50 px-3 py-2 text-xs text-muted-foreground dark:bg-zinc-900">
         <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-green-500" />
+          <div className="h-2 w-2 rounded-full bg-zinc-800 dark:bg-zinc-200" />
           <span>Afgerond</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-blue-500" />
+          <div className="h-2 w-2 rounded-full bg-zinc-600 dark:bg-zinc-400" />
           <span>Bezig</span>
         </div>
         <div className="flex items-center gap-1.5">

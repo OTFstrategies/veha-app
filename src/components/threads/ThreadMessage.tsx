@@ -56,7 +56,7 @@ function highlightMentions(content: string, mentions: string[], mentionNames: st
         parts.push(result.substring(lastIndex, index))
       }
       parts.push(
-        <span key={index} className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 rounded px-0.5">
+        <span key={index} className="bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200 rounded px-0.5">
           {pattern}
         </span>
       )

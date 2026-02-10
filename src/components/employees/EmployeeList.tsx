@@ -408,7 +408,7 @@ export function EmployeeList({
                       variant="outline"
                       className={cn(
                         employee.isActive
-                          ? 'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400'
+                          ? 'border-state-success-text/20 bg-state-success-bg text-state-success-text'
                           : 'border-zinc-200 bg-zinc-50 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
                       )}
                     >

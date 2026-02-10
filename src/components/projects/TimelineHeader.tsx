@@ -132,7 +132,7 @@ export function TimelineHeader({
             className={cn(
               'flex items-center justify-center border-r border-border text-xs',
               isWeekend && 'bg-zinc-100/50 dark:bg-zinc-800/30',
-              isToday && 'bg-blue-100 font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+              isToday && 'bg-zinc-200 font-semibold text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100'
             )}
             style={{ width: columnWidth }}
           >

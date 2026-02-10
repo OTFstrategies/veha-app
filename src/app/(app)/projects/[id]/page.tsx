@@ -77,10 +77,10 @@ export default function ProjectDetailPage() {
 
   // Mock employees data - in production, this would come from a useEmployees hook
   const employees = React.useMemo(() => [
-    { id: '1', name: 'Jan de Vries', role: 'Voorman', color: '#3b82f6' },
-    { id: '2', name: 'Pieter Bakker', role: 'Specialist', color: '#22c55e' },
-    { id: '3', name: 'Klaas Jansen', role: 'Medewerker', color: '#f59e0b' },
-    { id: '4', name: 'Willem Smit', role: 'Uitvoerder', color: '#8b5cf6' },
+    { id: '1', name: 'Jan de Vries', role: 'Voorman', color: '#3f3f46' },
+    { id: '2', name: 'Pieter Bakker', role: 'Specialist', color: '#52525b' },
+    { id: '3', name: 'Klaas Jansen', role: 'Medewerker', color: '#71717a' },
+    { id: '4', name: 'Willem Smit', role: 'Uitvoerder', color: '#a1a1aa' },
   ], [])
 
   // Handlers

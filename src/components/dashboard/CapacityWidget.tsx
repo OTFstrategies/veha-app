@@ -62,7 +62,7 @@ export function CapacityWidget({
                 className={cn(
                   'ml-2 text-xs font-medium tabular-nums',
                   employee.status === 'overbooked' && 'text-red-600 dark:text-red-400',
-                  employee.status === 'underutilized' && 'text-amber-600 dark:text-amber-400'
+                  employee.status === 'underutilized' && 'text-zinc-500 dark:text-zinc-400'
                 )}
               >
                 {employee.plannedHours}/{employee.availableHours}u
@@ -82,8 +82,8 @@ export function CapacityWidget({
                 className={cn(
                   'h-full rounded-full transition-all',
                   employee.status === 'overbooked' && 'bg-red-500',
-                  employee.status === 'optimal' && 'bg-green-500',
-                  employee.status === 'underutilized' && 'bg-amber-500'
+                  employee.status === 'optimal' && 'bg-zinc-800 dark:bg-zinc-200',
+                  employee.status === 'underutilized' && 'bg-zinc-500 dark:bg-zinc-400'
                 )}
                 style={{ width: `${Math.min(employee.utilizationPercent, 100)}%` }}
               />

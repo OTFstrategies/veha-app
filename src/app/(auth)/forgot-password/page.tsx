@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
         {/* Success Message */}
         {formState.success && (
           <div
-            className="rounded-xl bg-green-50 p-4 text-sm text-green-600 dark:bg-green-950/50 dark:text-green-400"
+            className="rounded-xl bg-state-success-bg p-4 text-sm text-state-success-text"
             role="alert"
           >
             {formState.success}

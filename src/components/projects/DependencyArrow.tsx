@@ -90,11 +90,11 @@ export function DependencyArrow({
   }
 
   const strokeClass = isHighlighted
-    ? 'stroke-blue-500 dark:stroke-blue-400'
+    ? 'stroke-zinc-600 dark:stroke-zinc-300'
     : 'stroke-zinc-400 dark:stroke-zinc-500'
 
   const fillClass = isHighlighted
-    ? 'fill-blue-500 dark:fill-blue-400'
+    ? 'fill-zinc-600 dark:fill-zinc-300'
     : 'fill-zinc-400 dark:fill-zinc-500'
 
   // Arrow head pointing right

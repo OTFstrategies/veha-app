@@ -40,13 +40,13 @@ export function VarianceIndicator({ varianceDays, type, className }: VarianceInd
   const colors = {
     high: isLate
       ? "bg-red-500 dark:bg-red-600"
-      : "bg-green-500 dark:bg-green-600",
+      : "bg-zinc-800 dark:bg-zinc-200",
     medium: isLate
-      ? "bg-amber-500 dark:bg-amber-600"
-      : "bg-green-400 dark:bg-green-500",
+      ? "bg-zinc-600 dark:bg-zinc-300"
+      : "bg-zinc-600 dark:bg-zinc-400",
     low: isLate
-      ? "bg-amber-400 dark:bg-amber-500"
-      : "bg-green-300 dark:bg-green-400",
+      ? "bg-zinc-500 dark:bg-zinc-400"
+      : "bg-zinc-400 dark:bg-zinc-500",
   }
 
   const typeLabel = type === "start" ? "Start" : "Eind"

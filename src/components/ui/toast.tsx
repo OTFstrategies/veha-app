@@ -90,10 +90,10 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
   }
 
   const colors = {
-    success: "border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-200",
+    success: "border-state-success-text/20 bg-state-success-bg text-state-success-text",
     error: "border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200",
-    warning: "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-200",
-    info: "border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200",
+    warning: "border-state-warning-text/20 bg-state-warning-bg text-state-warning-text",
+    info: "border-state-info-text/20 bg-state-info-bg text-state-info-text",
   }
 
   const Icon = icons[toast.type]

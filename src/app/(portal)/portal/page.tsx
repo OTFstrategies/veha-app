@@ -227,7 +227,7 @@ export default function PortalDashboardPage() {
           </div>
           <div className="rounded-lg border bg-card p-3 sm:p-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
-              <div className="h-2 w-2 shrink-0 rounded-full bg-green-500" />
+              <div className="h-2 w-2 shrink-0 rounded-full bg-zinc-800 dark:bg-zinc-200" />
               <span className="truncate">Afgerond</span>
             </div>
             <p className="mt-1 text-xl font-bold tabular-nums sm:text-2xl">{completedProjects}</p>

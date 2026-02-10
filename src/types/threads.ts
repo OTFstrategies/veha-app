@@ -90,17 +90,17 @@ export interface Notification {
 // =============================================================================
 
 export const STATUS_TAG_CONFIG: Record<ThreadStatusTag, { label: string; color: string }> = {
-  vraag: { label: 'Vraag', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' },
-  besluit: { label: 'Besluit', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' },
-  update: { label: 'Update', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' },
-  probleem: { label: 'Probleem', color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' },
-  idee: { label: 'Idee', color: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300' },
+  vraag: { label: 'Vraag', color: 'bg-state-info-bg text-state-info-text' },
+  besluit: { label: 'Besluit', color: 'bg-state-success-bg text-state-success-text' },
+  update: { label: 'Update', color: 'bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200' },
+  probleem: { label: 'Probleem', color: 'bg-state-error-bg text-state-error-text' },
+  idee: { label: 'Idee', color: 'bg-state-warning-bg text-state-warning-text' },
 }
 
 export const PRIORITY_CONFIG: Record<ThreadPriority, { label: string; color: string }> = {
   low: { label: 'Laag', color: 'text-muted-foreground' },
   normal: { label: 'Normaal', color: 'text-foreground' },
-  high: { label: 'Hoog', color: 'text-amber-600' },
+  high: { label: 'Hoog', color: 'text-zinc-700 dark:text-zinc-300' },
   urgent: { label: 'Urgent', color: 'text-red-600' },
 }
 

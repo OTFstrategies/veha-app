@@ -45,7 +45,7 @@ function ThreadCard({
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium truncate">{thread.title}</span>
             {thread.isResolved && (
-              <CheckCircle2 className="h-3.5 w-3.5 text-green-600 shrink-0" />
+              <CheckCircle2 className="h-3.5 w-3.5 text-zinc-700 dark:text-zinc-300 shrink-0" />
             )}
           </div>
           <div className="flex items-center gap-2 mt-0.5">

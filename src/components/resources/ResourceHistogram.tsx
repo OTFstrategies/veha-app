@@ -39,9 +39,9 @@ interface ResourceHistogramProps {
 // =============================================================================
 
 const STATUS_COLORS = {
-  overbooked: "#ef4444", // red-500
-  optimal: "#22c55e", // green-500
-  underutilized: "#f59e0b", // amber-500
+  overbooked: "#ef4444", // red-500 — KEEP: error/overbooked state
+  optimal: "#3f3f46", // zinc-700
+  underutilized: "#71717a", // zinc-500
 }
 
 // =============================================================================

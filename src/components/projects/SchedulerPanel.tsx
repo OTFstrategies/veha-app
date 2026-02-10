@@ -229,7 +229,7 @@ export function SchedulerPanel({
                 className={cn(
                   'flex items-center border-b border-border transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800',
                   overbooked && 'bg-red-50 dark:bg-red-900/10',
-                  hasConflicts && !overbooked && 'bg-orange-50/50 dark:bg-orange-900/10'
+                  hasConflicts && !overbooked && 'bg-zinc-100/50 dark:bg-zinc-800/50'
                 )}
                 style={{ height: ROW_HEIGHT }}
               >
@@ -330,7 +330,7 @@ export function SchedulerPanel({
               return conflictRanges.map((range, rangeIndex) => (
                 <div
                   key={`conflict-${resource.employee.id}-${rangeIndex}`}
-                  className="absolute bg-orange-200/30 dark:bg-orange-800/20 border-l-2 border-r-2 border-orange-400"
+                  className="absolute bg-zinc-200/30 dark:bg-zinc-700/20 border-l-2 border-r-2 border-zinc-400"
                   style={{
                     left: range.left,
                     top: rowIndex * ROW_HEIGHT,
@@ -344,7 +344,7 @@ export function SchedulerPanel({
             {/* Today Line */}
             {viewOptions.showTodayLine && todayPosition > 0 && (
               <div
-                className="absolute top-0 bottom-0 z-10 w-0.5 bg-blue-500"
+                className="absolute top-0 bottom-0 z-10 w-0.5 bg-zinc-500 dark:bg-zinc-400"
                 style={{ left: todayPosition }}
               />
             )}
@@ -373,7 +373,7 @@ export function SchedulerPanel({
                       className={cn(
                         'group absolute cursor-pointer rounded transition-all',
                         isSelected
-                          ? 'ring-2 ring-blue-500 ring-offset-1'
+                          ? 'ring-2 ring-zinc-400/30 ring-offset-1'
                           : 'hover:brightness-95'
                       )}
                       style={{

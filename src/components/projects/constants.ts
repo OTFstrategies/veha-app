@@ -10,23 +10,23 @@ export const STATUS_CONFIG: Record<ProjectStatus, { label: string; className: st
   },
   actief: {
     label: 'Actief',
-    className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    barColor: 'bg-green-500 dark:bg-green-600',
+    className: 'bg-state-success-bg text-state-success-text',
+    barColor: 'bg-zinc-700 dark:bg-zinc-300',
   },
   'on-hold': {
     label: 'On-hold',
-    className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-    barColor: 'bg-amber-500 dark:bg-amber-600',
+    className: 'bg-state-warning-bg text-state-warning-text',
+    barColor: 'bg-zinc-500 dark:bg-zinc-400',
   },
   afgerond: {
     label: 'Afgerond',
-    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    barColor: 'bg-blue-500 dark:bg-blue-600',
+    className: 'bg-state-info-bg text-state-info-text',
+    barColor: 'bg-zinc-800 dark:bg-zinc-200',
   },
   geannuleerd: {
     label: 'Geannuleerd',
-    className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-    barColor: 'bg-red-400 dark:bg-red-500',
+    className: 'bg-state-error-bg text-state-error-text',
+    barColor: 'bg-zinc-400 dark:bg-zinc-500',
   },
 }
 
@@ -50,9 +50,9 @@ export const KANBAN_COLUMNS: Array<{
   bgColor: string
 }> = [
   { id: 'gepland', title: 'Gepland', headerColor: 'bg-zinc-500', bgColor: 'bg-zinc-50 dark:bg-zinc-900/50' },
-  { id: 'actief', title: 'Actief', headerColor: 'bg-green-500', bgColor: 'bg-green-50 dark:bg-green-900/20' },
-  { id: 'on-hold', title: 'On-hold', headerColor: 'bg-amber-500', bgColor: 'bg-amber-50 dark:bg-amber-900/20' },
-  { id: 'afgerond', title: 'Afgerond', headerColor: 'bg-blue-500', bgColor: 'bg-blue-50 dark:bg-blue-900/20' },
+  { id: 'actief', title: 'Actief', headerColor: 'bg-zinc-700 dark:bg-zinc-300', bgColor: 'bg-zinc-50 dark:bg-zinc-900/50' },
+  { id: 'on-hold', title: 'On-hold', headerColor: 'bg-zinc-500', bgColor: 'bg-zinc-50 dark:bg-zinc-900/50' },
+  { id: 'afgerond', title: 'Afgerond', headerColor: 'bg-zinc-800 dark:bg-zinc-200', bgColor: 'bg-zinc-100 dark:bg-zinc-800/50' },
 ]
 
 // Gantt grid column widths

@@ -45,9 +45,9 @@ export function ConflictBadge({ conflicts, size = "md" }: ConflictBadgeProps) {
           type="button"
           className={cn(
             "inline-flex items-center gap-1 rounded-full px-2 py-0.5",
-            "bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400",
-            "hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors",
-            "focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+            "bg-state-warning-bg text-state-warning-text",
+            "hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors",
+            "focus:outline-none focus:ring-2 focus:ring-zinc-400/30 focus:ring-offset-2"
           )}
           aria-label={`${conflicts.length} ${conflicts.length === 1 ? "conflict" : "conflicten"}`}
         >
@@ -82,7 +82,7 @@ function ConflictDetails({ conflicts }: ConflictDetailsProps) {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
+      <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
         <AlertTriangle className="h-4 w-4" />
         <h4 className="font-semibold">
           {conflicts.length} {conflicts.length === 1 ? "Conflict" : "Conflicten"}
@@ -101,7 +101,7 @@ function ConflictDetails({ conflicts }: ConflictDetailsProps) {
               <span className="font-medium text-zinc-900 dark:text-zinc-100">
                 {conflict.employeeName}
               </span>
-              <span className="text-xs text-orange-600 dark:text-orange-400">
+              <span className="text-xs text-zinc-600 dark:text-zinc-400">
                 {conflict.overlapDays}{" "}
                 {conflict.overlapDays === 1 ? "dag" : "dagen"} overlap
               </span>
@@ -158,7 +158,7 @@ export function ConflictSummary({ conflictCount }: ConflictSummaryProps) {
   if (conflictCount === 0) return null
 
   return (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-state-warning-bg text-state-warning-text">
       <AlertTriangle className="h-4 w-4" />
       <span className="text-sm font-medium">
         {conflictCount} {conflictCount === 1 ? "conflict" : "conflicten"}

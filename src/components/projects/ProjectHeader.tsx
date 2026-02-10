@@ -55,19 +55,19 @@ const STATUS_CONFIG: Record<ProjectStatus, { label: string; className: string }>
   },
   actief: {
     label: 'Actief',
-    className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    className: 'bg-state-success-bg text-state-success-text',
   },
   'on-hold': {
     label: 'On-hold',
-    className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+    className: 'bg-state-warning-bg text-state-warning-text',
   },
   afgerond: {
     label: 'Afgerond',
-    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    className: 'bg-state-info-bg text-state-info-text',
   },
   geannuleerd: {
     label: 'Geannuleerd',
-    className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    className: 'bg-state-error-bg text-state-error-text',
   },
 }
 
@@ -145,7 +145,7 @@ export function ProjectHeader({
         <div className="flex items-center gap-3">
           {/* Conflict Summary */}
           {conflictCount > 0 && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-state-warning-bg text-state-warning-text">
               <AlertTriangle className="h-4 w-4" />
               <span className="text-sm font-medium">
                 {conflictCount} {conflictCount === 1 ? 'conflict' : 'conflicten'}

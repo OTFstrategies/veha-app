@@ -20,7 +20,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
   if (taskGroups.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <CheckCircle2 className="mb-2 h-8 w-8 text-green-500" />
+        <CheckCircle2 className="mb-2 h-8 w-8 text-zinc-500 dark:text-zinc-400" />
         <p className="text-sm text-muted-foreground">Geen taken voor vandaag</p>
       </div>
     )
@@ -54,16 +54,16 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                   className={cn(
                     'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
                     task.status === 'done'
-                      ? 'bg-green-100 dark:bg-green-900/30'
+                      ? 'bg-zinc-200 dark:bg-zinc-700'
                       : task.status === 'in_progress'
-                      ? 'bg-blue-100 dark:bg-blue-900/30'
+                      ? 'bg-zinc-100 dark:bg-zinc-800'
                       : 'bg-zinc-100 dark:bg-zinc-800'
                   )}
                 >
                   {task.status === 'done' ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-zinc-600 dark:text-zinc-300" />
                   ) : (
-                    <Clock className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                    <Clock className="h-3.5 w-3.5 text-zinc-600 dark:text-zinc-400" />
                   )}
                 </div>
 
@@ -91,7 +91,7 @@ export function TodayTasks({ taskGroups, onTaskClick }: TodayTasksProps) {
                         className={cn(
                           'h-full rounded-full transition-all',
                           task.progress === 100
-                            ? 'bg-green-500'
+                            ? 'bg-zinc-800 dark:bg-zinc-200'
                             : 'bg-zinc-600 dark:bg-zinc-400'
                         )}
                         style={{ width: `${task.progress}%` }}

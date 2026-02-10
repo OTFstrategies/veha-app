@@ -52,7 +52,7 @@ export function ProjectCard(props: ProjectCardProps) {
         onClick={onClick}
         className={cn(
           'w-full text-left rounded-lg border border-border bg-card p-3 shadow-sm transition-all hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600',
-          isDragging && 'ring-2 ring-blue-500 shadow-lg'
+          isDragging && 'ring-2 ring-zinc-400/30 shadow-lg'
         )}
       >
         <h3 className="font-medium text-foreground truncate">{project.name}</h3>
@@ -75,7 +75,7 @@ export function ProjectCard(props: ProjectCardProps) {
               <div
                 className={cn(
                   'h-full rounded-full transition-all',
-                  project.progress === 100 ? 'bg-green-500' : 'bg-zinc-800 dark:bg-zinc-200'
+                  project.progress === 100 ? 'bg-zinc-800 dark:bg-zinc-200' : 'bg-zinc-800 dark:bg-zinc-200'
                 )}
                 style={{ width: `${project.progress}%` }}
               />
@@ -151,7 +151,7 @@ export function ProjectCard(props: ProjectCardProps) {
             <div
               className={cn(
                 'h-full rounded-full transition-all',
-                project.progress === 100 ? 'bg-green-500' : 'bg-zinc-800 dark:bg-zinc-200'
+                project.progress === 100 ? 'bg-zinc-800 dark:bg-zinc-200' : 'bg-zinc-800 dark:bg-zinc-200'
               )}
               style={{ width: `${project.progress}%` }}
             />

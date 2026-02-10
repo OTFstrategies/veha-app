@@ -63,7 +63,7 @@ export function CascadePreviewModal({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-orange-500" />
+            <Calendar className="h-5 w-5 text-zinc-500 dark:text-zinc-400" />
             Datum Wijzigingen Preview
           </DialogTitle>
           <DialogDescription>{dependencyDescription}</DialogDescription>
@@ -76,7 +76,7 @@ export function CascadePreviewModal({
             </p>
           ) : (
             <>
-              <div className="mb-4 flex items-center gap-2 rounded-lg bg-orange-50 p-3 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300">
+              <div className="mb-4 flex items-center gap-2 rounded-lg bg-zinc-100 p-3 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                 <AlertTriangle className="h-4 w-4 shrink-0" />
                 <p className="text-sm">
                   {previews.length}{" "}
@@ -101,7 +101,7 @@ export function CascadePreviewModal({
                         </span>
                       </div>
                       <ArrowRight className="h-4 w-4 text-zinc-400" />
-                      <div className="font-medium text-orange-600 dark:text-orange-400">
+                      <div className="font-medium text-zinc-900 dark:text-zinc-100">
                         {formatDate(preview.newStartDate)} -{" "}
                         {formatDate(preview.newEndDate)}
                       </div>

@@ -117,7 +117,7 @@ export function DemoProjectCard({ project, isFirst }: DemoProjectCardProps) {
             className={cn(
               "h-full rounded-full transition-all",
               isComplete
-                ? "bg-green-500"
+                ? "bg-zinc-800 dark:bg-zinc-200"
                 : isActive
                   ? "bg-zinc-700 dark:bg-zinc-300"
                   : "bg-zinc-400 dark:bg-zinc-500"

@@ -55,7 +55,7 @@ export default function AuthCallbackPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-10 h-10 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-3 border-zinc-400 border-t-transparent rounded-full animate-spin dark:border-zinc-500" />
         <p className="text-zinc-600 dark:text-zinc-400">Inloggen...</p>
       </div>
     </div>

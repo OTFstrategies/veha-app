@@ -461,7 +461,7 @@ export function TaskEditor({
       <Dialog open={!!conflictWarning} onOpenChange={() => setConflictWarning(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-orange-600">
+            <DialogTitle className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
               <AlertTriangle className="h-5 w-5" />
               Conflict Gedetecteerd
             </DialogTitle>
@@ -473,7 +473,7 @@ export function TaskEditor({
             </p>
 
             {conflictWarning && (
-              <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg space-y-2">
+              <div className="p-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-zinc-500 dark:text-zinc-400">Conflicterende taak:</span>
                   <span className="font-medium text-zinc-900 dark:text-zinc-100">
@@ -482,7 +482,7 @@ export function TaskEditor({
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-zinc-500 dark:text-zinc-400">Overlap:</span>
-                  <span className="font-medium text-orange-600 dark:text-orange-400">
+                  <span className="font-medium text-zinc-700 dark:text-zinc-300">
                     {conflictWarning.overlapDays} {conflictWarning.overlapDays === 1 ? 'dag' : 'dagen'}
                   </span>
                 </div>

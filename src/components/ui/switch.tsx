@@ -16,7 +16,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           "focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
           disabled && "cursor-not-allowed opacity-50",
           checked
-            ? "bg-lime-600 dark:bg-lime-500"
+            ? "bg-zinc-900 dark:bg-zinc-100"
             : "bg-zinc-200 dark:bg-zinc-700",
           className
         )}

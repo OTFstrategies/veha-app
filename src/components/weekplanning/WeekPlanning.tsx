@@ -35,13 +35,13 @@ export interface WeekPlanningProps {
 
 const defaultAvailabilityStyles: AvailabilityStyles = {
   ziek: {
-    bgColor: 'bg-red-100 dark:bg-red-900/30',
-    textColor: 'text-red-700 dark:text-red-300',
+    bgColor: 'bg-state-error-bg',
+    textColor: 'text-state-error-text',
     label: 'ZIEK',
   },
   vakantie: {
-    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
-    textColor: 'text-amber-700 dark:text-amber-300',
+    bgColor: 'bg-state-info-bg',
+    textColor: 'text-state-info-text',
     label: 'VAKANTIE',
   },
   vrij: {
@@ -76,9 +76,9 @@ const ROW_HEIGHT = 100
  */
 function getUtilizationColor(percentage: number): string {
   if (percentage > 100) return 'bg-red-500'
-  if (percentage > 80) return 'bg-orange-500'
-  if (percentage > 50) return 'bg-blue-500'
-  return 'bg-green-500'
+  if (percentage > 80) return 'bg-zinc-800 dark:bg-zinc-200'
+  if (percentage > 50) return 'bg-zinc-600 dark:bg-zinc-400'
+  return 'bg-zinc-400 dark:bg-zinc-500'
 }
 
 /**
@@ -315,7 +315,7 @@ export function WeekPlanning({
                 key={day.date}
                 className={cn(
                   'shrink-0 border-r border-border px-3 py-3 text-center',
-                  day.isToday && 'bg-blue-50 dark:bg-blue-900/20'
+                  day.isToday && 'bg-zinc-100 dark:bg-zinc-800/50'
                 )}
                 style={{ width: DAY_COLUMN_WIDTH }}
               >
@@ -325,7 +325,7 @@ export function WeekPlanning({
                 <div
                   className={cn(
                     'mt-1 text-lg font-semibold',
-                    day.isToday && 'text-blue-600 dark:text-blue-400'
+                    day.isToday && 'text-zinc-900 dark:text-zinc-100'
                   )}
                 >
                   {day.dayNumber}
@@ -352,7 +352,7 @@ export function WeekPlanning({
                   key={`summary-${day.date}`}
                   className={cn(
                     'shrink-0 border-r border-border px-3 py-2 text-center',
-                    day.isToday && 'bg-blue-50/30 dark:bg-blue-900/10'
+                    day.isToday && 'bg-zinc-100/50 dark:bg-zinc-800/30'
                   )}
                   style={{ width: DAY_COLUMN_WIDTH }}
                 >
@@ -411,7 +411,7 @@ export function WeekPlanning({
                     key={day.date}
                     className={cn(
                       'shrink-0 border-r border-border p-1',
-                      day.isToday && 'bg-blue-50/50 dark:bg-blue-900/10'
+                      day.isToday && 'bg-zinc-100/50 dark:bg-zinc-800/20'
                     )}
                     style={{ width: DAY_COLUMN_WIDTH }}
                   >

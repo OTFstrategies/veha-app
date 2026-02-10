@@ -137,7 +137,7 @@ function PresenceAvatar({
             aria-label={isActive ? "Online" : "Offline"}
             className={cn(
               "absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-background",
-              isActive ? "bg-green-500" : "bg-zinc-400"
+              isActive ? "bg-zinc-800 dark:bg-zinc-200" : "bg-zinc-400"
             )}
           />
         </div>
@@ -146,7 +146,7 @@ function PresenceAvatar({
         <p className="font-medium">{user.name}</p>
         <p className="text-muted-foreground">{user.email}</p>
         {user.viewingTaskId && (
-          <p className="text-blue-500 text-[10px] mt-1">
+          <p className="text-zinc-500 dark:text-zinc-400 text-[10px] mt-1">
             Bekijkt taak
           </p>
         )}

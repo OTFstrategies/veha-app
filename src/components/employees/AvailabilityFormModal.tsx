@@ -37,10 +37,10 @@ interface AvailabilityFormModalProps {
 
 function getStatusColor(status: AvailabilityStatus): string {
   const colors: Record<AvailabilityStatus, string> = {
-    beschikbaar: "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800",
-    ziek: "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800",
-    vakantie: "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800",
-    vrij: "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800",
+    beschikbaar: "bg-state-success-bg text-state-success-text border-state-success-text/20",
+    ziek: "bg-state-error-bg text-state-error-text border-state-error-text/20",
+    vakantie: "bg-state-info-bg text-state-info-text border-state-info-text/20",
+    vrij: "bg-state-warning-bg text-state-warning-text border-state-warning-text/20",
     training: "bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-zinc-700 dark:text-zinc-300 dark:border-zinc-600",
   };
   return colors[status] || "bg-zinc-100 text-zinc-700 border-zinc-200";

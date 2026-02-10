@@ -177,15 +177,15 @@ export function TaskDependencyPanel({
         )}
 
         {pendingDependency?.predecessorId && inlinePreview.length > 0 && (
-          <div className="rounded-md bg-amber-50 p-3 dark:bg-amber-900/20">
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+          <div className="rounded-md bg-zinc-100 p-3 dark:bg-zinc-800">
+            <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
               Deze wijziging zal {inlinePreview.length}{' '}
               {inlinePreview.length === 1 ? 'taak' : 'taken'} verplaatsen:
             </p>
-            <ul className="mt-2 space-y-1 text-xs text-amber-700 dark:text-amber-300">
+            <ul className="mt-2 space-y-1 text-xs text-zinc-700 dark:text-zinc-300">
               {inlinePreview.slice(0, 3).map((t) => (
                 <li key={t.taskId} className="flex items-center gap-1">
-                  <span className="text-amber-500">&#8226;</span>
+                  <span className="text-zinc-500">&#8226;</span>
                   <span className="font-medium">{t.taskName}:</span>
                   <span className="line-through opacity-60">
                     {new Date(t.oldStartDate).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}
@@ -197,7 +197,7 @@ export function TaskDependencyPanel({
                 </li>
               ))}
               {inlinePreview.length > 3 && (
-                <li className="text-amber-600 dark:text-amber-400">
+                <li className="text-zinc-600 dark:text-zinc-400">
                   ... en {inlinePreview.length - 3} meer
                 </li>
               )}
@@ -206,7 +206,7 @@ export function TaskDependencyPanel({
         )}
 
         {pendingDependency?.predecessorId && inlinePreview.length === 0 && !inlinePreviewError && !isPreviewLoading && (
-          <div className="rounded-md bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-300">
+          <div className="rounded-md bg-zinc-50 p-3 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
             Geen taken worden beinvloed door deze dependency.
           </div>
         )}

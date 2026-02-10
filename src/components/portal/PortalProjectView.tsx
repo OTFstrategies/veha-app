@@ -115,7 +115,7 @@ function TaskItem({ task }: TaskItemProps) {
       className={cn(
         "flex items-start gap-3 rounded-lg border p-3 sm:p-4 transition-colors",
         isDone
-          ? "border-green-200 bg-green-50 dark:border-green-800/50 dark:bg-green-900/20"
+          ? "border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800/50"
           : isInProgress
           ? "border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800"
           : "border-border bg-card"
@@ -124,7 +124,7 @@ function TaskItem({ task }: TaskItemProps) {
       {/* Status Icon */}
       <div className="mt-0.5 shrink-0">
         {isDone ? (
-          <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+          <CheckCircle2 className="h-5 w-5 text-zinc-700 dark:text-zinc-300" />
         ) : isInProgress ? (
           <Loader2 className="h-5 w-5 animate-spin text-zinc-600 dark:text-zinc-400" />
         ) : (
@@ -139,14 +139,14 @@ function TaskItem({ task }: TaskItemProps) {
             <h4
               className={cn(
                 "font-medium text-sm sm:text-base",
-                isDone && "text-green-700 dark:text-green-300",
+                isDone && "text-zinc-700 dark:text-zinc-300",
                 isInProgress && "text-zinc-900 dark:text-zinc-100"
               )}
             >
               {task.name}
             </h4>
             {task.isMilestone && (
-              <Flag className="h-4 w-4 text-amber-500" aria-label="Mijlpaal" />
+              <Flag className="h-4 w-4 text-zinc-500 dark:text-zinc-400" aria-label="Mijlpaal" />
             )}
           </div>
           <Badge
@@ -166,10 +166,10 @@ function TaskItem({ task }: TaskItemProps) {
                 className={cn(
                   "h-2 rounded-full transition-all",
                   isDone
-                    ? "bg-green-600"
+                    ? "bg-zinc-800 dark:bg-zinc-200"
                     : isInProgress
-                    ? "bg-green-500"
-                    : "bg-green-400"
+                    ? "bg-zinc-600 dark:bg-zinc-400"
+                    : "bg-zinc-400 dark:bg-zinc-500"
                 )}
                 style={{ width: `${task.progress}%` }}
               />
@@ -252,7 +252,7 @@ export function PortalProjectView({ project, userRole, userId }: PortalProjectVi
                   className={cn(
                     "h-full rounded-full transition-all",
                     isComplete
-                      ? "bg-green-500"
+                      ? "bg-zinc-800 dark:bg-zinc-200"
                       : isActive
                       ? "bg-zinc-700 dark:bg-zinc-300"
                       : "bg-zinc-400"

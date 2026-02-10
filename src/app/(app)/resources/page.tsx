@@ -216,7 +216,7 @@ function ResourcesPageContent() {
               <div className="flex items-center gap-6">
                 <span className="text-sm text-muted-foreground font-medium">Legenda:</span>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-sm bg-green-500" />
+                  <div className="w-3 h-3 rounded-sm bg-zinc-700 dark:bg-zinc-300" />
                   <span className="text-sm text-muted-foreground">Optimaal (70-100%)</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -224,7 +224,7 @@ function ResourcesPageContent() {
                   <span className="text-sm text-muted-foreground">Overbezet (&gt;100%)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-sm bg-amber-500" />
+                  <div className="w-3 h-3 rounded-sm bg-zinc-500 dark:bg-zinc-400" />
                   <span className="text-sm text-muted-foreground">Onderbezet (&lt;70%)</span>
                 </div>
               </div>

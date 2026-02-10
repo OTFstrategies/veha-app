@@ -52,8 +52,8 @@ const GROUP_CONFIG = {
 
 const STATUS_COLORS: Record<string, string> = {
   gepland: 'border-zinc-200 bg-zinc-100 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
-  actief: 'border-lime-200 bg-lime-100 text-lime-700 dark:border-lime-800 dark:bg-lime-900/30 dark:text-lime-300',
-  'on-hold': 'border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  actief: 'border-state-success-text/20 bg-state-success-bg text-state-success-text',
+  'on-hold': 'border-state-warning-text/20 bg-state-warning-bg text-state-warning-text',
   afgerond: 'border-zinc-200 bg-zinc-100 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400',
   geannuleerd: 'border-red-200 bg-red-100 text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300',
 }
@@ -135,14 +135,14 @@ export function ClientTreeNode({
           className={cn(
             'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
             client.is_active
-              ? 'bg-lime-100 dark:bg-lime-900/30'
+              ? 'bg-zinc-200 dark:bg-zinc-700'
               : 'bg-zinc-100 dark:bg-zinc-800'
           )}
         >
           <Building2
             className={cn(
               'h-4 w-4',
-              client.is_active ? 'text-lime-600 dark:text-lime-400' : 'text-zinc-400'
+              client.is_active ? 'text-zinc-700 dark:text-zinc-300' : 'text-zinc-400'
             )}
           />
         </div>
@@ -163,14 +163,14 @@ export function ClientTreeNode({
           className={cn(
             'shrink-0',
             client.is_active
-              ? 'border-lime-200 bg-lime-50 text-lime-700 dark:border-lime-800 dark:bg-lime-900/20 dark:text-lime-400'
+              ? 'border-state-success-text/20 bg-state-success-bg text-state-success-text'
               : 'border-zinc-200 bg-zinc-50 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
           )}
         >
           <span
             className={cn(
               'mr-1.5 h-1.5 w-1.5 rounded-full',
-              client.is_active ? 'bg-lime-500' : 'bg-zinc-400'
+              client.is_active ? 'bg-zinc-700 dark:bg-zinc-300' : 'bg-zinc-400'
             )}
           />
           {client.is_active ? 'Actief' : 'Inactief'}
@@ -366,7 +366,7 @@ function ContactItem({ contact }: { contact: ClientContact }) {
       {contact.is_primary && (
         <Tooltip>
           <TooltipTrigger>
-            <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+            <Star className="h-3.5 w-3.5 fill-zinc-400 text-zinc-400" />
           </TooltipTrigger>
           <TooltipContent>Primair contactpersoon</TooltipContent>
         </Tooltip>
@@ -390,7 +390,7 @@ function LocationItem({ location }: { location: ClientLocation }) {
       {location.is_primary && (
         <Tooltip>
           <TooltipTrigger>
-            <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+            <Star className="h-3.5 w-3.5 fill-zinc-400 text-zinc-400" />
           </TooltipTrigger>
           <TooltipContent>Primaire locatie</TooltipContent>
         </Tooltip>
@@ -431,9 +431,9 @@ function ProjectItem({ project, onClick }: { project: ClientProject; onClick: ()
             className={cn(
               'h-full rounded-full',
               project.progress === 100
-                ? 'bg-lime-500'
+                ? 'bg-zinc-800 dark:bg-zinc-200'
                 : project.progress > 0
-                ? 'bg-lime-400'
+                ? 'bg-zinc-600 dark:bg-zinc-400'
                 : 'bg-zinc-300 dark:bg-zinc-600'
             )}
             style={{ width: `${project.progress}%` }}

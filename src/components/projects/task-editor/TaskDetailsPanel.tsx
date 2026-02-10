@@ -7,14 +7,14 @@ import type { Task, TaskStatus, TaskPriority } from '@/types/projects'
 
 const STATUS_OPTIONS: Array<{ value: TaskStatus; label: string; color: string }> = [
   { value: 'todo', label: 'Todo', color: 'bg-zinc-200 text-zinc-700' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-700' },
-  { value: 'done', label: 'Done', color: 'bg-green-100 text-green-700' },
+  { value: 'in_progress', label: 'In Progress', color: 'bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200' },
+  { value: 'done', label: 'Done', color: 'bg-zinc-300 text-zinc-900 dark:bg-zinc-600 dark:text-zinc-100' },
 ]
 
 const PRIORITY_OPTIONS: Array<{ value: TaskPriority; label: string; color: string }> = [
   { value: 'low', label: 'Laag', color: 'bg-zinc-100 text-zinc-600' },
   { value: 'normal', label: 'Normaal', color: 'bg-zinc-200 text-zinc-700' },
-  { value: 'high', label: 'Hoog', color: 'bg-amber-100 text-amber-700' },
+  { value: 'high', label: 'Hoog', color: 'bg-zinc-300 text-zinc-800 dark:bg-zinc-600 dark:text-zinc-200' },
   { value: 'urgent', label: 'Urgent', color: 'bg-red-100 text-red-700' },
 ]
 

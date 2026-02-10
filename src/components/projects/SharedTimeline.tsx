@@ -121,10 +121,10 @@ export function SharedTimeline({
           {/* Today Line */}
           {viewOptions.showTodayLine && todayPosition > 0 && (
             <div
-              className="absolute top-0 bottom-0 z-10 w-0.5 bg-blue-500"
+              className="absolute top-0 bottom-0 z-10 w-0.5 bg-zinc-500 dark:bg-zinc-400"
               style={{ left: todayPosition }}
             >
-              <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-blue-500" />
+              <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-zinc-500 dark:bg-zinc-400" />
             </div>
           )}
 

@@ -67,9 +67,9 @@ export function TaskBar({
         <Diamond
           className={cn(
             'h-4 w-4 cursor-pointer fill-zinc-800 text-zinc-800 transition-all dark:fill-zinc-200 dark:text-zinc-200',
-            isSelected && 'fill-blue-600 text-blue-600 dark:fill-blue-400 dark:text-blue-400',
-            isHighlighted && 'animate-pulse fill-orange-500 text-orange-500 dark:fill-orange-400 dark:text-orange-400',
-            isDependencyHighlighted && !isHighlighted && 'fill-blue-500 text-blue-500 dark:fill-blue-400 dark:text-blue-400',
+            isSelected && 'fill-zinc-600 text-zinc-600 dark:fill-zinc-300 dark:text-zinc-300',
+            isHighlighted && 'animate-pulse fill-zinc-500 text-zinc-500 dark:fill-zinc-400 dark:text-zinc-400',
+            isDependencyHighlighted && !isHighlighted && 'fill-zinc-500 text-zinc-500 dark:fill-zinc-400 dark:text-zinc-400',
             isCritical && !isDependencyHighlighted && !isHighlighted && 'fill-red-500 text-red-500 dark:fill-red-400 dark:text-red-400',
             'hover:scale-110'
           )}
@@ -101,16 +101,16 @@ export function TaskBar({
         className={cn(
           'group absolute cursor-pointer rounded-sm transition-all',
           isHighlighted
-            ? 'animate-pulse bg-orange-400 dark:bg-orange-500'
+            ? 'animate-pulse bg-zinc-400 dark:bg-zinc-500'
             : isDependencyHighlighted
-            ? 'bg-blue-500 dark:bg-blue-600'
+            ? 'bg-zinc-600 dark:bg-zinc-400'
             : isCritical
             ? 'bg-red-500 dark:bg-red-600'
             : 'bg-zinc-400 dark:bg-zinc-500',
           isSelected
-            ? 'ring-2 ring-blue-500 ring-offset-1'
+            ? 'ring-2 ring-zinc-400/30 ring-offset-1'
             : isDependencyHighlighted
-            ? 'ring-2 ring-blue-400 ring-offset-1 dark:ring-blue-500'
+            ? 'ring-2 ring-zinc-400/30 ring-offset-1'
             : isCritical
             ? 'ring-2 ring-red-300 dark:ring-red-700'
             : 'hover:brightness-95',
@@ -148,9 +148,9 @@ export function TaskBar({
           className={cn(
             'absolute -bottom-1 left-0 w-1 rounded-b-sm',
             isHighlighted
-              ? 'bg-orange-400 dark:bg-orange-500'
+              ? 'bg-zinc-600 dark:bg-zinc-300'
               : isDependencyHighlighted
-              ? 'bg-blue-500 dark:bg-blue-600'
+              ? 'bg-zinc-600 dark:bg-zinc-400'
               : isCritical
               ? 'bg-red-500 dark:bg-red-600'
               : 'bg-zinc-400 dark:bg-zinc-500'
@@ -162,9 +162,9 @@ export function TaskBar({
           className={cn(
             'absolute -bottom-1 right-0 w-1 rounded-b-sm',
             isHighlighted
-              ? 'bg-orange-400 dark:bg-orange-500'
+              ? 'bg-zinc-600 dark:bg-zinc-300'
               : isDependencyHighlighted
-              ? 'bg-blue-500 dark:bg-blue-600'
+              ? 'bg-zinc-600 dark:bg-zinc-400'
               : isCritical
               ? 'bg-red-500 dark:bg-red-600'
               : 'bg-zinc-400 dark:bg-zinc-500'
@@ -187,16 +187,16 @@ export function TaskBar({
   // Status-based styling classes
   const getTaskBarClasses = () => {
     if (isHighlighted) {
-      return 'animate-pulse bg-orange-400 dark:bg-orange-500'
+      return 'animate-pulse bg-zinc-400 dark:bg-zinc-500'
     }
     if (isDependencyHighlighted) {
-      return 'bg-blue-500 dark:bg-blue-600'
+      return 'bg-zinc-600 dark:bg-zinc-400'
     }
     if (isCritical) {
       return 'bg-red-500 dark:bg-red-600'
     }
     if (task.status === 'done') {
-      return 'bg-green-500 dark:bg-green-600'
+      return 'bg-zinc-700 dark:bg-zinc-300'
     }
     // todo and in_progress use VEHA beige
     return 'bg-[#CBC4B5] dark:bg-zinc-500'
@@ -204,16 +204,16 @@ export function TaskBar({
 
   const getProgressBarClasses = () => {
     if (isHighlighted) {
-      return 'bg-orange-600 dark:bg-orange-400'
+      return 'bg-zinc-600 dark:bg-zinc-300'
     }
     if (isDependencyHighlighted) {
-      return 'bg-blue-700 dark:bg-blue-400'
+      return 'bg-zinc-700 dark:bg-zinc-300'
     }
     if (isCritical) {
       return 'bg-red-700 dark:bg-red-400'
     }
     if (task.status === 'done') {
-      return 'bg-green-600 dark:bg-green-500'
+      return 'bg-zinc-800 dark:bg-zinc-200'
     }
     // todo and in_progress use VEHA zwart (dark) / light for dark mode
     return 'bg-zinc-800 dark:bg-zinc-200'
@@ -225,9 +225,9 @@ export function TaskBar({
         'group absolute cursor-pointer rounded transition-all',
         getTaskBarClasses(),
         isSelected
-          ? 'ring-2 ring-blue-500 ring-offset-1'
+          ? 'ring-2 ring-zinc-400/30 ring-offset-1'
           : isDependencyHighlighted
-          ? 'ring-2 ring-blue-400 ring-offset-1 dark:ring-blue-500'
+          ? 'ring-2 ring-zinc-400/30 ring-offset-1'
           : isCritical
           ? 'ring-2 ring-red-300 dark:ring-red-700'
           : 'hover:brightness-95',

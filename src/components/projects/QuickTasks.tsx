@@ -87,7 +87,7 @@ export function QuickTasks({ projectId: _projectId, tasks, onTasksChange }: Quic
       {totalCount > 0 && (
         <div className="h-1.5 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
           <div
-            className="h-full bg-green-500 transition-all duration-300"
+            className="h-full bg-zinc-800 dark:bg-zinc-200 transition-all duration-300"
             style={{ width: `${(completedCount / totalCount) * 100}%` }}
           />
         </div>
@@ -109,7 +109,7 @@ export function QuickTasks({ projectId: _projectId, tasks, onTasksChange }: Quic
               className={cn(
                 "flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors",
                 task.completed
-                  ? "border-green-500 bg-green-500 text-white"
+                  ? "border-zinc-800 bg-zinc-800 text-white dark:border-zinc-200 dark:bg-zinc-200 dark:text-zinc-900"
                   : "border-zinc-300 dark:border-zinc-600 hover:border-zinc-400"
               )}
             >

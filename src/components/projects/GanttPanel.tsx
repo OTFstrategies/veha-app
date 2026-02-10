@@ -392,10 +392,10 @@ export function GanttPanel({
                 key={task.id}
                 className={cn(
                   'flex items-center border-b border-border transition-colors',
-                  isRecentlyChanged && 'animate-pulse bg-orange-50 dark:bg-orange-900/20',
+                  isRecentlyChanged && 'animate-pulse bg-zinc-100 dark:bg-zinc-800',
                   isDependencyHighlighted &&
                     !isRecentlyChanged &&
-                    'bg-blue-50 dark:bg-blue-900/20',
+                    'bg-zinc-100 dark:bg-zinc-800',
                   isSelected &&
                     !isRecentlyChanged &&
                     !isDependencyHighlighted &&
@@ -461,7 +461,7 @@ export function GanttPanel({
                   className={cn(
                     'px-1 text-center font-mono text-xs',
                     isRecentlyChanged || isBeingModified
-                      ? 'font-medium text-orange-600 dark:text-orange-400'
+                      ? 'font-medium text-zinc-900 dark:text-zinc-100'
                       : 'text-muted-foreground'
                   )}
                   style={{ width: GRID_COLUMNS.start }}
@@ -474,7 +474,7 @@ export function GanttPanel({
                   className={cn(
                     'px-1 text-center font-mono text-xs',
                     isRecentlyChanged || isBeingModified
-                      ? 'font-medium text-orange-600 dark:text-orange-400'
+                      ? 'font-medium text-zinc-900 dark:text-zinc-100'
                       : 'text-muted-foreground'
                   )}
                   style={{ width: GRID_COLUMNS.end }}
@@ -500,7 +500,7 @@ export function GanttPanel({
                       className={cn(
                         'h-full rounded-full transition-all',
                         task.progress === 100
-                          ? 'bg-green-500'
+                          ? 'bg-zinc-800 dark:bg-zinc-200'
                           : 'bg-zinc-800 dark:bg-zinc-200'
                       )}
                       style={{ width: `${task.progress}%` }}
@@ -584,10 +584,10 @@ export function GanttPanel({
             {/* Today Line */}
             {viewOptions.showTodayLine && todayPosition > 0 && (
               <div
-                className="absolute bottom-0 top-0 z-10 w-0.5 bg-blue-500"
+                className="absolute bottom-0 top-0 z-10 w-0.5 bg-zinc-500 dark:bg-zinc-400"
                 style={{ left: todayPosition }}
               >
-                <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-blue-500" />
+                <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-zinc-500 dark:bg-zinc-400" />
               </div>
             )}
 
