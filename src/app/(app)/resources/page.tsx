@@ -15,8 +15,8 @@ import { WeekPlanningSection } from "./WeekPlanningSection"
 import { ResourceHistogram } from "@/components/resources/ResourceHistogram"
 import { MaterialFormModal, type MaterialFormData } from "@/components/resources/MaterialFormModal"
 import { EquipmentFormModal, type EquipmentFormData } from "@/components/resources/EquipmentFormModal"
-import { useCreateMaterial } from "@/queries/materials"
-import { useCreateEquipment } from "@/queries/equipment"
+import { useCreateMaterial, useMaterial, useUpdateMaterial } from "@/queries/materials"
+import { useCreateEquipment, useEquipmentItem, useUpdateEquipment } from "@/queries/equipment"
 
 const tabs = [
   { id: "medewerkers", label: "Medewerkers", icon: Users },
@@ -37,15 +37,19 @@ function ResourcesPageContent() {
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false)
   const [isEquipmentModalOpen, setIsEquipmentModalOpen] = useState(false)
 
-  // State for selected items (for future edit modal views)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // State for selected items (for edit modal views)
   const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null)
+
+  // Queries for selected items
+  const { data: selectedMaterial } = useMaterial(selectedMaterialId)
+  const { data: selectedEquipment } = useEquipmentItem(selectedEquipmentId)
 
   // Mutations
   const createMaterial = useCreateMaterial()
   const createEquipment = useCreateEquipment()
+  const updateMaterial = useUpdateMaterial()
+  const updateEquipment = useUpdateEquipment()
 
   const handleTabChange = (value: string) => {
     router.push(`/resources?tab=${value}`)
@@ -53,12 +57,13 @@ function ResourcesPageContent() {
 
   // Material handlers
   const handleAddMaterial = () => {
+    setSelectedMaterialId(null)
     setIsMaterialModalOpen(true)
   }
 
   const handleViewMaterial = (materialId: string) => {
     setSelectedMaterialId(materialId)
-    // TODO: Open material detail/edit modal
+    setIsMaterialModalOpen(true)
   }
 
   const handleMaterialSubmit = async (data: MaterialFormData) => {
@@ -68,35 +73,56 @@ function ResourcesPageContent() {
     }
 
     try {
-      await createMaterial.mutateAsync({
-        workspace_id: currentWorkspaceId,
-        name: data.name,
-        description: data.description,
-        material_type: data.material_type,
-        unit: data.unit,
-        unit_price: data.unit_price,
-        quantity_in_stock: data.quantity_in_stock,
-        min_stock_level: data.min_stock_level,
-        supplier: data.supplier,
-        supplier_article_number: data.supplier_article_number,
-        notes: data.notes,
-      })
-      addToast({ type: "success", title: "Materiaal toegevoegd" })
+      if (selectedMaterialId) {
+        // Update existing material
+        await updateMaterial.mutateAsync({
+          id: selectedMaterialId,
+          name: data.name,
+          description: data.description,
+          material_type: data.material_type,
+          unit: data.unit,
+          unit_price: data.unit_price,
+          quantity_in_stock: data.quantity_in_stock,
+          min_stock_level: data.min_stock_level,
+          supplier: data.supplier,
+          supplier_article_number: data.supplier_article_number,
+          notes: data.notes,
+        })
+        addToast({ type: "success", title: "Materiaal bijgewerkt" })
+      } else {
+        // Create new material
+        await createMaterial.mutateAsync({
+          workspace_id: currentWorkspaceId,
+          name: data.name,
+          description: data.description,
+          material_type: data.material_type,
+          unit: data.unit,
+          unit_price: data.unit_price,
+          quantity_in_stock: data.quantity_in_stock,
+          min_stock_level: data.min_stock_level,
+          supplier: data.supplier,
+          supplier_article_number: data.supplier_article_number,
+          notes: data.notes,
+        })
+        addToast({ type: "success", title: "Materiaal toegevoegd" })
+      }
       setIsMaterialModalOpen(false)
+      setSelectedMaterialId(null)
     } catch (error) {
-      console.error("Failed to create material:", error)
-      addToast({ type: "error", title: "Fout bij toevoegen van materiaal" })
+      console.error("Failed to save material:", error)
+      addToast({ type: "error", title: selectedMaterialId ? "Fout bij bijwerken van materiaal" : "Fout bij toevoegen van materiaal" })
     }
   }
 
   // Equipment handlers
   const handleAddEquipment = () => {
+    setSelectedEquipmentId(null)
     setIsEquipmentModalOpen(true)
   }
 
   const handleViewEquipment = (equipmentId: string) => {
     setSelectedEquipmentId(equipmentId)
-    // TODO: Open equipment detail/edit modal
+    setIsEquipmentModalOpen(true)
   }
 
   const handleEquipmentSubmit = async (data: EquipmentFormData) => {
@@ -106,20 +132,36 @@ function ResourcesPageContent() {
     }
 
     try {
-      await createEquipment.mutateAsync({
-        workspace_id: currentWorkspaceId,
-        name: data.name,
-        equipment_type: data.equipment_type,
-        license_plate: data.license_plate,
-        daily_rate: data.daily_rate,
-        daily_capacity_hours: data.daily_capacity_hours,
-        notes: data.notes,
-      })
-      addToast({ type: "success", title: "Middel toegevoegd" })
+      if (selectedEquipmentId) {
+        // Update existing equipment
+        await updateEquipment.mutateAsync({
+          id: selectedEquipmentId,
+          name: data.name,
+          equipment_type: data.equipment_type,
+          license_plate: data.license_plate,
+          daily_rate: data.daily_rate,
+          daily_capacity_hours: data.daily_capacity_hours,
+          notes: data.notes,
+        })
+        addToast({ type: "success", title: "Middel bijgewerkt" })
+      } else {
+        // Create new equipment
+        await createEquipment.mutateAsync({
+          workspace_id: currentWorkspaceId,
+          name: data.name,
+          equipment_type: data.equipment_type,
+          license_plate: data.license_plate,
+          daily_rate: data.daily_rate,
+          daily_capacity_hours: data.daily_capacity_hours,
+          notes: data.notes,
+        })
+        addToast({ type: "success", title: "Middel toegevoegd" })
+      }
       setIsEquipmentModalOpen(false)
+      setSelectedEquipmentId(null)
     } catch (error) {
-      console.error("Failed to create equipment:", error)
-      addToast({ type: "error", title: "Fout bij toevoegen van middel" })
+      console.error("Failed to save equipment:", error)
+      addToast({ type: "error", title: selectedEquipmentId ? "Fout bij bijwerken van middel" : "Fout bij toevoegen van middel" })
     }
   }
 
@@ -194,17 +236,25 @@ function ResourcesPageContent() {
       {/* Material Form Modal */}
       <MaterialFormModal
         open={isMaterialModalOpen}
-        onOpenChange={setIsMaterialModalOpen}
+        onOpenChange={(open) => {
+          setIsMaterialModalOpen(open)
+          if (!open) setSelectedMaterialId(null)
+        }}
+        material={selectedMaterial ?? undefined}
         onSubmit={handleMaterialSubmit}
-        isLoading={createMaterial.isPending}
+        isLoading={createMaterial.isPending || updateMaterial.isPending}
       />
 
       {/* Equipment Form Modal */}
       <EquipmentFormModal
         open={isEquipmentModalOpen}
-        onOpenChange={setIsEquipmentModalOpen}
+        onOpenChange={(open) => {
+          setIsEquipmentModalOpen(open)
+          if (!open) setSelectedEquipmentId(null)
+        }}
+        equipment={selectedEquipment ?? undefined}
         onSubmit={handleEquipmentSubmit}
-        isLoading={createEquipment.isPending}
+        isLoading={createEquipment.isPending || updateEquipment.isPending}
       />
     </div>
   )
