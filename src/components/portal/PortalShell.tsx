@@ -209,7 +209,7 @@ function PortalLayoutContent({ children }: PortalShellProps) {
           {children}
         </div>
       </main>
-      <footer className="border-t border-zinc-200 bg-white px-3 py-3 sm:px-4 sm:py-4 dark:border-zinc-800 dark:bg-zinc-900">
+      <footer className="glass border-t border-zinc-200 px-3 py-3 sm:px-4 sm:py-4 dark:border-zinc-800">
         <div className="mx-auto max-w-6xl text-center text-xs text-muted-foreground">
           <p>VEHA Klantportaal - Projecten en voortgang</p>
         </div>

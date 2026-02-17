@@ -65,7 +65,7 @@ export function PortalHeader({ userEmail, userName, clientName, userRole }: Port
   const isViewer = userRole === "klant_viewer";
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-zinc-200 bg-white px-3 sm:h-16 sm:px-4 md:px-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <header className="glass flex h-14 items-center justify-between border-b border-zinc-200 px-3 sm:h-16 sm:px-4 md:px-6 dark:border-zinc-800">
       {/* Logo and Title */}
       <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
         <Link href="/portal" className="flex shrink-0 items-center gap-2 sm:gap-3">
