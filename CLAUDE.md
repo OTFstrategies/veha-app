@@ -7,7 +7,7 @@ Project planning en resource management dashboard voor Nederlandse MKB-dienstver
 ## Tech Stack
 
 - **Framework:** Next.js (App Router) + TypeScript
-- **Styling:** Tailwind CSS v4, Shadow Huisstijl design system
+- **Styling:** Tailwind CSS v4, Huisstijl design system
 - **Auth:** Supabase Auth
 - **Database:** Supabase PostgreSQL + Realtime
 - **State:** Zustand (client) + TanStack Query (server)
@@ -18,13 +18,15 @@ Project planning en resource management dashboard voor Nederlandse MKB-dienstver
 ## Deployment
 
 Deploy commando:
+
 ```bash
 vercel --prod --token $VERCEL_TOKEN
 ```
 
 ## Design System
 
-Shadow Huisstijl met **warm stone accent** (#CBC4B5):
+Huisstijl met **warm stone accent** (#CBC4B5):
+
 - Zinc palette als primair, warm stone als secundair/decoratief
 - Warm stone ALLEEN voor: Gantt task bars, brand identity elementen
 - NIET voor: buttons, focus rings, primary actions
